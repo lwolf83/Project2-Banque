@@ -13,6 +13,12 @@ namespace Project2
         private string _location;
         private List<Account> _accounts;
 
+        public bool IsLoginExist(string login)
+        {
+            return true;
+        }
+
+
         public int GetIdClient()
         {
             return _idClient;
@@ -65,7 +71,7 @@ namespace Project2
 
         public List<Account> GetAccounts()
         {
-            return  _accounts;
+            return _accounts;
         }
 
         public void SetAccounts(List<Account> accounts)
@@ -73,11 +79,13 @@ namespace Project2
             _accounts = accounts;
         }
 
+
+
+        public void CreateClient()
+        {
+            
+        }
         
 
-        public void CreateAccount()
-        {
-
-        }
     }
 }

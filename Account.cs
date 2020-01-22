@@ -9,6 +9,7 @@ namespace Project2
         protected int _idClient;
         protected string _accountIdentifier;
         protected double _amount;
+        protected DateTime _creationDate;
 
         public int GetIdClient()
         {
@@ -40,9 +41,9 @@ namespace Project2
             _amount = amount;
         }
 
-        public virtual void Create()
+        public virtual void CreateAccount()
         {
-
+            //assigner le compte à un client --> à faire dans un constructeur 
         }
 
         public virtual void Debit()
@@ -53,6 +54,16 @@ namespace Project2
         {
         }
 
+        public virtual bool IsValidDebit(double amount)
+        {
+            return true;
+        }
 
+        public virtual bool IsValidCredit(double amount)
+        {
+            return true;
+        }
+
+        
     }
 }
