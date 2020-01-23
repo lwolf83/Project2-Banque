@@ -18,6 +18,10 @@ namespace Project2
             return true;
         }
 
+        public bool IsAuthorizedClient()
+        {
+            return true;
+        }
 
         public int GetIdClient()
         {
