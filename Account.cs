@@ -11,8 +11,8 @@ namespace Project2
         protected double _amount;
         protected DateTime _creationDate;
 
-        
-        
+       
+
         public int GetIdClient()
         {
             return _idClient;

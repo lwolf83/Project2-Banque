@@ -13,10 +13,18 @@ namespace Project2
         private string _location;
         private List<Account> _accounts;
 
+        public Client(string login)
+        {
+            _login = login;
+        }
+
         public bool IsLoginExist(string login)
         {
             return true;
         }
+
+
+
 
         public bool IsAuthorizedClient()
         {
@@ -83,13 +91,26 @@ namespace Project2
             _accounts = accounts;
         }
 
-
-
-        public void CreateClient()
-        {
-            
-        }
         
+        public void ClientCreation()
+        { 
+                IO.DisplayInformation("Creation of a new client");
+                Client newClient = new Client(Program.opts.CreateNewClient);
+                if (newClient.IsClientExisting())
+                {
+                    IO.DisplayWarning("This login already exists, we cannot create it", Program.opts.Verbose);
+                }
+                else
+                {
+                    IO.SaveDB(newClient);
+                }
+        }
+
+
+        public bool IsClientExisting()
+        { // vérifie dans la base de données si le client existe en fonction de son login
+            return true;    
+        }
 
     }
 }

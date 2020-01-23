@@ -8,6 +8,13 @@ namespace Project2
     {
         private double _overdraft;
 
+        public CheckingAccount (string accountIdentifier, double amout, int idClient)
+        {
+            _accountIdentifier = accountIdentifier;
+            _amount = amout;
+            _idClient = idClient;
+        }
+
         public double GetOverdraft()
         {
             return _overdraft;

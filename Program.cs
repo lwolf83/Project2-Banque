@@ -1,17 +1,22 @@
-﻿using System;
+﻿using CommandLine;
+using System;
 using System.Collections.Generic;
 
 namespace Project2
 {
     class Program
     {
+        public static Options opts;
+
+
+
         static void Main(string[] args)
         {
-            string action = IO.getAction(args);
             /*
              * jeu de test jusqu'à possibilité de lecteur en db 
              */
-            Client currentUser = new Client();
+
+           /* Client currentUser = new Client();
             currentUser.SetIdClient(1);
             currentUser.SetLogin("john doe");
             currentUser.SetPassword("azerty");
@@ -29,18 +34,48 @@ namespace Project2
 
             userAccountsList.Add(userSavingsAccount);
             userAccountsList.Add(userCheckingAccount);
-            currentUser.SetAccounts(userAccountsList);
+            currentUser.SetAccounts(userAccountsList);*/
             /*
              *  fin de jeu de test
              */
+            CommandLine.Parser.Default.ParseArguments<Options>(args)
+            .WithParsed(RunOptions)
+            .WithNotParsed(HandleParseError);
 
 
-            if (currentUser.IsAuthorizedClient() && !(action == "createUser"))
+
+
+           /* if (currentUser.IsAuthorizedClient() && !(action == "createUser"))
             {
                 switch(action)
                 {
                     case "createAccount":
                         //on créé un nouveau compte en prenant les valeurs données en parametre
+                        //si sa => instancie new savingsaccount via le 
+                        if(CommandLine == sa)
+                        {
+                            // create a service account
+                            SavingsAccount savingsAccount = new SavingsAccount();
+
+                        }
+                        else if (CommandLine == ca)
+                        {
+                            // create a current account
+                            CheckingAccount checkingAccount = new CheckingAccount();
+                        }
+
+
+
+                        CheckingAccount userCheckingAccount = new CheckingAccount();
+                        List<Account> userAccountsList = new List<Account>();
+                        userSavingsAccount.SetAccountIdentifier();
+                        userSavingsAccount.SetAmount();
+                        userSavingsAccount.SetIdClient();
+
+                        userAccountsList.Add(userSavingsAccount);
+                        userAccountsList.Add(userCheckingAccount);
+                        currentUser.SetAccounts(userAccountsList);
+                        
                         //récupération de l'ensemble des infos dans args
                         //sauvegarde en db
                         break;
@@ -80,8 +115,21 @@ namespace Project2
                 //l'authentification a échoué.
                 //on rejette et on termine le programme.
                 Console.WriteLine("no possible action available");
-            }
+            }*/
 
         }
+
+        static void RunOptions(Options options)
+        {
+            opts = options;
+            IO.getAction();
+
+        }
+        static void HandleParseError(IEnumerable<Error> errs)
+        {
+            //handle errors
+        }
+
+        
     }
 }
