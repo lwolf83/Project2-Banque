@@ -12,6 +12,7 @@ namespace Project2
 
         static void Main(string[] args)
         {
+
             /*
              * jeu de test jusqu'à possibilité de lecteur en db 
              */
@@ -122,7 +123,14 @@ namespace Project2
         static void RunOptions(Options options)
         {
             opts = options;
-            IO.getAction();
+            string action;
+            action = IO.getAction();
+
+            if (action=="CreateClient")
+            {
+                ClientCreation();
+            }
+           
 
         }
         static void HandleParseError(IEnumerable<Error> errs)
@@ -130,6 +138,39 @@ namespace Project2
             //handle errors
         }
 
-        
+        public static void ClientCreation()
+        {
+            IO.DisplayInformation("Creation of a new client");
+            Client newClient = new Client(Program.opts.CreateNewClient);
+            if (newClient.IsClientExisting())
+            {
+                IO.DisplayWarning("This login already exists, we cannot create it.");
+            }
+            else
+            {
+                IO.SaveDB(newClient);
+                IO.DisplayInformation("New client saved in the database.");
+            }
+        }
+
+        public static void SavingsAccountCreation()
+        {
+            IO.DisplayInformation("Creation of a savings account");
+            Client client = new Client(Program.opts.Login);
+            if (client.IsClientExisting())
+            {
+                IO.DisplayInformation("New account saved in the database.");
+                SavingsAccount newAccount = new SavingsAccount(client.GetIdClient());
+                List<Account> accountList=client.GetAccounts();
+                accountList.Add(newAccount);
+                IO.SaveDB(client);
+                IO.SaveDB(newAccount);
+            }
+            else
+            {
+                IO.DisplayWarning("This client doesn't exist.");
+            }
+           
+        }
     }
 }
