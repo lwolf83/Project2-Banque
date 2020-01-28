@@ -6,16 +6,8 @@ namespace Project2
 {
     class Deferred : Transaction
     {
-        private DateTime _dateTransaction;
+        public DateTime DateTransaction { get; set; }
 
-        public DateTime GetDateTransaction()
-        {
-            return _dateTransaction;
-        }
-
-        public void SetDateTransaction(DateTime dateTransaction)
-        {
-            _dateTransaction = dateTransaction;
-        }
+        
     }
 }

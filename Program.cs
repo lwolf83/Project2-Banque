@@ -13,132 +13,74 @@ namespace Project2
         static void Main(string[] args)
         {
 
-            /*
-             * jeu de test jusqu'à possibilité de lecteur en db 
-             */
+            CommandLine.Parser.Default
+                .ParseArguments<Options, CreateClientOptions, CreateAccountOptions, ListAccountOptions, 
+                ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
+                .MapResult(
+                (Options opts) => RunCommand(opts),
+                (CreateClientOptions opts) => RunCreateClientCommand(opts),
+                (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
+                (ListAccountOptions opts) => RunListAccountCommand(opts),
+                (ShowInfoOptions opts) => RunShowInfoCommand(opts),
+                (DoDefferedTransferOptions opts) => RunDefferedTransferCommand(opts),
+                (DoInstantTransferOptions opts) => RunInstantTransferCommand(opts),
+                (DoPermanentTransferOptions opts) => RunPermanentTransferCommand(opts),
 
-           /* Client currentUser = new Client();
-            currentUser.SetIdClient(1);
-            currentUser.SetLogin("john doe");
-            currentUser.SetPassword("azerty");
-
-            SavingsAccount userSavingsAccount = new SavingsAccount();
-            userSavingsAccount.SetAccountIdentifier("CC0001");
-            userSavingsAccount.SetAmount(1000);
-            userSavingsAccount.SetIdClient(1);
-
-            CheckingAccount userCheckingAccount = new CheckingAccount();
-            List<Account> userAccountsList =  new List<Account>();
-            userSavingsAccount.SetAccountIdentifier("CE0001");
-            userSavingsAccount.SetAmount(10000);
-            userSavingsAccount.SetIdClient(1);
-
-            userAccountsList.Add(userSavingsAccount);
-            userAccountsList.Add(userCheckingAccount);
-            currentUser.SetAccounts(userAccountsList);*/
-            /*
-             *  fin de jeu de test
-             */
-            CommandLine.Parser.Default.ParseArguments<Options>(args)
-            .WithParsed(RunOptions)
-            .WithNotParsed(HandleParseError);
-
-
-
-
-           /* if (currentUser.IsAuthorizedClient() && !(action == "createUser"))
-            {
-                switch(action)
-                {
-                    case "createAccount":
-                        //on créé un nouveau compte en prenant les valeurs données en parametre
-                        //si sa => instancie new savingsaccount via le 
-                        if(CommandLine == sa)
-                        {
-                            // create a service account
-                            SavingsAccount savingsAccount = new SavingsAccount();
-
-                        }
-                        else if (CommandLine == ca)
-                        {
-                            // create a current account
-                            CheckingAccount checkingAccount = new CheckingAccount();
-                        }
-
-
-
-                        CheckingAccount userCheckingAccount = new CheckingAccount();
-                        List<Account> userAccountsList = new List<Account>();
-                        userSavingsAccount.SetAccountIdentifier();
-                        userSavingsAccount.SetAmount();
-                        userSavingsAccount.SetIdClient();
-
-                        userAccountsList.Add(userSavingsAccount);
-                        userAccountsList.Add(userCheckingAccount);
-                        currentUser.SetAccounts(userAccountsList);
-                        
-                        //récupération de l'ensemble des infos dans args
-                        //sauvegarde en db
-                        break;
-                    case "getAccountList":
-                        //recupérer l'ensemble des comptes de l'utilisateur
-                        //si presence de l'argument /csv dans args le sauvegarder dans un csv sinon l'afficher à l'écran.
-                        break;
-                    case "exportAccount":
-                        break;
-                    case "doWireTransfert":
-                        //vérifer que l'ensemble des informations nécessaires sont disponibles
-                        //verifier que le compte origine est bien à l'utilisateur
-                        //verifier que le compte origine peut bien être débité de la valeur
-                        //verifier que le compte destination existe
-                        //réaliser le transfert
-                        //sauvegarde en db
-                        break;
-                    default:
-                        //l'utilisateur n'a choisi aucune option. On affiche l'erreur et on termine le programme
-                        Console.WriteLine("no possible action available");
-                        break;
-
-                }
-
-            }
-            else if(action == "createUser")
-            {
-                //on crée un nouvel utilisateur
-                //on verifie que le login n'existe deja pas en db (echec si le login existe deja)
-                //(optionnal) on verifie que le mot de passe possède une complexité suffisante (8 caractères, 1 maj, 1min, 1 chiffre, 1 caractères spécial dans ,;:!?./%+={([|])}
-                //on crée l'utilisateur
-                //on le sauvegarde en db
-                currentUser.CreateClient();
-            }
-            else
-            {   
-                //l'authentification a échoué.
-                //on rejette et on termine le programme.
-                Console.WriteLine("no possible action available");
-            }*/
+                (parserErrors) => 1
+                );
 
         }
 
-        static void RunOptions(Options options)
+        static int RunCommand(Options options)
         {
             opts = options;
             string action;
-            action = IO.getAction();
+            
 
-            if (action=="CreateClient")
-            {
-                ClientCreation();
-            }
-           
-
+            return 1;
         }
+
+        static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
+        {
+            return 1;
+        }
+
+        static int RunInstantTransferCommand(DoInstantTransferOptions opts)
+        {
+            return 1;
+        }
+
+        static int RunPermanentTransferCommand(DoPermanentTransferOptions opts)
+        {
+            return 1;
+        }
+
+        static int RunCreateClientCommand(CreateClientOptions opts)
+        {
+            return 1;
+        }
+
+        static int RunCreateAccountCommand(CreateAccountOptions opts)
+        {
+            return 1;
+        }
+
+        static int RunListAccountCommand(ListAccountOptions opts)
+        {
+            return 1;
+        }
+
+        static int RunShowInfoCommand(ShowInfoOptions opts)
+        {
+            return 1;
+        }
+
         static void HandleParseError(IEnumerable<Error> errs)
         {
             //handle errors
         }
 
-        public static void ClientCreation()
+        /*public static void ClientCreation()
         {
             IO.DisplayInformation("Creation of a new client");
             Client newClient = new Client(Program.opts.CreateNewClient);
@@ -151,7 +93,7 @@ namespace Project2
                 IO.SaveDB(newClient);
                 IO.DisplayInformation("New client saved in the database.");
             }
-        }
+        }*/
 
         public static void SavingsAccountCreation()
         {
@@ -160,8 +102,8 @@ namespace Project2
             if (client.IsClientExisting())
             {
                 IO.DisplayInformation("New account saved in the database.");
-                SavingsAccount newAccount = new SavingsAccount(client.GetIdClient());
-                List<Account> accountList=client.GetAccounts();
+                SavingsAccount newAccount = new SavingsAccount(client.IdClient);
+                List<Account> accountList=client.Accounts;
                 accountList.Add(newAccount);
                 IO.SaveDB(client);
                 IO.SaveDB(newAccount);

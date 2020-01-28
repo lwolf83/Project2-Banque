@@ -6,16 +6,22 @@ namespace Project2
 {
     public class Client
     {
-        private int _idClient;
-        private string _name;
-        private string _login;
-        private string _password;
-        private string _location;
-        private List<Account> _accounts;
+        public int IdClient { get; set; }
+        public string Name { get; set; }
+        public string Login { get; set; }
+        public string Password { get; set; }
+        public string Location { get; set; }
+        public List<Account> Accounts { get; set; }
+
+        public Client()
+        { }
+
+        public Client(string name, string login, string location, string password)
+        { }
 
         public Client(string login)
         {
-            _login = login;
+            Login = login;
         }
 
         public bool IsLoginExist(string login)
@@ -23,82 +29,84 @@ namespace Project2
             return true;
         }
 
-
-
-
         public bool IsAuthorizedClient()
         {
             return true;
         }
-
-        public int GetIdClient()
-        {
-            return _idClient;
-        }
-
-        public void SetIdClient(int idClient)
-        {
-            _idClient = idClient;
-        }
-
-        public string GetName()
-        {
-            return _name;
-        }
-
-        public void SetName(string name)
-        {
-            _name = name;
-        }
-
-        public string GetLogin()
-        {
-            return _login;
-        }
-
-        public void SetLogin(string login)
-        {
-            _login = login;
-        }
-
-        public string GetPassword()
-        {
-            return _login;
-        }
-
-        public void SetPassword(string password)
-        {
-            _password = password;
-        }
-
-        public string GetLocation()
-        {
-            return _login;
-        }
-
-        public void SetLocation(string location)
-        {
-            _location = location;
-        }
-
-        public List<Account> GetAccounts()
-        {
-            return _accounts;
-        }
-
-        public void SetAccounts(List<Account> accounts)
-        {
-            _accounts = accounts;
-        }
-
-        
-        
-
 
         public bool IsClientExisting()
         { // vérifie dans la base de données si le client existe en fonction de son login
             return false;    
         }
 
+        public static bool IsComplexPassword(string password)
+        {
+            bool hasUpperletter = HasUpperletter(password);
+            bool hasLowerletter = HasLowerletter(password);
+            bool hasEnoughLetters = HasEnoughLetters(password);
+            bool hasNumber = HasNumber(password);
+            bool hasSpecialCharacter = HasSpecialCharacter(password);
+            bool result = hasUpperletter && hasLowerletter && hasEnoughLetters && hasNumber && hasSpecialCharacter;
+
+            return result;
+        }
+
+        public static bool HasUpperletter(string password)
+        {
+            foreach(char letter in password)
+            {
+                if (char.IsUpper(letter))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool HasLowerletter(string password)
+        {
+            foreach (char letter in password)
+            {
+                if (char.IsLower(letter))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool HasEnoughLetters(string password)
+        {
+            if(password.Length >= 8)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool HasNumber(string password)
+        {
+            foreach(char character in password)
+            {
+                if(char.IsDigit(character))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool HasSpecialCharacter(string password)
+        {
+            string specialCharacter = "/#+=-*@%&_.;,";
+            foreach(char character in password)
+            {
+                if(specialCharacter.Contains(character))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

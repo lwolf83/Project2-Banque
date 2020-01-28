@@ -6,42 +6,11 @@ namespace Project2
 {
     public class Account
     {
-        protected int _idClient;
-        protected string _accountIdentifier;
-        protected double _amount;
-        protected DateTime _creationDate;
+        protected int IdClient { get; set; }
+        protected string AccountIdentifier { get; set; }
+        protected double Amount { get; set; }
+        protected DateTime CreationDate { get; set; }
 
-       
-
-        public int GetIdClient()
-        {
-            return _idClient;
-        }
-
-        public void SetIdClient(int idClient)
-        {
-            _idClient = idClient;
-        }
-
-        public string GetAccountIdentifier()
-        {
-            return _accountIdentifier;
-        }
-
-        public void SetAccountIdentifier(string accountIdentifier)
-        {
-            _accountIdentifier = accountIdentifier;
-        }
-
-        public double GetAmount()
-        {
-            return _amount;
-        }
-
-        public void SetAmount(double amount)
-        {
-            _amount = amount;
-        }
 
         public virtual void CreateAccount()
         {

@@ -6,33 +6,7 @@ namespace Project2
 {
     class IO
     {
-        public static string getAction()
-        {
-           if (Program.opts.CreateNewClient != "")
-            {
-                return "CreateClient";
-                
-            }
-           else if (Program.opts.CreateNewAccount!= "")
-            {
-                if (Program.opts.CreateNewAccount == "sa")
-                {
-                    return "CreateSavingAccount";
-                }
-                else if (Program.opts.CreateNewAccount == "ca")
-                {
-                    return "CreateCheckingAccount";
-                }
-                else
-                {
-                    IO.DisplayWarning("Account type doesn't exist");
-                    return "Error" ;
-                }
-            }
-            return "";
-            
-
-        }
+        
 
         public static void SaveDB(Client client)
         {
