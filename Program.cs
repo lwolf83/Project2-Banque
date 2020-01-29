@@ -8,8 +8,6 @@ namespace Project2
     {
         public static Options opts;
 
-
-
         static void Main(string[] args)
         {
 
@@ -25,10 +23,8 @@ namespace Project2
                 (DoDefferedTransferOptions opts) => RunDefferedTransferCommand(opts),
                 (DoInstantTransferOptions opts) => RunInstantTransferCommand(opts),
                 (DoPermanentTransferOptions opts) => RunPermanentTransferCommand(opts),
-
                 (parserErrors) => 1
                 );
-
         }
 
         static int RunCommand(Options options)
@@ -112,7 +108,6 @@ namespace Project2
             {
                 IO.DisplayWarning("This client doesn't exist.");
             }
-           
         }
     }
 }
