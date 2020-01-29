@@ -50,7 +50,6 @@ namespace Project2
 
             return result;
         }
-
         public static bool HasUpperletter(string password)
         {
             foreach(char letter in password)

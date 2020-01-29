@@ -6,8 +6,6 @@ namespace Project2
 {
     class IO
     {
-        
-
         public static void SaveDB(Client client)
         {
             IO.DisplayInformation("Client saved in DataBase");
