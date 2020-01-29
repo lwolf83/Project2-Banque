@@ -1,12 +1,16 @@
 ﻿using CommandLine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Collections;
+
 
 namespace Project2
 {
     class Program
     {
         public static Options opts;
+        public static Client currentClient;
 
         static void Main(string[] args)
         {
@@ -63,6 +67,10 @@ namespace Project2
 
         static int RunListAccountCommand(ListAccountOptions opts)
         {
+
+            List<Account> accountList = currentClient.GetAccountList(); //recuperation liste
+            IO.DisplayAccountList(currentClient, accountList); //afficher liste
+
             return 1;
         }
 

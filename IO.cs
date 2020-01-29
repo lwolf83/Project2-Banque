@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -29,20 +30,33 @@ namespace Project2
             }
         }
 
-       /* public static void GetTypeAccount(string[] args)
+        public static void DisplayAccountList(Client client, List<Account> AccountsList)
         {
-            string typeAccount;
-            //recupere les infos via commandlineparser
-            
-            if (typeAccount == "SA")
+            Console.WriteLine(Program.currentClient.Name + " account list is below:");
+            Console.WriteLine();
+            Console.WriteLine("Client ID" + "|" + "Account ID" + "|" + "Amount" + "|" + "Creation Date");
+            Console.WriteLine("----------------------------------------------------------------------");
+
+            foreach (Account account in AccountsList)
             {
-                
-            }
-            else if( typeAccount == "CA" )
-            {
-                
-            }
-          
-        }*/
+              Console.WriteLine(account.IdClient + "|" + account.AccountIdentifier + "|" + account.Amount + "|" + account.CreationDate);
+            }   
+        }
+
+        /* public static void GetTypeAccount(string[] args)
+         {
+             string typeAccount;
+             //recupere les infos via commandlineparser
+
+             if (typeAccount == "SA")
+             {
+
+             }
+             else if( typeAccount == "CA" )
+             {
+
+             }
+
+         }*/
     }
 }

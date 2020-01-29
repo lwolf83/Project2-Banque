@@ -1,21 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Wilder\\Laure\\Projet2\\ConsoleApp1.csproj": {}
+    "C:\\Users\\konuk\\source\\repos\\Exo2Banque\\ConsoleApp1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Wilder\\Laure\\Projet2\\ConsoleApp1.csproj": {
+    "C:\\Users\\konuk\\source\\repos\\Exo2Banque\\ConsoleApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Wilder\\Laure\\Projet2\\ConsoleApp1.csproj",
+        "projectUniqueName": "C:\\Users\\konuk\\source\\repos\\Exo2Banque\\ConsoleApp1.csproj",
         "projectName": "Project2-banque",
-        "projectPath": "C:\\Users\\Wilder\\Laure\\Projet2\\ConsoleApp1.csproj",
-        "packagesPath": "C:\\Users\\Wilder\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Wilder\\Laure\\Projet2\\obj\\",
+        "projectPath": "C:\\Users\\konuk\\source\\repos\\Exo2Banque\\ConsoleApp1.csproj",
+        "packagesPath": "C:\\Users\\konuk\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\konuk\\source\\repos\\Exo2Banque\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Wilder\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\konuk\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"

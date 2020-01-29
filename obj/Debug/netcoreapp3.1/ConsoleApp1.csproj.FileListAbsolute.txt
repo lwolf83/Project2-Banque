@@ -11,3 +11,16 @@ C:\Users\Wilder\Laure\Projet2\bin\Debug\netcoreapp3.1\CommandLine.dll
 C:\Users\Wilder\Laure\Projet2\obj\Debug\netcoreapp3.1\ConsoleApp1.csproj.CopyComplete
 C:\Users\Wilder\Laure\Projet2\obj\Debug\netcoreapp3.1\Project2-banque.dll
 C:\Users\Wilder\Laure\Projet2\obj\Debug\netcoreapp3.1\Project2-banque.pdb
+C:\Users\konuk\source\repos\Exo2Banque\obj\Debug\netcoreapp3.1\ConsoleApp1.csprojAssemblyReference.cache
+C:\Users\konuk\source\repos\Exo2Banque\obj\Debug\netcoreapp3.1\ConsoleApp1.AssemblyInfoInputs.cache
+C:\Users\konuk\source\repos\Exo2Banque\obj\Debug\netcoreapp3.1\ConsoleApp1.AssemblyInfo.cs
+C:\Users\konuk\source\repos\Exo2Banque\obj\Debug\netcoreapp3.1\Project2-banque.dll
+C:\Users\konuk\source\repos\Exo2Banque\obj\Debug\netcoreapp3.1\Project2-banque.pdb
+C:\Users\konuk\source\repos\Exo2Banque\bin\Debug\netcoreapp3.1\Project2-banque.exe
+C:\Users\konuk\source\repos\Exo2Banque\bin\Debug\netcoreapp3.1\Project2-banque.deps.json
+C:\Users\konuk\source\repos\Exo2Banque\bin\Debug\netcoreapp3.1\Project2-banque.runtimeconfig.json
+C:\Users\konuk\source\repos\Exo2Banque\bin\Debug\netcoreapp3.1\Project2-banque.runtimeconfig.dev.json
+C:\Users\konuk\source\repos\Exo2Banque\bin\Debug\netcoreapp3.1\Project2-banque.dll
+C:\Users\konuk\source\repos\Exo2Banque\bin\Debug\netcoreapp3.1\Project2-banque.pdb
+C:\Users\konuk\source\repos\Exo2Banque\bin\Debug\netcoreapp3.1\CommandLine.dll
+C:\Users\konuk\source\repos\Exo2Banque\obj\Debug\netcoreapp3.1\ConsoleApp1.csproj.CopyComplete
