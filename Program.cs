@@ -31,7 +31,7 @@ namespace Project2
 
             try
             {
-                QueryEmployee(conn);
+                Client newClient = IO.GetCustomerFromLogin("laure");
             }
             catch (Exception e)
             {
@@ -49,10 +49,11 @@ namespace Project2
 
 
             CommandLine.Parser.Default
-                .ParseArguments<Options, CreateClientOptions, CreateAccountOptions, ListAccountOptions, 
+                .ParseArguments<VerboseOptions, LoginOptions, CreateClientOptions, CreateAccountOptions, ListAccountOptions, 
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
-                (Options opts) => RunCommand(opts),
+                (VerboseOptions opts) => RunVerboseCommand(opts),
+                (LoginOptions opts) => RunLoginCommand(opts),
                 (CreateClientOptions opts) => RunCreateClientCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
                 (ListAccountOptions opts) => RunListAccountCommand(opts),
@@ -69,13 +70,48 @@ namespace Project2
             conn.Dispose();
         }
 
-        static int RunCommand(Options options)
+        static int RunVerboseCommand(VerboseOptions options)
         {
-            opts = options;
-            string action;
-            
-
             return 1;
+        }
+
+        static int RunLoginCommand(LoginOptions opts)
+        {
+            Client existingClient = new Client("Jean", "jeanbarth", "azerty", "strasbourg");
+            Client clientWhoWantsToLogIn = new Client();
+            string passwordExisting;
+            if (clientWhoWantsToLogIn.IsClientExisting())
+            {
+                passwordExisting = clientWhoWantsToLogIn.Password;
+            }
+            else
+            {
+                return 1;
+            }
+            Console.WriteLine("Please enter your password");
+            string password = Console.ReadLine();
+            int i = 0;
+            while ((password != passwordExisting) || (i < 2))
+            {
+                Console.WriteLine("Wrong password, please try again");
+                password = Console.ReadLine();
+                i++;
+            }
+            if ((i == 2) && (password != passwordExisting))
+            {
+                return 1;
+            }
+            else
+            {
+                Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
+                return 0;
+            }
+
+            //vérification que le client existe
+            //Non, on quitte
+            //oui, on recupère le mot de passe dans la db getPasswordFromUser(string user) {return "azert"};
+            //tant que le mot de passe n'est pas valide le redemander. A 3 essais faux afficher que le mot de passe n'est pas bon et quitter.
+
         }
 
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)

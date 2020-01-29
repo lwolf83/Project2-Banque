@@ -30,3 +30,22 @@ E:\Project\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\sni.d
 E:\Project\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
 E:\Project\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 E:\Project\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\Project2-banque.exe
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\Project2-banque.deps.json
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\Project2-banque.runtimeconfig.json
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\Project2-banque.runtimeconfig.dev.json
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\Project2-banque.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\Project2-banque.pdb
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\CommandLine.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\System.Data.SqlClient.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\sni.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\sni.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\obj\Debug\netcoreapp3.1\ConsoleApp1.csprojAssemblyReference.cache
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\obj\Debug\netcoreapp3.1\ConsoleApp1.AssemblyInfoInputs.cache
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\obj\Debug\netcoreapp3.1\ConsoleApp1.AssemblyInfo.cs
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\obj\Debug\netcoreapp3.1\ConsoleApp1.csproj.CopyComplete
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\obj\Debug\netcoreapp3.1\Project2-banque.dll
+C:\Users\Student\Desktop\Projet 2 - Banque\Project2-Banque\obj\Debug\netcoreapp3.1\Project2-banque.pdb

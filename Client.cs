@@ -26,7 +26,16 @@ namespace Project2
 
         public bool IsLoginExist(string login)
         {
-            return true;
+
+            //vérifier dans la BDD si le login existe
+            Client clientWhoWantsToLogIn = new Client();
+            login = Program.opts.Login;
+
+            if (login == clientWhoWantsToLogIn.Login)
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool IsAuthorizedClient()
@@ -36,7 +45,14 @@ namespace Project2
 
         public bool IsClientExisting()
         { // vérifie dans la base de données si le client existe en fonction de son login
-            return false;    
+            Client existingClient = new Client("jeanbarth");
+            Client clientWhoWantsToLogIn = new Client(Login);
+            if (clientWhoWantsToLogIn.Login == existingClient.Login)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public static bool IsComplexPassword(string password)

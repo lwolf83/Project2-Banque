@@ -490,11 +490,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj",
+      "projectUniqueName": "C:\\Users\\Student\\Desktop\\Projet 2 - Banque\\Project2-Banque\\ConsoleApp1.csproj",
       "projectName": "Project2-banque",
-      "projectPath": "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj",
+      "projectPath": "C:\\Users\\Student\\Desktop\\Projet 2 - Banque\\Project2-Banque\\ConsoleApp1.csproj",
       "packagesPath": "C:\\Users\\Student\\.nuget\\packages\\",
-      "outputPath": "E:\\Project\\Project2-Banque\\obj\\",
+      "outputPath": "C:\\Users\\Student\\Desktop\\Projet 2 - Banque\\Project2-Banque\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Student\\AppData\\Roaming\\NuGet\\NuGet.Config",

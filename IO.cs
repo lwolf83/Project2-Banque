@@ -50,7 +50,7 @@ namespace Project2
              }
 
          }*/
-        private static Client getCustomerFromLogin(string login)
+        public static Client GetCustomerFromLogin(string login)
         {
             string sql = "SELECT [idClient] ,[name] ,[login] ,[password] ,[location] FROM [dbo].[User] WHERE [login] = '" + login + "'";
 
