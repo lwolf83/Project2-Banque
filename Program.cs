@@ -1,15 +1,52 @@
 ﻿using CommandLine;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace Project2
 {
     class Program
     {
         public static Options opts;
+        public static SqlConnection conn;
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Getting Connection ...");
+            conn = DBUtils.GetDBConnection();
+
+            try
+            {
+                Console.WriteLine("Openning Connection ...");
+
+                conn.Open();
+
+                Console.WriteLine("Connection successful!");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+            }
+
+            try
+            {
+                QueryEmployee(conn);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e);
+                Console.WriteLine(e.StackTrace);
+            }
+            finally
+            {
+                // Closez la connexion.
+                conn.Close();
+                // Éliminez l'objet, libérant les ressources.
+                conn.Dispose();
+            }
+            Console.Read();
+
 
             CommandLine.Parser.Default
                 .ParseArguments<Options, CreateClientOptions, CreateAccountOptions, ListAccountOptions, 
@@ -25,6 +62,11 @@ namespace Project2
                 (DoPermanentTransferOptions opts) => RunPermanentTransferCommand(opts),
                 (parserErrors) => 1
                 );
+
+            // Closez la connexion.
+            conn.Close();
+            // Éliminez l'objet, libérant les ressources.
+            conn.Dispose();
         }
 
         static int RunCommand(Options options)
@@ -109,5 +151,8 @@ namespace Project2
                 IO.DisplayWarning("This client doesn't exist.");
             }
         }
+
+      
+
     }
 }

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Wilder\\Laure\\Projet2\\ConsoleApp1.csproj": {}
+    "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Wilder\\Laure\\Projet2\\ConsoleApp1.csproj": {
+    "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Wilder\\Laure\\Projet2\\ConsoleApp1.csproj",
+        "projectUniqueName": "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj",
         "projectName": "Project2-banque",
-        "projectPath": "C:\\Users\\Wilder\\Laure\\Projet2\\ConsoleApp1.csproj",
-        "packagesPath": "C:\\Users\\Wilder\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Wilder\\Laure\\Projet2\\obj\\",
+        "projectPath": "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj",
+        "packagesPath": "C:\\Users\\Student\\.nuget\\packages\\",
+        "outputPath": "E:\\Project\\Project2-Banque\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Wilder\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Student\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -41,6 +41,10 @@
             "CommandLineParser": {
               "target": "Package",
               "version": "[2.7.82, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.0, )"
             }
           },
           "imports": [
@@ -58,7 +62,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
