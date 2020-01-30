@@ -24,20 +24,6 @@ namespace Project2
             Login = login;
         }
 
-        public bool IsLoginExist(string login)
-        {
-
-            //vérifier dans la BDD si le login existe
-            Client clientWhoWantsToLogIn = new Client();
-            login = Program.opts.Login;
-
-            if (login == clientWhoWantsToLogIn.Login)
-            {
-                return true;
-            }
-            return false;
-        }
-
         public bool IsAuthorizedClient()
         {
             return true;
@@ -137,6 +123,25 @@ namespace Project2
             {
                 return true;
             }
+        }
+
+        public bool PasswordDifferentFromPasswordInDB(string login, string password)
+        {
+            Client currentCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
+            string passwordInDB = currentCustomer.Password;
+            int i = 0;
+            while ((password != passwordInDB) && (i < 2))
+            {
+                Console.WriteLine("Wrong password, please try again");
+                password = Console.ReadLine();
+                i++;
+            }
+            if ((i == 2) && (password != passwordInDB))
+            {
+                Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
+                
+            }
+            return true;
         }
 
     }

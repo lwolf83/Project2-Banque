@@ -8,7 +8,7 @@ namespace Project2
 {
     class Program
     {
-        public static Options opts;
+   
         public static bool Verbose { set; get;}
         public static SqlConnection sqlConnexion;
 
@@ -16,28 +16,6 @@ namespace Project2
         {
             Verbose = true;
             DBUtils.GetDBConnection();
-            try
-            {
-                Console.WriteLine("Openning Connection ...");
-
-                conn.Open();
-
-                Console.WriteLine("Connection successful!");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-            }
-
-            try
-            {
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e);
-                Console.WriteLine(e.StackTrace);
-            }
 
             CommandLine.Parser.Default
                 .ParseArguments<VerboseOptions, LoginOptions, CreateClientOptions, CreateAccountOptions, ListAccountOptions,
@@ -84,33 +62,21 @@ namespace Project2
 
             Console.WriteLine("Please enter your password");
             string password = Console.ReadLine();
-            int i = 0;
             if (password == passwordInDB)
             {
                 Console.WriteLine("You are connected !");
                 return 0;
             }
 
+            else if (currentCustomer.PasswordDifferentFromPasswordInDB(opts.Login, password))
+            {
+                return 1;
+            }
             else
             {
-                while ((password != passwordInDB) && (i < 2))
-                {
-                    Console.WriteLine("Wrong password, please try again");
-                    password = Console.ReadLine();
-                    i++;
-                }
-                if ((i == 2) && (password != passwordInDB))
-                {
-                    Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
-                    return 1;
-                }
-                else
-                {
-                    Console.WriteLine("You are connected !");
-                    return 0;
-                }
+                Console.WriteLine("You are connected !");
+                return 0;
             }
-
         }
 
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)

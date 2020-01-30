@@ -7,7 +7,7 @@ using CommandLine.Text;
 namespace Project2
 {
     [Verb("verbose", HelpText = "Activate Verbose Mode")]
-    class VerboseOptions
+    class TOTOptions
     {
 
     }
