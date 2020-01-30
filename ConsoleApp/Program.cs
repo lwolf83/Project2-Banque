@@ -78,32 +78,22 @@ namespace Project2
                 Console.WriteLine("You are connected !");
                 return 0;
             }
-
+            else if (currentCustomer.PasswordDifferentFromPasswordInDB(opts.Login, password))
+            {
+                return 1;
+            }
             else
             {
-                while ((password != passwordInDB) && (i < 2))
-                {
-                    Console.WriteLine("Wrong password, please try again");
-                    password = Console.ReadLine();
-                    i++;
-                }
-                if ((i == 2) && (password != passwordInDB))
-                {
-                    Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
-                    return 1;
-                }
-                else
-                {
-                    Console.WriteLine("You are connected !");
-                    return 0;
-                }
+                Console.WriteLine("You are connected !");
+                return 0;
             }
+
             //vérification que le client existe
             //Non, on quitte
             //oui, on recupère le mot de passe dans la db getPasswordFromUser(string user) {return "azert"};
             //tant que le mot de passe n'est pas valide le redemander. A 3 essais faux afficher que le mot de passe n'est pas bon et quitter.
         }
-
+            
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
         {
             return 1;
@@ -177,8 +167,5 @@ namespace Project2
                 IO.DisplayWarning("This client doesn't exist.");
             }*/
         }
-
-      
-
     }
 }

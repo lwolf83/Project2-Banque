@@ -123,5 +123,24 @@ namespace Project2
             }
         }
 
+        public bool PasswordDifferentFromPasswordInDB(string login, string password)
+        {
+            Client currentCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
+
+            string passwordInDB = currentCustomer.Password;
+            int i = 0;
+            while ((password != passwordInDB) && (i < 2))
+            {
+                Console.WriteLine("Wrong password, please try again");
+                password = Console.ReadLine();
+                i++;
+            }
+            if ((i == 2) && (password != passwordInDB))
+            {
+                Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
+
+            }
+            return true;
+        }
     }
 }
