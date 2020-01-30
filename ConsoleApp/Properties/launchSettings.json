@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleApp1": {
+      "commandName": "Project",
+      "commandLineArgs": "pt 500 1234 5678 01-28-2020 02-28-2020 2"
+    }
+  }
+}
