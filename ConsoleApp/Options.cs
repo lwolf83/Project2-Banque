@@ -50,7 +50,7 @@ namespace Project2
     class ShowInfoOptions
     {
         [Value(0)]
-        public string AccountId { get { AccountId.ToLower(); return AccountId; } set { } }
+        public string AccountId { get; set; }
     }
 
      class DoTransferOptions

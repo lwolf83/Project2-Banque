@@ -26,13 +26,13 @@ namespace Project2
                 Console.WriteLine(e.StackTrace);
             }
 
-            DBQuery.saveNewCustomerInDb(1, "lwolf", "lwolf", "passwoes", "location", "21-11-1986");
+            
             CommandLine.Parser.Default
                 .ParseArguments<Options, CreateClientOptions, CreateAccountOptions, ListAccountOptions, 
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
                 (Options opts) => RunCommand(opts),
-                (CreateClientOptions opts) => RunCreateClientCommand(opts),
+                (CreateClientOptions opts) => RunCreateCustomerCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
                 (ListAccountOptions opts) => RunListAccountCommand(opts),
                 (ShowInfoOptions opts) => RunShowInfoCommand(opts),
@@ -66,8 +66,45 @@ namespace Project2
             return 1;
         }
 
-        static int RunCreateClientCommand(CreateClientOptions opts)
+        static int RunCreateCustomerCommand(CreateClientOptions opts)
         {
+            //creation du client
+            //demander le mot de passe au client
+            string password;
+            bool isComplexPassword;
+            
+            do
+            {
+                Console.WriteLine("Please, enter your password : ");
+                password = Console.ReadLine();
+                isComplexPassword = Client.IsComplexPassword(password);
+
+                if (!isComplexPassword)
+                {
+                    WrongPasswordMessage(password);
+                }
+            }
+            while (!isComplexPassword);
+
+            static bool WrongPasswordMessage(string password)
+            {
+                int nbErreurSaisie = 0;                
+                nbErreurSaisie++;
+                if (nbErreurSaisie < 3)
+                {
+                    Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
+                }
+                if (nbErreurSaisie >= 3)
+                {
+                    Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
+                        "at least one number and one special character.");
+                }
+                return true;
+            }
+            Console.WriteLine("Your password is valid.");
+
+            //sauvegarder le client            
+            DBQuery.saveNewCustomerInDb(1, opts.Name, opts.Login, password, opts.Location, "20/01/2020");
             return 1;
         }
 
