@@ -26,12 +26,12 @@ namespace Project2
                 Console.WriteLine(e.StackTrace);
             }
 
-            DBQuery.saveNewCustomerInDb(1, "lwolf", "lwolf", "passwoes", "location", "21-11-1986");
             CommandLine.Parser.Default
-                .ParseArguments<Options, CreateClientOptions, CreateAccountOptions, ListAccountOptions, 
+                .ParseArguments<VerboseOptions, LoginOptions, CreateClientOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
-                (Options opts) => RunCommand(opts),
+                (VerboseOptions opts) => RunVerboseCommand(opts),
+                (LoginOptions opts) => RunLoginCommand(opts),
                 (CreateClientOptions opts) => RunCreateClientCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
                 (ListAccountOptions opts) => RunListAccountCommand(opts),
@@ -49,6 +49,59 @@ namespace Project2
         static int RunCommand(Options options)
         {
             return 1;
+        }
+
+        static int RunVerboseCommand(VerboseOptions options)
+        {
+            return 1;
+        }
+
+        static int RunLoginCommand(LoginOptions opts)
+        {
+            Client currentCustomer = new Client(opts.Login);
+            string passwordInDB;
+            if (currentCustomer.IsCustomerExisting(opts.Login))
+            {
+                currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
+                passwordInDB = currentCustomer.Password;
+            }
+            else
+            {
+                return 1;
+            }
+
+            Console.WriteLine("Please enter your password");
+            string password = Console.ReadLine();
+            int i = 0;
+            if (password == passwordInDB)
+            {
+                Console.WriteLine("You are connected !");
+                return 0;
+            }
+
+            else
+            {
+                while ((password != passwordInDB) && (i < 2))
+                {
+                    Console.WriteLine("Wrong password, please try again");
+                    password = Console.ReadLine();
+                    i++;
+                }
+                if ((i == 2) && (password != passwordInDB))
+                {
+                    Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
+                    return 1;
+                }
+                else
+                {
+                    Console.WriteLine("You are connected !");
+                    return 0;
+                }
+            }
+            //vérification que le client existe
+            //Non, on quitte
+            //oui, on recupère le mot de passe dans la db getPasswordFromUser(string user) {return "azert"};
+            //tant que le mot de passe n'est pas valide le redemander. A 3 essais faux afficher que le mot de passe n'est pas bon et quitter.
         }
 
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
@@ -107,7 +160,7 @@ namespace Project2
         }*/
 
         public static void SavingsAccountCreation()
-        {
+        {/*
             IO.DisplayInformation("Creation of a savings account");
             Client client = new Client(Program.opts.Login);
             if (client.IsClientExisting())
@@ -122,7 +175,7 @@ namespace Project2
             else
             {
                 IO.DisplayWarning("This client doesn't exist.");
-            }
+            }*/
         }
 
       
