@@ -123,5 +123,21 @@ namespace Project2
             }
             return false;
         }
+
+        public bool IsCustomerExisting(string login)
+        { // vérifie dans la base de données si le client existe en fonction de son login
+          // POUR TEST SANS BDD Client existingClient = new Client("jeanbarth");
+
+            Client existingCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
+            if (existingCustomer.Login == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
     }
 }

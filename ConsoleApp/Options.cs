@@ -9,6 +9,12 @@ namespace Project2
     [Verb("verbose", HelpText = "Activate Verbose Mode")]
     class VerboseOptions
     {
+
+    }
+
+    [Verb("verbose", HelpText = "Activate Verbose Mode")]
+    class VerboseOptions
+    {
         [Option('v', "verbose", Required = false, HelpText = "Activate Verbose Mode")]
         public bool Verbose { get; set; }
 

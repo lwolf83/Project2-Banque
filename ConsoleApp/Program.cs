@@ -9,13 +9,13 @@ namespace Project2
     class Program
     {
         public static Options opts;
-        public static SqlConnection conn;
+        public static bool Verbose { set; get;}
+        public static SqlConnection sqlConnexion;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Getting Connection ...");
-            conn = DBUtils.GetDBConnection();
-
+            Verbose = true;
+            DBUtils.GetDBConnection();
             try
             {
                 Console.WriteLine("Openning Connection ...");
@@ -31,25 +31,17 @@ namespace Project2
 
             try
             {
-                Client newClient = IO.GetCustomerFromLogin("laure");
+
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error: " + e);
                 Console.WriteLine(e.StackTrace);
             }
-            finally
-            {
-                // Closez la connexion.
-                conn.Close();
-                // Éliminez l'objet, libérant les ressources.
-                conn.Dispose();
-            }
-            Console.Read();
-
 
             CommandLine.Parser.Default
-                .ParseArguments<VerboseOptions, LoginOptions, CreateClientOptions, CreateAccountOptions, ListAccountOptions, 
+                .ParseArguments<VerboseOptions, LoginOptions, CreateClientOptions, CreateAccountOptions, ListAccountOptions,
+
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
                 (VerboseOptions opts) => RunVerboseCommand(opts),
@@ -64,53 +56,60 @@ namespace Project2
                 (parserErrors) => 1
                 );
 
-            // Closez la connexion.
-            conn.Close();
-            // Éliminez l'objet, libérant les ressources.
-            conn.Dispose();
+            sqlConnexion.Close();
+            sqlConnexion.Dispose();
         }
 
         static int RunVerboseCommand(VerboseOptions options)
         {
+
             return 1;
         }
 
         static int RunLoginCommand(LoginOptions opts)
         {
-            Client existingClient = new Client("Jean", "jeanbarth", "azerty", "strasbourg");
-            Client clientWhoWantsToLogIn = new Client();
-            string passwordExisting;
-            if (clientWhoWantsToLogIn.IsClientExisting())
+
+            Client currentCustomer = new Client(opts.Login);
+            string passwordInDB;
+            if (currentCustomer.IsCustomerExisting(opts.Login))
             {
-                passwordExisting = clientWhoWantsToLogIn.Password;
+                currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
+                passwordInDB = currentCustomer.Password;
+
             }
             else
             {
                 return 1;
             }
+
             Console.WriteLine("Please enter your password");
             string password = Console.ReadLine();
             int i = 0;
-            while ((password != passwordExisting) || (i < 2))
+            if (password == passwordInDB)
             {
-                Console.WriteLine("Wrong password, please try again");
-                password = Console.ReadLine();
-                i++;
-            }
-            if ((i == 2) && (password != passwordExisting))
-            {
-                return 1;
-            }
-            else
-            {
-                Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
+                Console.WriteLine("You are connected !");
                 return 0;
             }
 
-            //vérification que le client existe
-            //Non, on quitte
-            //oui, on recupère le mot de passe dans la db getPasswordFromUser(string user) {return "azert"};
-            //tant que le mot de passe n'est pas valide le redemander. A 3 essais faux afficher que le mot de passe n'est pas bon et quitter.
+            else
+            {
+                while ((password != passwordInDB) && (i < 2))
+                {
+                    Console.WriteLine("Wrong password, please try again");
+                    password = Console.ReadLine();
+                    i++;
+                }
+                if ((i == 2) && (password != passwordInDB))
+                {
+                    Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
+                    return 1;
+                }
+                else
+                {
+                    Console.WriteLine("You are connected !");
+                    return 0;
+                }
+            }
 
         }
 
@@ -170,7 +169,7 @@ namespace Project2
         }*/
 
         public static void SavingsAccountCreation()
-        {
+        {/*
             IO.DisplayInformation("Creation of a savings account");
             Client client = new Client(Program.opts.Login);
             if (client.IsClientExisting())
@@ -185,7 +184,7 @@ namespace Project2
             else
             {
                 IO.DisplayWarning("This client doesn't exist.");
-            }
+            }*/
         }
 
       
