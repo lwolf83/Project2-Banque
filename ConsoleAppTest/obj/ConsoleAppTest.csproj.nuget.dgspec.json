@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj": {}
+    "E:\\Project\\Project2-Banque\\ConsoleAppTest\\ConsoleAppTest.csproj": {}
   },
   "projects": {
-    "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj": {
+    "E:\\Project\\Project2-Banque\\ConsoleAppTest\\ConsoleAppTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj",
-        "projectName": "Project2-banque",
-        "projectPath": "E:\\Project\\Project2-Banque\\ConsoleApp1.csproj",
+        "projectUniqueName": "E:\\Project\\Project2-Banque\\ConsoleAppTest\\ConsoleAppTest.csproj",
+        "projectName": "ConsoleAppTest",
+        "projectPath": "E:\\Project\\Project2-Banque\\ConsoleAppTest\\ConsoleAppTest.csproj",
         "packagesPath": "C:\\Users\\Student\\.nuget\\packages\\",
-        "outputPath": "E:\\Project\\Project2-Banque\\obj\\",
+        "outputPath": "E:\\Project\\Project2-Banque\\ConsoleAppTest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Student\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -38,13 +38,17 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
-            "CommandLineParser": {
+            "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[2.7.82, )"
+              "version": "[16.2.0, )"
             },
-            "System.Data.SqlClient": {
+            "NUnit3TestAdapter": {
               "target": "Package",
-              "version": "[4.8.0, )"
+              "version": "[3.15.1, )"
+            },
+            "nunit": {
+              "target": "Package",
+              "version": "[3.12.0, )"
             }
           },
           "imports": [
