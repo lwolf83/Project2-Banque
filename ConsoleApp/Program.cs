@@ -9,45 +9,24 @@ namespace Project2
     class Program
     {
         public static Options opts;
-        public static SqlConnection conn;
+        public static bool Verbose { set; get;}
+        public static SqlConnection sqlConnexion;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Getting Connection ...");
-            conn = DBUtils.GetDBConnection();
-
+            Verbose = true;
+            DBUtils.GetDBConnection();
             try
             {
-                Console.WriteLine("Openning Connection ...");
-
-                conn.Open();
-
-                Console.WriteLine("Connection successful!");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-            }
-
-            try
-            {
-                QueryEmployee(conn);
+                DBQuery.getCustomerFromDbWhereLogin("lwolf");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error: " + e);
                 Console.WriteLine(e.StackTrace);
             }
-            finally
-            {
-                // Closez la connexion.
-                conn.Close();
-                // Éliminez l'objet, libérant les ressources.
-                conn.Dispose();
-            }
-            Console.Read();
 
-
+            DBQuery.saveNewCustomerInDb(1, "lwolf", "lwolf", "passwoes", "location", "21-11-1986");
             CommandLine.Parser.Default
                 .ParseArguments<Options, CreateClientOptions, CreateAccountOptions, ListAccountOptions, 
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
@@ -63,18 +42,12 @@ namespace Project2
                 (parserErrors) => 1
                 );
 
-            // Closez la connexion.
-            conn.Close();
-            // Éliminez l'objet, libérant les ressources.
-            conn.Dispose();
+            sqlConnexion.Close();
+            sqlConnexion.Dispose();
         }
 
         static int RunCommand(Options options)
         {
-            opts = options;
-            string action;
-            
-
             return 1;
         }
 
