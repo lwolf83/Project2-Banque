@@ -8,7 +8,7 @@ namespace Project2
 {
     class Program
     {
-        public static Options opts;
+       
         public static bool Verbose { set; get;}
         public static SqlConnection sqlConnexion;
 
@@ -18,7 +18,7 @@ namespace Project2
             DBUtils.GetDBConnection();
             try
             {
-                DBQuery.getCustomerFromDbWhereLogin("lwolf");
+                DBQuery.getCustomerFromDbWhereLogin("jeanbarth");
             }
             catch (Exception e)
             {
@@ -27,11 +27,9 @@ namespace Project2
             }
 
             CommandLine.Parser.Default
-                .ParseArguments<VerboseOptions, LoginOptions, CreateClientOptions, CreateAccountOptions, ListAccountOptions,
+                .ParseArguments<CreateClientOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
-                (VerboseOptions opts) => RunVerboseCommand(opts),
-                (LoginOptions opts) => RunLoginCommand(opts),
                 (CreateClientOptions opts) => RunCreateClientCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
                 (ListAccountOptions opts) => RunListAccountCommand(opts),
@@ -46,17 +44,8 @@ namespace Project2
             sqlConnexion.Dispose();
         }
 
-        static int RunCommand(Options options)
-        {
-            return 1;
-        }
 
-        static int RunVerboseCommand(VerboseOptions options)
-        {
-            return 1;
-        }
-
-        static int RunLoginCommand(LoginOptions opts)
+        static int Connection(Options opts)
         {
             Client currentCustomer = new Client(opts.Login);
             string passwordInDB;
@@ -96,36 +85,43 @@ namespace Project2
             
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunInstantTransferCommand(DoInstantTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunPermanentTransferCommand(DoPermanentTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunCreateClientCommand(CreateClientOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunCreateAccountCommand(CreateAccountOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunListAccountCommand(ListAccountOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunShowInfoCommand(ShowInfoOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
