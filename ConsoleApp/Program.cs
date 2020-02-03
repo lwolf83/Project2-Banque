@@ -113,27 +113,27 @@ namespace Project2
                 nbErreurSaisie++;
             }
             while (!isComplexPassword);
-
-            static bool WrongPasswordMessage(string password, int nbErreurSaisie)
-            {
-                if (nbErreurSaisie < 3)
-                {
-                    Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
-                }
-                if (nbErreurSaisie >= 3)
-                {
-                    Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
-                        "at least one number and one special character.");
-                }
-                return true;
-            }
+                        
             Console.WriteLine("Your password is valid.");
 
             //sauvegarder le client            
-            DBQuery.saveNewCustomerInDb(1, opts.Name, opts.Login, password, opts.Location, "20/01/2020");
+            DBQuery.saveNewCustomerInDb( opts.Name, opts.Login, password, opts.Location, "20/01/2020");
             return 1;
         }
 
+        static bool WrongPasswordMessage(string password, int nbErreurSaisie)
+        {
+            if (nbErreurSaisie < 3)
+            {
+                Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
+            }
+            if (nbErreurSaisie >= 3)
+            {
+                Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
+                    "at least one number and one special character.");
+            }
+            return true;
+        }
         static int RunCreateAccountCommand(CreateAccountOptions opts)
         {
             return 1;

@@ -55,10 +55,10 @@ namespace Project2
             return getCustomerFromDB("idClient", idClient);
         }
 
-        public static void saveNewCustomerInDb(int idCustomer,string name, string login, string password, string location, string dateCreation)
+        public static void saveNewCustomerInDb(string name, string login, string password, string location, string dateCreation)
         {
             string sql = "INSERT INTO [dbo].[Customer] ([idCustomer],[name],[login],[password],[location]) "
-                    + " VALUES ("+ idCustomer + " , '" +name + "', '" + login + "' , '"+ password + "' , '" + location + "')";
+                    + " VALUES ('" +name + "', '" + login + "' , '"+ password + "' , '" + location + "')";
 
             // Créez un objet Command.
             SqlCommand cmd = new SqlCommand();
@@ -66,7 +66,7 @@ namespace Project2
             // Combinez l'objet Command avec Connection.
             cmd.Connection = Program.sqlConnexion;
             cmd.CommandText = sql;
-            DbDataReader reader = cmd.ExecuteReader();
+            int queryResult = cmd.ExecuteNonQuery();
 
         }
     }
