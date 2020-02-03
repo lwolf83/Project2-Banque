@@ -8,7 +8,7 @@ namespace Project2
 {
     class DBQuery
     {
-        public static Client getCustomerFromDB(string field, string value)
+        public static Customer getCustomerFromDB(string field, string value)
         {
             string sql = "SELECT * FROM [dbo].[Customer] WHERE [" + field + "] = '" + value + "'";
 
@@ -19,8 +19,8 @@ namespace Project2
             cmd.Connection = Program.sqlConnexion;
             cmd.CommandText = sql;
 
-            
-            Client currentClient = new Client();
+
+            Customer currentClient = new Customer();
             using (DbDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.HasRows)
@@ -44,12 +44,12 @@ namespace Project2
 
 
 
-        public static Client getCustomerFromDbWhereLogin(string login)
+        public static Customer getCustomerFromDbWhereLogin(string login)
         {
             return getCustomerFromDB("login", login);
         }
 
-        public static Client getCustomerFromDbWhereID(int id)
+        public static Customer getCustomerFromDbWhereID(int id)
         {
             string idClient = Convert.ToString(id);
             return getCustomerFromDB("idClient", idClient);
