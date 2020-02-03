@@ -13,14 +13,13 @@ namespace Project2
 
         static void Main(string[] args)
         {
-            Verbose = true;
+    
             DBUtils.GetDBConnection();
 
             CommandLine.Parser.Default
-                .ParseArguments<VerboseOptions, LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
+                .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
-                (LoginOptions opts) => RunLoginCommand(opts),
                 (CreateCustomerOptions opts) => RunCreateCustomerCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
                 (ListAccountOptions opts) => RunListAccountCommand(opts),
