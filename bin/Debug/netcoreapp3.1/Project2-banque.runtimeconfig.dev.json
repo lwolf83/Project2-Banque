@@ -1,0 +1,14 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+<<<<<<< HEAD
+      "C:\\Users\\konuk\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\konuk\\.nuget\\packages",
+      "C:\\Microsoft\\Xamarin\\NuGet"
+=======
+      "C:\\Users\\Student\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Student\\.nuget\\packages"
+>>>>>>> master
+    ]
+  }
+}

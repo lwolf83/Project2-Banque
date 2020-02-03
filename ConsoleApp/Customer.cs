@@ -50,9 +50,9 @@ namespace Project2
             bool hasNumber = HasNumber(password);
             bool hasSpecialCharacter = HasSpecialCharacter(password);
             bool result = hasUpperletter && hasLowerletter && hasEnoughLetters && hasNumber && hasSpecialCharacter;
-
             return result;
         }
+
         public static bool HasUpperletter(string password)
         {
             foreach(char letter in password)
@@ -137,6 +137,18 @@ namespace Project2
             Accounts.Add(account);
         }
 
+        public List<Account> GetAccountList()
+        {
+            CheckingAccount newca1 = new CheckingAccount("CANUM01", 2850.50, 006984);
+            CheckingAccount newca2 = new CheckingAccount("CANUM02", 00.00, 006984);
+            SavingsAccount newsa1 = new SavingsAccount("SANUM01", 20800.00, 006984);
 
+            List<Account> currentClientAccountsList = new List<Account>();
+            currentClientAccountsList.Add(newca1);
+            currentClientAccountsList.Add(newca2);
+            currentClientAccountsList.Add(newsa1);
+
+            return currentClientAccountsList;
+        }
     }
 }
