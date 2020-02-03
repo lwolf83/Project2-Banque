@@ -41,6 +41,7 @@ namespace Project2
             return false;
         }
 
+
         public static bool IsComplexPassword(string password)
         {
             bool hasUpperletter = HasUpperletter(password);
@@ -112,8 +113,6 @@ namespace Project2
 
         public bool IsCustomerExisting(string login)
         { // vérifie dans la base de données si le client existe en fonction de son login
-          // POUR TEST SANS BDD Client existingClient = new Client("jeanbarth");
-
             Client existingCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
             if (existingCustomer.Login == null)
             {
@@ -128,6 +127,7 @@ namespace Project2
         public bool PasswordDifferentFromPasswordInDB(string login, string password)
         {
             Client currentCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
+
             string passwordInDB = currentCustomer.Password;
             int i = 0;
             while ((password != passwordInDB) && (i < 2))
@@ -139,7 +139,10 @@ namespace Project2
             if ((i == 2) && (password != passwordInDB))
             {
                 Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
-                
+            }
+            else
+            {
+                Console.WriteLine("You are connected !");
             }
             return true;
         }

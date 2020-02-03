@@ -8,7 +8,6 @@ namespace Project2
 {
     class Program
     {
-   
         public static bool Verbose { set; get;}
         public static SqlConnection sqlConnexion;
 
@@ -21,7 +20,6 @@ namespace Project2
                 .ParseArguments<VerboseOptions, LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
-                (VerboseOptions opts) => RunVerboseCommand(opts),
                 (LoginOptions opts) => RunLoginCommand(opts),
                 (CreateCustomerOptions opts) => RunCreateCustomerCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
@@ -37,13 +35,7 @@ namespace Project2
             sqlConnexion.Dispose();
         }
 
-        static int RunVerboseCommand(VerboseOptions options)
-        {
-
-            return 1;
-        }
-
-        static int RunLoginCommand(LoginOptions opts)
+        static int Connection(Options opts)
         {
 
             Client currentCustomer = new Client(opts.Login);
@@ -66,7 +58,6 @@ namespace Project2
                 Console.WriteLine("You are connected !");
                 return 0;
             }
-
             else if (currentCustomer.PasswordDifferentFromPasswordInDB(opts.Login, password))
             {
                 return 1;
@@ -76,25 +67,30 @@ namespace Project2
                 Console.WriteLine("You are connected !");
                 return 0;
             }
-        }
 
+        }
+            
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunInstantTransferCommand(DoInstantTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunPermanentTransferCommand(DoPermanentTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunCreateCustomerCommand(CreateCustomerOptions opts)
         {
+
             //creation du client
             //demander le mot de passe au client
             string password;
@@ -136,16 +132,19 @@ namespace Project2
 
         static int RunCreateAccountCommand(CreateAccountOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunListAccountCommand(ListAccountOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunShowInfoCommand(ShowInfoOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
@@ -187,8 +186,5 @@ namespace Project2
                 IO.DisplayWarning("This client doesn't exist.");
             }*/
         }
-
-      
-
     }
 }
