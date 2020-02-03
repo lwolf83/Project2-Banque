@@ -43,7 +43,7 @@ namespace Project2
         public bool SavingsAccount { get; set; }
 
         [Option('c', "ca", Required = false, HelpText = "Create a checking account")]
-        public string CheckingAccount { get; set; }
+        public bool CheckingAccount { get; set; }
 
     }
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Project2
 {
-    public class Client
+    public class Customer
     {
         public int IdClient { get; set; }
         public string Name { get; set; }
@@ -13,13 +13,13 @@ namespace Project2
         public string Location { get; set; }
         public List<Account> Accounts { get; set; }
 
-        public Client()
+        public Customer()
         { }
 
-        public Client(string name, string login, string location, string password)
+        public Customer(string name, string login, string location, string password)
         { }
 
-        public Client(string login)
+        public Customer(string login)
         {
             Login = login;
         }
@@ -31,8 +31,8 @@ namespace Project2
 
         public bool IsClientExisting()
         { // vérifie dans la base de données si le client existe en fonction de son login
-            Client existingClient = new Client("jeanbarth");
-            Client clientWhoWantsToLogIn = new Client(Login);
+            Customer existingClient = new Customer("jeanbarth");
+            Customer clientWhoWantsToLogIn = new Customer(Login);
             if (clientWhoWantsToLogIn.Login == existingClient.Login)
             {
                 return true;
@@ -113,7 +113,7 @@ namespace Project2
 
         public bool IsCustomerExisting(string login)
         { // vérifie dans la base de données si le client existe en fonction de son login
-            Client existingCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
+            Customer existingCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
             if (existingCustomer.Login == null)
             {
                 return false;
@@ -126,7 +126,7 @@ namespace Project2
 
         public bool PasswordDifferentFromPasswordInDB(string login, string password)
         {
-            Client currentCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
+            Customer currentCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
 
             string passwordInDB = currentCustomer.Password;
             int i = 0;
@@ -146,6 +146,19 @@ namespace Project2
             }
             return true;
         }
+
+        public void AddSavingAccount()
+        {
+            SavingsAccount account = new SavingsAccount();
+            Accounts.Add(account);
+        }
+
+        public void AddCheckingAccount()
+        {
+            CheckingAccount account = new CheckingAccount();
+            Accounts.Add(account);
+        }
+
 
     }
 }
