@@ -8,7 +8,7 @@ namespace Project2
 {
     class DBQuery
     {
-        public static Customer getCustomerFromDB(string field, string value)
+        public static Client getCustomerFromDB(string field, string value)
         {
             string sql = "SELECT * FROM [dbo].[Customer] WHERE [" + field + "] = '" + value + "'";
 
@@ -20,7 +20,7 @@ namespace Project2
             cmd.CommandText = sql;
 
             
-            Customer currentClient = new Customer();
+            Client currentClient = new Client();
             using (DbDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.HasRows)
@@ -44,21 +44,21 @@ namespace Project2
 
 
 
-        public static Customer getCustomerFromDbWhereLogin(string login)
+        public static Client getCustomerFromDbWhereLogin(string login)
         {
             return getCustomerFromDB("login", login);
         }
 
-        public static Customer getCustomerFromDbWhereID(int id)
+        public static Client getCustomerFromDbWhereID(int id)
         {
             string idClient = Convert.ToString(id);
             return getCustomerFromDB("idClient", idClient);
         }
 
-        public static void saveNewCustomerInDb(int idCustomer,string name, string login, string password, string location, string dateCreation)
+        public static void saveNewCustomerInDb(string name, string login, string password, string location, string dateCreation)
         {
             string sql = "INSERT INTO [dbo].[Customer] ([idCustomer],[name],[login],[password],[location]) "
-                    + " VALUES ("+ idCustomer + " , '" +name + "', '" + login + "' , '"+ password + "' , '" + location + "')";
+                    + " VALUES ('" +name + "', '" + login + "' , '"+ password + "' , '" + location + "')";
 
             // Créez un objet Command.
             SqlCommand cmd = new SqlCommand();
@@ -66,8 +66,7 @@ namespace Project2
             // Combinez l'objet Command avec Connection.
             cmd.Connection = Program.sqlConnexion;
             cmd.CommandText = sql;
-            DbDataReader reader = cmd.ExecuteReader();
-            IO.DisplayInformation("SAuvegarde ok");
+            int queryResult = cmd.ExecuteNonQuery();
 
         }
     }
