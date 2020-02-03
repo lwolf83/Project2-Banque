@@ -9,6 +9,10 @@ namespace Project2
         public double Ceiling { get; set; }
         public double SavingsRate { get; set; }
 
+        public SavingsAccount()
+        {
+        }
+
         public SavingsAccount(string accountIdentifier, double amount, int idClient)
         {
             AccountIdentifier = accountIdentifier;

@@ -8,21 +8,19 @@ namespace Project2
 {
     class Program
     {
-   
+        public static Customer currentCustomer;
         public static bool Verbose { set; get;}
         public static SqlConnection sqlConnexion;
 
         static void Main(string[] args)
         {
-            Verbose = true;
+    
             DBUtils.GetDBConnection();
 
             CommandLine.Parser.Default
-                .ParseArguments<VerboseOptions, LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
+                .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
-                (VerboseOptions opts) => RunVerboseCommand(opts),
-                (LoginOptions opts) => RunLoginCommand(opts),
                 (CreateCustomerOptions opts) => RunCreateCustomerCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
                 (ListAccountOptions opts) => RunListAccountCommand(opts),
@@ -37,16 +35,10 @@ namespace Project2
             sqlConnexion.Dispose();
         }
 
-        static int RunVerboseCommand(VerboseOptions options)
+        static int Connection(Options opts)
         {
 
-            return 1;
-        }
-
-        static int RunLoginCommand(LoginOptions opts)
-        {
-
-            Client currentCustomer = new Client(opts.Login);
+            currentCustomer = new Customer(opts.Login);
             string passwordInDB;
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
@@ -66,7 +58,6 @@ namespace Project2
                 Console.WriteLine("You are connected !");
                 return 0;
             }
-
             else if (currentCustomer.PasswordDifferentFromPasswordInDB(opts.Login, password))
             {
                 return 1;
@@ -76,25 +67,30 @@ namespace Project2
                 Console.WriteLine("You are connected !");
                 return 0;
             }
-        }
 
+        }
+            
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunInstantTransferCommand(DoInstantTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunPermanentTransferCommand(DoPermanentTransferOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunCreateCustomerCommand(CreateCustomerOptions opts)
         {
+
             //creation du client
             //demander le mot de passe au client
             string password;
@@ -104,7 +100,7 @@ namespace Project2
             {
                 Console.WriteLine("Please, enter your password : ");
                 password = Console.ReadLine();
-                isComplexPassword = Client.IsComplexPassword(password);
+                isComplexPassword = Customer.IsComplexPassword(password);
 
                 if (!isComplexPassword)
                 {
@@ -113,39 +109,54 @@ namespace Project2
                 nbErreurSaisie++;
             }
             while (!isComplexPassword);
-                        
-            Console.WriteLine("Your password is valid.");
+
+            static bool WrongPasswordMessage(string password, int nbErreurSaisie)
+            {
+                if (nbErreurSaisie < 3)
+                {
+                    Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
+                }
+                if (nbErreurSaisie >= 3)
+                {
+                    Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
+                        "at least one number and one special character.");
+                }
+                return true;
+            }
+            IO.DisplayInformation("Your password is valid.");
 
             //sauvegarder le client            
-            DBQuery.saveNewCustomerInDb( opts.Name, opts.Login, password, opts.Location, "20/01/2020");
+            DBQuery.saveNewCustomerInDb(1, opts.Name, opts.Login, password, opts.Location, "20/01/2020");
             return 1;
         }
 
-        static bool WrongPasswordMessage(string password, int nbErreurSaisie)
-        {
-            if (nbErreurSaisie < 3)
-            {
-                Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
-            }
-            if (nbErreurSaisie >= 3)
-            {
-                Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
-                    "at least one number and one special character.");
-            }
-            return true;
-        }
         static int RunCreateAccountCommand(CreateAccountOptions opts)
         {
+            Connection(opts);
+            Customer currentCustomer = new Customer(opts.Login);
+            int idCustomer = currentCustomer.IdClient;
+            if(opts.CheckingAccount)
+            {
+                currentCustomer.AddSavingAccount();
+            }
+            if(opts.SavingsAccount)
+            {
+                currentCustomer.AddCheckingAccount();
+            }
+
+
             return 1;
         }
 
         static int RunListAccountCommand(ListAccountOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
         static int RunShowInfoCommand(ShowInfoOptions opts)
         {
+            Connection(opts);
             return 1;
         }
 
@@ -187,8 +198,5 @@ namespace Project2
                 IO.DisplayWarning("This client doesn't exist.");
             }*/
         }
-
-      
-
     }
 }

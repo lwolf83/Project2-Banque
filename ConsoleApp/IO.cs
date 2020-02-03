@@ -7,7 +7,7 @@ namespace Project2
 {
     class IO
     {
-        public static void SaveDB(Client client)
+        public static void SaveDB(Customer client)
         {
             IO.DisplayInformation("Client saved in DataBase");
         }
@@ -30,7 +30,7 @@ namespace Project2
             }
         }
 
-        public static Client getCustomerFromDB(string customer)
+        public static Customer getCustomerFromDB(string customer)
         {
             return null;
         }

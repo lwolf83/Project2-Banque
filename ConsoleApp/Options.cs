@@ -6,33 +6,28 @@ using CommandLine.Text;
 
 namespace Project2
 {
-    [Verb("verbose", HelpText = "Activate Verbose Mode")]
-    class TOTOptions
+
+    class Options
     {
-
-    }
-
-    [Verb("verbose", HelpText = "Activate Verbose Mode")]
-    class VerboseOptions
-    {
-        [Option('v', "verbose", Required = false, HelpText = "Activate Verbose Mode")]
-        public bool Verbose { get; set; }
-
-    }
-
-    [Verb("login", HelpText = "Log into your account")]
-    class LoginOptions
-    {
-        [Option("login", Required = true, HelpText = "Enter the login")]
+        [Option('l', "login", Required = true, HelpText = "Enter the login")]
         public string Login { get; set; }
 
+        [Option('v', "verbose", Required = false, HelpText = "Activate Verbose Mode")]
+        public bool Verbose
+        {
+            set
+            {
+                Program.Verbose = value;
+            }
+        }
     }
+
 
     [Verb ("createclient", HelpText = "Create a new client.")]
-    class CreateCustomerOptions
+
+    class CreateCustomerOptions : Options
+
     {
-        [Option("login", Required = true, HelpText = "Enter the login")]
-        public string Login { get; set; }
 
         [Option("name", Required = false, HelpText = "Enter a name")]
         public string Name { get; set; }
@@ -42,30 +37,30 @@ namespace Project2
     }
 
     [Verb("createaccount", HelpText = "Create a new account.")]
-    class CreateAccountOptions
+    class CreateAccountOptions : Options
     {
         [Option('s', "sa", Required = false, HelpText = "Create a savings account")]
         public bool SavingsAccount { get; set; }
 
         [Option('c', "ca", Required = false, HelpText = "Create a checking account")]
-        public string CheckingAccount { get; set; }
+        public bool CheckingAccount { get; set; }
 
     }
 
     [Verb("listaccount", HelpText = "List your accounts.")]
-    class ListAccountOptions
+    class ListAccountOptions : Options
     {
         //on pourra après ajouter en option des entrées de dates
     }
 
     [Verb("showinfo", HelpText = "Show your account's informations.")]
-    class ShowInfoOptions
+    class ShowInfoOptions : Options
     {
         [Value(0)]
         public string AccountId { get; set; }
     }
 
-     class DoTransferOptions
+     class DoTransferOptions : Options
     {
         [Value(0)]
         public double AmountToTransfer { get; set; }

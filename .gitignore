@@ -17,6 +17,7 @@
 mono_crash.*
 
 ConsoleApp/Properties
+Properties
 
 # Build results
 [Dd]ebug/
