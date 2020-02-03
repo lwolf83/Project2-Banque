@@ -37,36 +37,34 @@ namespace Project2
 
         static int Connection(Options opts)
         {
-
             currentCustomer = new Customer(opts.Login);
-            string passwordInDB;
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
                 currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
-                passwordInDB = currentCustomer.Password;
-
+                string password = " ";
+                int i = 0;
+                do
+                {
+                    Console.WriteLine("Please type in your password");
+                    password = Console.ReadLine();
+                    i++;
+                }
+                while ((password != currentCustomer.Password) && (i <= 2));
+                
+                if (password == currentCustomer.Password)
+                {
+                    IO.DisplayInformation("You are connected!");
+                    return 0;
+                }
+                else
+                {
+                    IO.DisplayWarning("Too many attempts, please try again later!");
+                    return 1;
+                }
+                
             }
-            else
-            {
-                return 1;
-            }
-
-            Console.WriteLine("Please enter your password");
-            string password = Console.ReadLine();
-            if (password == passwordInDB)
-            {
-                Console.WriteLine("You are connected !");
-                return 0;
-            }
-            else if (currentCustomer.PasswordDifferentFromPasswordInDB(opts.Login, password))
-            {
-                return 1;
-            }
-            else
-            {
-                Console.WriteLine("You are connected !");
-                return 0;
-            }
+            IO.DisplayWarning("Your account doesn't exist!");
+            return 1;
 
         }
             
@@ -126,7 +124,7 @@ namespace Project2
             IO.DisplayInformation("Your password is valid.");
 
             //sauvegarder le client            
-            DBQuery.saveNewCustomerInDb(1, opts.Name, opts.Login, password, opts.Location, "20/01/2020");
+            DBQuery.saveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location, "20/01/2020");
             return 1;
         }
 
