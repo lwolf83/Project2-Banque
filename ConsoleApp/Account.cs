@@ -6,10 +6,10 @@ namespace Project2
 {
     public class Account
     {
-        protected int IdClient { get; set; }
-        protected string AccountIdentifier { get; set; }
-        protected double Amount { get; set; }
-        protected DateTime CreationDate { get; set; }
+        public int IdClient { get; set; }
+        public string AccountIdentifier { get; set; }
+        public double Amount { get; set; }
+        public DateTime CreationDate { get; set; }
 
 
         public virtual void CreateAccount()
