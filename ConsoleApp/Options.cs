@@ -6,24 +6,28 @@ using CommandLine.Text;
 
 namespace Project2
 {
-    [Verb("verbose", HelpText = "Activate Verbose Mode")]
-    class TOTOptions
+
+    class Options
     {
         [Option('l', "login", Required = true, HelpText = "Enter the login")]
         public string Login { get; set; }
 
         [Option('v', "verbose", Required = false, HelpText = "Activate Verbose Mode")]
-        public bool Verbose { get; set; }
+        public bool Verbose
+        {
+            set
+            {
+                Program.Verbose = value;
+            }
+        }
     }
 
 
     [Verb ("createclient", HelpText = "Create a new client.")]
 
-    class CreateClientOptions : Options
+    class CreateCustomerOptions : Options
 
     {
-        [Option("login", Required = true, HelpText = "Enter the login")]
-        public string Login { get; set; }
 
         [Option("name", Required = false, HelpText = "Enter a name")]
         public string Name { get; set; }
