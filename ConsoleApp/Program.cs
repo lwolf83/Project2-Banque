@@ -72,7 +72,7 @@ namespace Project2
             //demander le mot de passe au client
             string password;
             bool isComplexPassword;
-            
+            int nbErreurSaisie = 0;
             do
             {
                 Console.WriteLine("Please, enter your password : ");
@@ -81,15 +81,14 @@ namespace Project2
 
                 if (!isComplexPassword)
                 {
-                    WrongPasswordMessage(password);
+                    WrongPasswordMessage(password, nbErreurSaisie);
                 }
+                nbErreurSaisie++;
             }
             while (!isComplexPassword);
 
-            static bool WrongPasswordMessage(string password)
+            static bool WrongPasswordMessage(string password, int nbErreurSaisie)
             {
-                int nbErreurSaisie = 0;                
-                nbErreurSaisie++;
                 if (nbErreurSaisie < 3)
                 {
                     Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
