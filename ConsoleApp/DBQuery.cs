@@ -10,7 +10,7 @@ namespace Project2
     {
         public static Client getCustomerFromDB(string field, string value)
         {
-            string sql = "SELECT * FROM [dbo].[User] WHERE [" + field + "] = '" + value + "'";
+            string sql = "SELECT * FROM [dbo].[Customer] WHERE [" + field + "] = '" + value + "'";
 
             // Créez un objet Command.
             SqlCommand cmd = new SqlCommand();
@@ -29,7 +29,7 @@ namespace Project2
                     while (reader.Read())
                     {
 
-                        currentClient.IdClient = reader.GetInt32(reader.GetOrdinal("idClient"));
+                        currentClient.IdClient = reader.GetInt32(reader.GetOrdinal("idCustomer"));
                         currentClient.Login = reader.GetString(reader.GetOrdinal("name"));
                         currentClient.Name = reader.GetString(reader.GetOrdinal("login"));
                         currentClient.Password = reader.GetString(reader.GetOrdinal("password"));

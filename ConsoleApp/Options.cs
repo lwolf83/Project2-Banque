@@ -6,11 +6,23 @@ using CommandLine.Text;
 
 namespace Project2
 {
-    class Options
+    [Verb("verbose", HelpText = "Activate Verbose Mode")]
+    class TOTOptions
+    {
+
+    }
+
+    [Verb("verbose", HelpText = "Activate Verbose Mode")]
+    class VerboseOptions
     {
         [Option('v', "verbose", Required = false, HelpText = "Activate Verbose Mode")]
         public bool Verbose { get; set; }
 
+    }
+
+    [Verb("login", HelpText = "Log into your account")]
+    class LoginOptions
+    {
         [Option("login", Required = true, HelpText = "Enter the login")]
         public string Login { get; set; }
 
