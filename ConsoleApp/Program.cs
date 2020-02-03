@@ -8,6 +8,7 @@ namespace Project2
 {
     class Program
     {
+        public static Customer currentCustomer;
         public static bool Verbose { set; get;}
         public static SqlConnection sqlConnexion;
 
@@ -37,7 +38,7 @@ namespace Project2
         static int Connection(Options opts)
         {
 
-            Client currentCustomer = new Client(opts.Login);
+            currentCustomer = new Customer(opts.Login);
             string passwordInDB;
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
@@ -99,7 +100,7 @@ namespace Project2
             {
                 Console.WriteLine("Please, enter your password : ");
                 password = Console.ReadLine();
-                isComplexPassword = Client.IsComplexPassword(password);
+                isComplexPassword = Customer.IsComplexPassword(password);
 
                 if (!isComplexPassword)
                 {
@@ -122,7 +123,7 @@ namespace Project2
                 }
                 return true;
             }
-            Console.WriteLine("Your password is valid.");
+            IO.DisplayInformation("Your password is valid.");
 
             //sauvegarder le client            
             DBQuery.saveNewCustomerInDb(1, opts.Name, opts.Login, password, opts.Location, "20/01/2020");
@@ -132,6 +133,18 @@ namespace Project2
         static int RunCreateAccountCommand(CreateAccountOptions opts)
         {
             Connection(opts);
+            Customer currentCustomer = new Customer(opts.Login);
+            int idCustomer = currentCustomer.IdClient;
+            if(opts.CheckingAccount)
+            {
+                currentCustomer.AddSavingAccount();
+            }
+            if(opts.SavingsAccount)
+            {
+                currentCustomer.AddCheckingAccount();
+            }
+
+
             return 1;
         }
 
