@@ -29,7 +29,7 @@ namespace Project2
     }
 
     [Verb ("createclient", HelpText = "Create a new client.")]
-    class CreateClientOptions
+    class CreateCustomerOptions
     {
         [Option("login", Required = true, HelpText = "Enter the login")]
         public string Login { get; set; }
@@ -62,7 +62,7 @@ namespace Project2
     class ShowInfoOptions
     {
         [Value(0)]
-        public string AccountId { get { AccountId.ToLower(); return AccountId; } set { } }
+        public string AccountId { get; set; }
     }
 
      class DoTransferOptions
