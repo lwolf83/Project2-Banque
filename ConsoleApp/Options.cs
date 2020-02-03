@@ -6,7 +6,8 @@ using CommandLine.Text;
 
 namespace Project2
 {
-    class Options
+    [Verb("verbose", HelpText = "Activate Verbose Mode")]
+    class TOTOptions
     {
         [Option('l', "login", Required = true, HelpText = "Enter the login")]
         public string Login { get; set; }
@@ -17,7 +18,9 @@ namespace Project2
 
 
     [Verb ("createclient", HelpText = "Create a new client.")]
+
     class CreateClientOptions : Options
+
     {
         [Option("login", Required = true, HelpText = "Enter the login")]
         public string Login { get; set; }
@@ -50,7 +53,7 @@ namespace Project2
     class ShowInfoOptions : Options
     {
         [Value(0)]
-        public string AccountId { get { AccountId.ToLower(); return AccountId; } set { } }
+        public string AccountId { get; set; }
     }
 
      class DoTransferOptions : Options

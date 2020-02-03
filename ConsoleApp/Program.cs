@@ -8,7 +8,6 @@ namespace Project2
 {
     class Program
     {
-       
         public static bool Verbose { set; get;}
         public static SqlConnection sqlConnexion;
 
@@ -16,21 +15,13 @@ namespace Project2
         {
             Verbose = true;
             DBUtils.GetDBConnection();
-            try
-            {
-                DBQuery.getCustomerFromDbWhereLogin("jeanbarth");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e);
-                Console.WriteLine(e.StackTrace);
-            }
 
             CommandLine.Parser.Default
-                .ParseArguments<CreateClientOptions, CreateAccountOptions, ListAccountOptions,
+                .ParseArguments<VerboseOptions, LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
                 .MapResult(
-                (CreateClientOptions opts) => RunCreateClientCommand(opts),
+                (LoginOptions opts) => RunLoginCommand(opts),
+                (CreateCustomerOptions opts) => RunCreateCustomerCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
                 (ListAccountOptions opts) => RunListAccountCommand(opts),
                 (ShowInfoOptions opts) => RunShowInfoCommand(opts),
@@ -44,15 +35,16 @@ namespace Project2
             sqlConnexion.Dispose();
         }
 
-
         static int Connection(Options opts)
         {
+
             Client currentCustomer = new Client(opts.Login);
             string passwordInDB;
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
                 currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
                 passwordInDB = currentCustomer.Password;
+
             }
             else
             {
@@ -61,7 +53,6 @@ namespace Project2
 
             Console.WriteLine("Please enter your password");
             string password = Console.ReadLine();
-            int i = 0;
             if (password == passwordInDB)
             {
                 Console.WriteLine("You are connected !");
@@ -77,10 +68,6 @@ namespace Project2
                 return 0;
             }
 
-            //vérification que le client existe
-            //Non, on quitte
-            //oui, on recupère le mot de passe dans la db getPasswordFromUser(string user) {return "azert"};
-            //tant que le mot de passe n'est pas valide le redemander. A 3 essais faux afficher que le mot de passe n'est pas bon et quitter.
         }
             
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
@@ -101,9 +88,45 @@ namespace Project2
             return 1;
         }
 
-        static int RunCreateClientCommand(CreateClientOptions opts)
+        static int RunCreateCustomerCommand(CreateCustomerOptions opts)
         {
-            Connection(opts);
+
+            //creation du client
+            //demander le mot de passe au client
+            string password;
+            bool isComplexPassword;
+            int nbErreurSaisie = 0;
+            do
+            {
+                Console.WriteLine("Please, enter your password : ");
+                password = Console.ReadLine();
+                isComplexPassword = Client.IsComplexPassword(password);
+
+                if (!isComplexPassword)
+                {
+                    WrongPasswordMessage(password, nbErreurSaisie);
+                }
+                nbErreurSaisie++;
+            }
+            while (!isComplexPassword);
+
+            static bool WrongPasswordMessage(string password, int nbErreurSaisie)
+            {
+                if (nbErreurSaisie < 3)
+                {
+                    Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
+                }
+                if (nbErreurSaisie >= 3)
+                {
+                    Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
+                        "at least one number and one special character.");
+                }
+                return true;
+            }
+            Console.WriteLine("Your password is valid.");
+
+            //sauvegarder le client            
+            DBQuery.saveNewCustomerInDb(1, opts.Name, opts.Login, password, opts.Location, "20/01/2020");
             return 1;
         }
 

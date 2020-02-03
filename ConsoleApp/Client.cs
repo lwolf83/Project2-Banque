@@ -24,14 +24,21 @@ namespace Project2
             Login = login;
         }
 
-        public bool IsLoginExist(string login)
+        public bool IsAuthorizedClient()
         {
             return true;
         }
 
-        public bool IsAuthorizedClient()
-        {
-            return true;
+        public bool IsClientExisting()
+        { // vérifie dans la base de données si le client existe en fonction de son login
+            Client existingClient = new Client("jeanbarth");
+            Client clientWhoWantsToLogIn = new Client(Login);
+            if (clientWhoWantsToLogIn.Login == existingClient.Login)
+            {
+                return true;
+            }
+
+            return false;
         }
 
 
@@ -132,7 +139,6 @@ namespace Project2
             if ((i == 2) && (password != passwordInDB))
             {
                 Console.WriteLine("You entered 3 times a wrong password, try again in 10 minutes");
-
             }
             else
             {
@@ -140,5 +146,6 @@ namespace Project2
             }
             return true;
         }
+
     }
 }
