@@ -140,20 +140,19 @@ namespace Project2
         static int RunCreateAccountCommand(CreateAccountOptions opts)
         {
             Connection(opts);
-            Customer currentCustomer = new Customer(opts.Login);
-            int idCustomer = currentCustomer.IdClient;
             if(opts.CheckingAccount)
             {
-                currentCustomer.AddSavingAccount();
+                currentCustomer.AddCheckingAccount();
             }
             if(opts.SavingsAccount)
             {
-                currentCustomer.AddCheckingAccount();
+                currentCustomer.AddSavingAccount();
             }
 
 
             return 1;
         }
+
 
         static int RunListAccountCommand(ListAccountOptions opts)
         {

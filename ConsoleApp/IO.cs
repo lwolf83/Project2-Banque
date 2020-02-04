@@ -70,11 +70,11 @@ namespace Project2
             foreach (Account account in AccountsList)
             { //j'ai présumé la long. max pour le IdClient(à 8 caractères), pour AccountIdentifier(à 8 caractères), Amount(12 caractères-les milliards), la CreationDate(à 10 caractères-sous forme XX/XX/XXXX
                 Console.SetCursorPosition(5, y);
-                Console.Write(account.IdClient);
+                Console.Write(account.IdCustomer);
                 Console.SetCursorPosition(18, y);
                 Console.Write("|");
                 Console.SetCursorPosition(23, y);
-                Console.Write(account.AccountIdentifier);
+                Console.Write(account.AccountNumber);
                 Console.SetCursorPosition(37, y);
                 Console.Write("|");
                 Console.SetCursorPosition(41, y);

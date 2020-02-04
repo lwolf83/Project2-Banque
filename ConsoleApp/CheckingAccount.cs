@@ -15,9 +15,9 @@ namespace Project2
 
         public CheckingAccount (string accountIdentifier, double amout, int idClient)
         {
-            AccountIdentifier = accountIdentifier;
+            AccountNumber = accountIdentifier;
             Amount = amout;
-            IdClient = idClient;
+            IdCustomer = idClient;
         }
 
     }
