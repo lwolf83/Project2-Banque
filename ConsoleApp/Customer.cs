@@ -6,12 +6,13 @@ namespace Project2
 {
     public class Customer
     {
-        public int IdClient { get; set; }
+        public int IdCustomer { get; set; }
         public string Name { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public string Location { get; set; }
-        public List<Account> Accounts { get; set; }
+        public List<Account> Accounts { get; set; } = new List<Account>();
+
 
         public Customer()
         { }
@@ -115,12 +116,23 @@ namespace Project2
         public void AddSavingAccount()
         {
             SavingsAccount account = new SavingsAccount();
+            account.IdCustomer = Program.currentCustomer.IdCustomer;
+            account.Amount = 0;
+            account.AccountNumber = "";
+
+            DBQuery.saveNewAccountInDb(account);
             Accounts.Add(account);
+            
         }
 
         public void AddCheckingAccount()
         {
             CheckingAccount account = new CheckingAccount();
+            account.IdCustomer = Program.currentCustomer.IdCustomer;
+            account.Amount = 0;
+            account.AccountNumber = "";
+
+            DBQuery.saveNewAccountInDb(account);
             Accounts.Add(account);
         }
 

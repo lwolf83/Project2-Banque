@@ -6,8 +6,9 @@ namespace Project2
 {
     public class Account
     {
-        public int IdClient { get; set; }
-        public string AccountIdentifier { get; set; }
+        public int IdAccount { get; set; }
+        public int IdCustomer { get; set; }
+        public string AccountNumber { get; set; }
         public double Amount { get; set; }
         public DateTime CreationDate { get; set; }
 

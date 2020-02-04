@@ -15,14 +15,14 @@ namespace Project2
 
         public SavingsAccount(string accountIdentifier, double amount, int idClient)
         {
-            AccountIdentifier = accountIdentifier;
+            AccountNumber = accountIdentifier;
             Amount = amount;
-            IdClient = idClient;
+            IdCustomer = idClient;
         }
 
         public SavingsAccount(int idClient)
         {
-            IdClient = idClient;
+            IdCustomer = idClient;
             Amount = 0;
         }
     }

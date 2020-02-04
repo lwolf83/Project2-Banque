@@ -29,7 +29,7 @@ namespace Project2
                     while (reader.Read())
                     {
 
-                        currentClient.IdClient = reader.GetInt32(reader.GetOrdinal("idCustomer"));
+                        currentClient.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
                         currentClient.Login = reader.GetString(reader.GetOrdinal("name"));
                         currentClient.Name = reader.GetString(reader.GetOrdinal("login"));
                         currentClient.Password = reader.GetString(reader.GetOrdinal("password"));
@@ -59,6 +59,32 @@ namespace Project2
         {
             string sql = "INSERT INTO [dbo].[Customer] ([name],[login],[password],[location]) "
                     + " VALUES ('" +name + "', '" + login + "' , '"+ password + "' , '" + location + "')";
+
+            // Créez un objet Command.
+            SqlCommand cmd = new SqlCommand();
+
+            // Combinez l'objet Command avec Connection.
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+            int queryResult = cmd.ExecuteNonQuery();
+
+        }
+
+
+        public static void saveNewAccountInDb(Account account)
+        {
+            string typeOfAccount;
+            Type type = account.GetType();
+            if (type.Name == "CheckingAccount")
+            {
+                typeOfAccount = "CA";
+            }
+            else
+            {
+                typeOfAccount = "SA";
+            }
+                string sql = "INSERT INTO [dbo].[Account] ([idCustomer],[accountNumber],[amount],[type]) "
+                        + " VALUES ('" + account.IdCustomer + "','" + account.AccountNumber + "','" + account.Amount + "','" + typeOfAccount + "')";
 
             // Créez un objet Command.
             SqlCommand cmd = new SqlCommand();
