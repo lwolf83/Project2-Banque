@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
-
+using System.Configuration;
 
 namespace Project2
 {
@@ -16,11 +16,12 @@ namespace Project2
             //
             //Data Source=Data Source=DESKTOP-O7HRM7U\SQLEXPRESS;Initial Catalog=Project2-Banque;Integrated Security=True
             //
-            string connString = @"Data Source=LOCALHOST\SQLEXPRESS;Initial Catalog=Project2-Banque;Integrated Security=True";
+            //string connString = @"Data Source=LOCALHOST\SQLEXPRESS;Initial Catalog=Project2-Banque;Integrated Security=True";
             // string connString = @"Data Source=" + datasource + ";Initial Catalog="
             //           + database + ";Persist Security Info=True;User ID=" + username + ";Password=" + password;
-
-            SqlConnection conn = new SqlConnection(connString);
+            ConnectionStringSettings connString = ConfigurationManager.ConnectionStrings["Localhostconnection"];
+            string connectionString = connString.ToString();
+            SqlConnection conn = new SqlConnection(connectionString);
 
             IO.DisplayInformation("Getting Connection ...");
             Program.sqlConnexion = conn;
