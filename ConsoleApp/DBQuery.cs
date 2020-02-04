@@ -55,9 +55,9 @@ namespace Project2
             return getCustomerFromDB("idClient", idClient);
         }
 
-        public static void saveNewCustomerInDb(string name, string login, string password, string location, string dateCreation)
+        public static void saveNewCustomerInDb(string name, string login, string password, string location)
         {
-            string sql = "INSERT INTO [dbo].[Customer] ([idCustomer],[name],[login],[password],[location]) "
+            string sql = "INSERT INTO [dbo].[Customer] ([name],[login],[password],[location]) "
                     + " VALUES ('" +name + "', '" + login + "' , '"+ password + "' , '" + location + "')";
 
             // Créez un objet Command.

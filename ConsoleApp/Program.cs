@@ -88,44 +88,53 @@ namespace Project2
 
         static int RunCreateCustomerCommand(CreateCustomerOptions opts)
         {
-
-            //creation du client
-            //demander le mot de passe au client
             string password;
             bool isComplexPassword;
-            int nbErreurSaisie = 0;
-            do
+            int inputError = 0;
+
+            currentCustomer = new Customer(opts.Login);
+            if (currentCustomer.IsCustomerExisting(opts.Login))
             {
-                Console.WriteLine("Please, enter your password : ");
-                password = Console.ReadLine();
-                isComplexPassword = Customer.IsComplexPassword(password);
-
-                if (!isComplexPassword)
-                {
-                    WrongPasswordMessage(password, nbErreurSaisie);
-                }
-                nbErreurSaisie++;
+                Console.WriteLine("Your account already exists.");
+                return 0;
             }
-            while (!isComplexPassword);
-
-            static bool WrongPasswordMessage(string password, int nbErreurSaisie)
+            else
             {
-                if (nbErreurSaisie < 3)
+                do
                 {
-                    Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
-                }
-                if (nbErreurSaisie >= 3)
-                {
-                    Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
-                        "at least one number and one special character.");
-                }
-                return true;
-            }
-            IO.DisplayInformation("Your password is valid.");
+                    Console.WriteLine("Please, set your password : ");
+                    password = Console.ReadLine();
+                    isComplexPassword = Customer.IsComplexPassword(password);
 
-            //sauvegarder le client            
-            DBQuery.saveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location, "20/01/2020");
-            return 1;
+                    if (!isComplexPassword)
+                    {
+                        WrongPasswordMessage(password, inputError);
+                    }
+                    inputError++;
+                }
+                while (!isComplexPassword);
+
+
+                IO.DisplayInformation("Your password is valid.");
+
+                //sauvegarder le client            
+                DBQuery.saveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
+                return 1;
+            }
+        }
+
+        static bool WrongPasswordMessage(string password, int nbErreurSaisie)
+        {
+            if (nbErreurSaisie < 3)
+            {
+                Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
+            }
+            if (nbErreurSaisie >= 3)
+            {
+                Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
+                    "at least one number and one special character.");
+            }
+            return true;
         }
 
         static int RunCreateAccountCommand(CreateAccountOptions opts)
