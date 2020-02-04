@@ -23,16 +23,16 @@ namespace Project2
     }
 
 
-    [Verb ("createclient", HelpText = "Create a new client.")]
+    [Verb ("createcustomer", HelpText = "Create a new customer.")]
 
     class CreateCustomerOptions : Options
 
     {
 
-        [Option("name", Required = false, HelpText = "Enter a name")]
+        [Option('n',"name", Required = false, HelpText = "Enter a name")]
         public string Name { get; set; }
 
-        [Option("location", Required = false, HelpText = "Enter a location.")]
+        [Option('p',"location", Required = false, HelpText = "Enter a location.")]
         public string Location { get; set; }
     }
 

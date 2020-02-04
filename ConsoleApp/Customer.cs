@@ -29,19 +29,6 @@ namespace Project2
             return true;
         }
 
-        public bool IsClientExisting()
-        { // vérifie dans la base de données si le client existe en fonction de son login
-            Customer existingClient = new Customer("jeanbarth");
-            Customer clientWhoWantsToLogIn = new Customer(Login);
-            if (clientWhoWantsToLogIn.Login == existingClient.Login)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-
         public static bool IsComplexPassword(string password)
         {
             bool hasUpperletter = HasUpperletter(password);
@@ -100,7 +87,7 @@ namespace Project2
 
         public static bool HasSpecialCharacter(string password)
         {
-            string specialCharacter = "/#+=-*@%&_.;,";
+            string specialCharacter = "/#+=-*@%&_.;,!?()[]{}<>";
             foreach(char character in password)
             {
                 if(specialCharacter.Contains(character))
