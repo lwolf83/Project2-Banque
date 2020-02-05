@@ -20,7 +20,7 @@ namespace Project2
             IdCustomer = idClient;
         }
 
-        public override bool CanBeDebited(decimal AmountToTransfer)
+        public override bool CanBeDebited(decimal AmountToTransfer, Account accountDestination)
         {
             Account currentAccount = DBQuery.GetAccountFromDB(AccountNumber);
            
