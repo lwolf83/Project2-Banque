@@ -53,15 +53,19 @@ CREATE TABLE [AccountAuthorizedCustomers](
 ) ON [PRIMARY]
 GO
 
-/*CREATE TABLE [Transfer](
+CREATE TABLE [Transfer](
 	[idTransfer] [int] NOT NULL,
 	[idOriginAccount] [int] NOT NULL,
 	[idDestinationAccount] [int] NOT NULL,
 	[idAmount] [money] NOT NULL,
-	[creationDate]
+	[transferType] [VARCHAR](10) NOT NULL,
+	[creationDate] DATETIME NOT NULL DEFAULT GETDATE(),
+	[beginDate] DATETIME NULL,
+	[endDate] DATETIME NULL,
+	[periodicity] INT NULL
 
 ) ON [PRIMARY]
-GO*/
+GO
 
 -- Set of test 
 
