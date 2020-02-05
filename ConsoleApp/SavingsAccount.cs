@@ -13,7 +13,7 @@ namespace Project2
         {
         }
 
-        public SavingsAccount(string accountIdentifier, double amount, int idClient)
+        public SavingsAccount(string accountIdentifier, decimal amount, int idClient)
         {
             AccountNumber = accountIdentifier;
             Amount = amount;

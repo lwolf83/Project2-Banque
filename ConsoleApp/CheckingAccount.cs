@@ -13,7 +13,7 @@ namespace Project2
 
         }
 
-        public CheckingAccount (string accountIdentifier, double amout, int idClient)
+        public CheckingAccount (string accountIdentifier, decimal amout, int idClient)
         {
             AccountNumber = accountIdentifier;
             Amount = amout;
