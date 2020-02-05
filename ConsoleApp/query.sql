@@ -22,6 +22,11 @@ BEGIN
 	DROP TABLE [AccountAuthorizedCustomers]
 END
 
+IF(EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Transfer'))
+BEGIN
+	DROP TABLE [Transfer]
+END
+
 CREATE TABLE [Customer](
 	[idCustomer] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	[name] [varchar](50) NOT NULL,
@@ -47,6 +52,16 @@ CREATE TABLE [AccountAuthorizedCustomers](
 	[idCustomer] [int] NULL
 ) ON [PRIMARY]
 GO
+
+/*CREATE TABLE [Transfer](
+	[idTransfer] [int] NOT NULL,
+	[idOriginAccount] [int] NOT NULL,
+	[idDestinationAccount] [int] NOT NULL,
+	[idAmount] [money] NOT NULL,
+	[creationDate]
+
+) ON [PRIMARY]
+GO*/
 
 -- Set of test 
 
