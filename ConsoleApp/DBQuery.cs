@@ -133,6 +133,7 @@ namespace Project2
             int idAccount = 0;
             decimal amount = 0;
             string type = "";
+            bool isDebitAuthorized = true;
             DateTime creationDate = new DateTime();
 
             using (DbDataReader reader = cmd.ExecuteReader())
@@ -144,6 +145,7 @@ namespace Project2
                     idAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
                     amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                     type = reader.GetString(reader.GetOrdinal("type"));
+                    isDebitAuthorized = reader.GetBoolean(reader.GetOrdinal("isDebitAuthorized"));
                     creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
                 }
             }
@@ -161,6 +163,7 @@ namespace Project2
             resultAccount.CreationDate = creationDate;
             resultAccount.IdAccount = idAccount;
             resultAccount.IdCustomer = idCustomer;
+            resultAccount.IsDebitAuthorized = isDebitAuthorized;
             return resultAccount;
         }
     }
