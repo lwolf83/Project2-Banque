@@ -62,15 +62,14 @@ namespace Project2
 
      class DoTransferOptions : Options
     {
-        [Value(0)]
-        public double AmountToTransfer { get; set; }
+        [Option('a', "amount", Required = false, HelpText = "Amount to transfer.")]
+        public decimal AmountToTransfer { get; set; }
 
-        [Value(1)]
+        [Option('o', "origin", Required = false, HelpText = "Origin account.")]
         public string AccountIdOrigin { get; set; }
 
-        [Value(2)]
+        [Option('d', "destination", Required = false, HelpText = "Destination account.")]
         public string AccountIdDestination { get; set; }
-
     }
 
     [Verb("instant", HelpText = "Do an instant transfer .")]

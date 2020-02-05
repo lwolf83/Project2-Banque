@@ -30,6 +30,16 @@ namespace Project2
             return true;
         }
 
+        public bool IsAccountOwner(string accountNumber)
+        {
+            int id = DBQuery.getCustomerFromAccountNumber(accountNumber);
+            if (IdCustomer == id)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public static bool IsComplexPassword(string password)
         {
             bool hasUpperletter = HasUpperletter(password);
@@ -136,7 +146,12 @@ namespace Project2
             Accounts.Add(account);
         }
 
-        public List<Account> GetAccountList()
+        public void MakeNewInstantTransfer(decimal amount, Account accountOrigin, Account accountDestination)
+        {
+            Console.WriteLine("on réalise le transfert");
+        }
+
+        /*public List<Account> GetAccountList()
         {
             CheckingAccount newca1 = new CheckingAccount("CANUM01", 2850.50, 006984);
             CheckingAccount newca2 = new CheckingAccount("CANUM02", 00.00, 006984);
@@ -148,6 +163,6 @@ namespace Project2
             currentClientAccountsList.Add(newsa1);
 
             return currentClientAccountsList;
-        }
+        }*/
     }
 }

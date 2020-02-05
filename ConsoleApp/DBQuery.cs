@@ -95,5 +95,73 @@ namespace Project2
             int queryResult = cmd.ExecuteNonQuery();
 
         }
+
+        public static int getCustomerFromAccountNumber(string accountNumber)
+        {
+            string sql = "SELECT [idCustomer] FROM [Project2-Banque].[dbo].[Account] WHERE accountNumber = '"+ accountNumber +"'";
+
+            // Créez un objet Command.
+            SqlCommand cmd = new SqlCommand();
+
+            // Combinez l'objet Command avec Connection.
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+            int IdCustomer = 0;
+
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
+                }
+            }
+            return IdCustomer;
+        }
+
+        public static Account GetAccountFromDB(string accountNumber)
+        {
+            string sql = "SELECT * FROM [Account] WHERE accountNumber = '" + accountNumber + "'";
+
+            // Créez un objet Command.
+            SqlCommand cmd = new SqlCommand();
+
+            // Combinez l'objet Command avec Connection.
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+            int idCustomer = 0;
+            int idAccount = 0;
+            decimal amount = 0;
+            string type = "";
+            DateTime creationDate = new DateTime();
+
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    idCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
+                    idAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
+                    amount = reader.GetDecimal(reader.GetOrdinal("amount"));
+                    type = reader.GetString(reader.GetOrdinal("type"));
+                    creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
+                }
+            }
+            Account resultAccount;
+            if(type == "CA")
+            {
+                resultAccount = new CheckingAccount();
+            }
+            else
+            {
+                resultAccount = new SavingsAccount();
+            }
+            resultAccount.AccountNumber = accountNumber;
+            resultAccount.Amount = amount;
+            resultAccount.CreationDate = creationDate;
+            resultAccount.IdAccount = idAccount;
+            resultAccount.IdCustomer = idCustomer;
+            return resultAccount;
+        }
     }
 }

@@ -77,6 +77,23 @@ namespace Project2
         static int RunInstantTransferCommand(DoInstantTransferOptions opts)
         {
             Connection(opts);
+            // définir le type de compte d'origine
+            // définir le type de compte d'arrivée
+            // vérifier si le compte de départ appartient bien au client
+            if(currentCustomer.IsAccountOwner(opts.AccountIdOrigin))
+            {
+                Account accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
+                Account accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
+
+                // vérifier que l'on peut retirer de l'argent du compte
+                if(accountOrigin.CanBeDebited(opts.AmountToTransfer) && accountDestination.CanBeCredited(opts.AmountToTransfer))
+                {
+                    currentCustomer.MakeNewInstantTransfer(opts.AmountToTransfer,accountOrigin, accountDestination);
+                }
+                // vérifier que l'on peut créditer le compte d'arrivée
+                // si les deux sont ok on crée la transaction
+                // on crée la transaction
+            }
             return 1;
         }
 

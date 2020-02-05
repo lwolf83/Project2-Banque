@@ -9,7 +9,7 @@ namespace Project2
         public int IdAccount { get; set; }
         public int IdCustomer { get; set; }
         public string AccountNumber { get; set; }
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
         public DateTime CreationDate { get; set; }
 
 
@@ -26,12 +26,12 @@ namespace Project2
         {
         }
 
-        public virtual bool IsValidDebit(double amount)
+        public virtual bool CanBeDebited(decimal amount)
         {
             return true;
         }
 
-        public virtual bool IsValidCredit(double amount)
+        public virtual bool CanBeCredited(decimal amount)
         {
             return true;
         }
