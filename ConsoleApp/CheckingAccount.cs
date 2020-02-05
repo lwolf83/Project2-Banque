@@ -6,7 +6,7 @@ namespace Project2
 {
     class CheckingAccount : Account
     {
-        public double Overdraft { get; set; }
+        public decimal Overdraft { get; set; } = -200;
 
         public CheckingAccount()
         {
@@ -20,5 +20,18 @@ namespace Project2
             IdCustomer = idClient;
         }
 
+        public override bool CanBeDebited(decimal AmountToTransfer)
+        {
+            Account currentAccount = DBQuery.GetAccountFromDB(AccountNumber);
+           
+            if (currentAccount.Amount > Overdraft)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

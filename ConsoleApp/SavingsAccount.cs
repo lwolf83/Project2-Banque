@@ -6,7 +6,7 @@ namespace Project2
 {
     class SavingsAccount : Account
     {
-        public double Ceiling { get; set; }
+        public decimal Ceiling { get; set; } = 1000;
         public double SavingsRate { get; set; }
 
 
@@ -40,20 +40,23 @@ namespace Project2
             }
         }
 
-        /* public override bool isDebitAuthorized(Account accountDestination)
-        {  // vérifier que le compte de destination est un compte de AccountOwner
-            SavingsAccount savingsAccount = new SavingsAccount();
-            accountDestination = DBQuery.GetAccountFromDB(AccountNumber);
 
-            if (accountDestination.IdCustomer == savingsAccount.IdCustomer)
+        public override bool IsAuthorizeCustomerToCredit()
+        {
+            if(DBQuery.IsCurrentCustomerAuthorizedOnAccount(this) || (IdCustomer == Program.currentCustomer.IdCustomer))
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
-        }*/
+            return false;
+        }
 
+        public override bool CanBeCredited(decimal amountToTransfer)
+        {            
+            if ((amountToTransfer + Amount) < Ceiling && IsAuthorizeCustomerToCredit())
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

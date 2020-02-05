@@ -84,8 +84,8 @@ namespace Project2
             {
                 Account accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
                 Account accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
-
                 // vérifier que l'on peut retirer de l'argent du compte
+
                 if(accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
                 {
                     currentCustomer.MakeNewInstantTransfer(opts.AmountToTransfer, accountOrigin, accountDestination);

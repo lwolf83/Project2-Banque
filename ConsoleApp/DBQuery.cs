@@ -166,5 +166,32 @@ namespace Project2
             resultAccount.IsDebitAuthorized = isDebitAuthorized;
             return resultAccount;
         }
+
+        public static bool IsCurrentCustomerAuthorizedOnAccount(Account account)
+        {
+            string sql = "SELECT COUNT([idCustomer]) AS nbCustomer FROM AccountAuthorizedCustomers WHERE idAccount = '" + account.IdAccount 
+                + "' AND idCustomer = '" + Program.currentCustomer.IdCustomer + "'";
+
+            // Créez un objet Command.
+            SqlCommand cmd = new SqlCommand();
+
+            // Combinez l'objet Command avec Connection.
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+            int nbCustomer = 0;
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    nbCustomer = reader.GetInt32(reader.GetOrdinal("nbCustomer"));
+                }
+            }
+            if(nbCustomer == 0)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

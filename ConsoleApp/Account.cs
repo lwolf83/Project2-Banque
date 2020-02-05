@@ -33,7 +33,16 @@ namespace Project2
             return true;
         }
 
-        public virtual bool CanBeCredited(decimal amount)
+        public virtual bool CanBeCredited(decimal amountToTransfer)
+        {
+            if(amountToTransfer<Amount)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public virtual bool IsAuthorizeCustomerToCredit()
         {
             return true;
         }
@@ -42,5 +51,6 @@ namespace Project2
         {
             return true;
         }
+
     }
 }
