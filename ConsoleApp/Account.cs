@@ -10,7 +10,9 @@ namespace Project2
         public int IdCustomer { get; set; }
         public string AccountNumber { get; set; }
         public decimal Amount { get; set; }
+        public bool IsDebitAuthorized { get; set; }
         public DateTime CreationDate { get; set; }
+
 
 
         public virtual void CreateAccount()
@@ -26,7 +28,7 @@ namespace Project2
         {
         }
 
-        public virtual bool CanBeDebited(decimal amount)
+        public virtual bool CanBeDebited(decimal amountToTransfer, Account accountDestination)
         {
             return true;
         }
@@ -45,6 +47,10 @@ namespace Project2
             return true;
         }
 
+        public virtual bool isDebitAuthorized(Account accountDestination)
+        {
+            return true;
+        }
 
     }
 }

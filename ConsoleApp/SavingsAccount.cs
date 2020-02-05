@@ -9,6 +9,7 @@ namespace Project2
         public decimal Ceiling { get; set; } = 1000;
         public double SavingsRate { get; set; }
 
+
         public SavingsAccount()
         {
         }
@@ -25,6 +26,20 @@ namespace Project2
             IdCustomer = idClient;
             Amount = 0;
         }
+
+        public override bool CanBeDebited(decimal amountToTransfer, Account accountDestination)
+        {
+
+            if (amountToTransfer <= Amount && IdCustomer == accountDestination.IdCustomer && IsDebitAuthorized)
+            {
+                return true;
+            }
+            else
+            {
+                 return false;
+            }
+        }
+
 
         public override bool IsAuthorizeCustomerToCredit()
         {
