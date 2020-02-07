@@ -22,9 +22,9 @@ BEGIN
 	DROP TABLE [AccountAuthorizedCustomers]
 END
 
-IF(EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Transfer'))
+IF(EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Transaction'))
 BEGIN
-	DROP TABLE [Transfer]
+	DROP TABLE [Transaction]
 END
 
 CREATE TABLE [Customer](
@@ -54,13 +54,14 @@ CREATE TABLE [AccountAuthorizedCustomers](
 ) ON [PRIMARY]
 GO
 
-CREATE TABLE [Transfer](
-	[idTransfer] [int] NOT NULL,
+CREATE TABLE [Transaction](
+	[idTransaction] [int] NOT NULL,
 	[idOriginAccount] [int] NOT NULL,
 	[idDestinationAccount] [int] NOT NULL,
 	[idAmount] [money] NOT NULL,
-	[transferType] [VARCHAR](10) NOT NULL,
+	[transactionType] [VARCHAR](10) NOT NULL,
 	[creationDate] DATETIME NOT NULL DEFAULT GETDATE(),
+	[transactionDate] DATETIME NOT NULL,
 	[beginDate] DATETIME NULL,
 	[endDate] DATETIME NULL,
 	[periodicity] INT NULL
@@ -77,18 +78,18 @@ INSERT INTO [Customer] (name, login, password, location) VALUES ('laurent' , 'la
 INSERT INTO [Customer] (name, login, password, location) VALUES ('john' , 'john', '1234', 'Strasbourg')
 INSERT INTO [Customer] (name, login, password, location) VALUES ('bob' , 'bob', '1234', 'Strasbourg')
 
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (1, 'FR1', 500.00, 'SA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (1, 'FR2', 10000.00, 'CA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (2, 'FR3', 120.00, 'SA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (2, 'FR4', 134.00, 'CA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (3, 'FR5', 120.00, 'SA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (3, 'FR6', 134.00, 'CA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (4, 'FR7', 120.00, 'SA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (4, 'FR8', 10.00, 'CA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (5, 'FR9', 0.00, 'SA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (5, 'FR10', 90.10, 'CA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (6, 'FR11', 10.99, 'SA')
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type) VALUES (6, 'FR12', -12.00, 'CA')
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (1, 'FR1', 500.00, 'SA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (1, 'FR2', 10000.00, 'CA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (2, 'FR3', 120.00, 'SA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (2, 'FR4', 134.00, 'CA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (3, 'FR5', 120.00, 'SA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (3, 'FR6', 134.00, 'CA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (4, 'FR7', 120.00, 'SA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (4, 'FR8', 10.00, 'CA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (5, 'FR9', 0.00, 'SA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (5, 'FR10', 90.10, 'CA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (6, 'FR11', 10.99, 'SA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (6, 'FR12', -12.00, 'CA', 0)
 
 INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (1, 2)
 INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (1, 4)
