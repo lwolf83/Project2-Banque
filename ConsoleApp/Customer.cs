@@ -153,11 +153,31 @@ namespace Project2
 
             accountDestination.Amount = accountDestination.Amount + amount;
 
-            Transaction currentTransaction = new Transaction();
+            Instant currentTransaction = new Instant();
             currentTransaction.AccountOrigin = accountOrigin.IdAccount;
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
             currentTransaction.TransactionDate = DateTime.Now;
+            DBQuery.InsertTransaction(currentTransaction);
+
+            DBQuery.UpdateAmountInAccount(accountOrigin);
+            DBQuery.UpdateAmountInAccount(accountDestination);
+
+            Console.WriteLine("We do the transfer");
+        }
+
+        public void MakeNewDefferedTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime defferedtransactionDate)
+        {
+
+            accountOrigin.Amount = accountOrigin.Amount - amount;
+
+            accountDestination.Amount = accountDestination.Amount + amount;
+
+            Deferred currentTransaction = new Deferred();
+            currentTransaction.AccountOrigin = accountOrigin.IdAccount;
+            currentTransaction.AccountDestination = accountDestination.IdAccount;
+            currentTransaction.Amount = amount;
+            currentTransaction.TransactionDate = defferedtransactionDate;
             DBQuery.InsertTransaction(currentTransaction);
 
             DBQuery.UpdateAmountInAccount(accountOrigin);
