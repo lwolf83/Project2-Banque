@@ -193,5 +193,73 @@ namespace Project2
             }
             return true;
         }
+
+        public static void  UpdateAmountInAccount(Account account)
+        {
+            string sql = "UPDATE Account SET amount = '" + account.Amount + "' WHERE idAccount = " + "'" + account.IdAccount + "'";
+
+            // Créez un objet Command.
+            SqlCommand cmd = new SqlCommand();
+
+            // Combinez l'objet Command avec Connection.
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void UpdateAccountNumberInAccount(Account account)
+        {
+            string sql = "UPDATE Account SET accountNumber = '" + account.AccountNumber + "' WHERE idAccount = " + "'" + account.IdAccount + "'";
+
+            // Créez un objet Command.
+            SqlCommand cmd = new SqlCommand();
+
+            // Combinez l'objet Command avec Connection.
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void InsertTransaction(Transaction currentTransaction)
+        {
+            string transactionType="";
+            string startDateString=null;
+            string endDateString=null;
+            int Periodicity=0;
+           
+
+            if (currentTransaction.GetType().Name == "Instant")
+            {
+                transactionType = "Instant";
+                startDateString = "null";
+                endDateString = "null";
+            }
+            else if (currentTransaction.GetType().Name == "Deferred")
+            {
+                transactionType = "Deferred";
+                startDateString = "null";
+                endDateString = "null";
+            }
+            else if(currentTransaction.GetType().Name == "Permanent")
+            {
+                transactionType = "Permanent";
+                Permanent permanentTransaction = (Permanent) currentTransaction;
+                startDateString = "'" + permanentTransaction.StartDate.ToString("yyyy-MM-dd") + "'";
+                endDateString = "'" + permanentTransaction.EndDate.ToString("yyyy-MM-dd") + "'";
+                Periodicity = permanentTransaction.Periodicity;
+            }
+
+            string sql = "INSERT INTO[Transaction] (idOriginAccount, idDestinationAccount, amount, transactionType, creationDate, transactionDate, beginDate, endDate," +
+                "periodicity) VALUES('" + currentTransaction.AccountOrigin + "' , '" + currentTransaction.AccountDestination + "', '" +
+                currentTransaction.Amount + "', '" + transactionType + "', GetDate(),'" + currentTransaction.TransactionDate + "'," + startDateString + "," + endDateString + ",'" + Periodicity + "'); ";
+
+            SqlCommand cmd = new SqlCommand();
+
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
+        }
+
+
     }
 }

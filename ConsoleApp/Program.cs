@@ -14,9 +14,6 @@ namespace Project2
 
         static void Main(string[] args)
         {
-    
-            DBUtils.GetDBConnection();
-
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
@@ -88,7 +85,7 @@ namespace Project2
 
                 if(accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
                 {
-                    currentCustomer.MakeNewInstantTransfer(opts.AmountToTransfer, accountOrigin, accountDestination);
+                    currentCustomer.MakeNewInstantTransaction(opts.AmountToTransfer, accountOrigin, accountDestination);
                 }
                 // vérifier que l'on peut créditer le compte d'arrivée
                 // si les deux sont ok on crée la transaction
