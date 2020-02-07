@@ -146,10 +146,26 @@ namespace Project2
             Accounts.Add(account);
         }
 
-        public void MakeNewInstantTransfer(decimal amount, Account accountOrigin, Account accountDestination)
+        public void MakeNewInstantTransaction(decimal amount, Account accountOrigin, Account accountDestination)
         {
-            Console.WriteLine("on réalise le transfert");
+            
+            accountOrigin.Amount = accountOrigin.Amount - amount;
+
+            accountDestination.Amount = accountDestination.Amount + amount;
+
+            Transaction currentTransaction = new Transaction();
+            currentTransaction.AccountOrigin = accountOrigin.IdAccount;
+            currentTransaction.AccountDestination = accountDestination.IdAccount;
+            currentTransaction.Amount = amount;
+            currentTransaction.TransactionDate = DateTime.Now;
+            DBQuery.InsertTransaction(currentTransaction);
+
+            DBQuery.UpdateAmountInAccount(accountOrigin);
+            DBQuery.UpdateAmountInAccount(accountDestination);
+
+            Console.WriteLine("We do the transfer");
         }
+
 
         /*public List<Account> GetAccountList()
         {

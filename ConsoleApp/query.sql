@@ -55,19 +55,29 @@ CREATE TABLE [AccountAuthorizedCustomers](
 GO
 
 CREATE TABLE [Transaction](
-	[idTransaction] [int] NOT NULL,
+	[idTransaction] [int] PRIMARY KEY IDENTITY(1,1),
 	[idOriginAccount] [int] NOT NULL,
 	[idDestinationAccount] [int] NOT NULL,
-	[idAmount] [money] NOT NULL,
+	[amount] [money] NOT NULL,
 	[transactionType] [VARCHAR](10) NOT NULL,
 	[creationDate] DATETIME NOT NULL DEFAULT GETDATE(),
 	[transactionDate] DATETIME NOT NULL,
 	[beginDate] DATETIME NULL,
 	[endDate] DATETIME NULL,
 	[periodicity] INT NULL
-
-) ON [PRIMARY]
+) 
 GO
+
+CREATE TABLE [Transfert](
+	[idTransfert] [int] PRIMARY KEY IDENTITY(1,1),
+	[idOriginAccount] [int] NOT NULL, 
+	[idDestinationAccount] [int] NOT NULL,
+	[amount] [money] NOT NULL,
+	[transferDate] DATETIME NOT NULL
+	) 
+GO
+
+
 
 -- Set of test 
 

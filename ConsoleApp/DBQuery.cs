@@ -223,35 +223,35 @@ namespace Project2
         public static void InsertTransaction(Transaction currentTransaction)
         {
             string transactionType="";
-            string StartDate=null;
-            string EndDate=null;
+            string startDateString=null;
+            string endDateString=null;
             int Periodicity=0;
            
 
             if (currentTransaction.GetType().Name == "Instant")
             {
                 transactionType = "Instant";
-                StartDate = "null";
-                EndDate = "null";
+                startDateString = "null";
+                endDateString = "null";
             }
             else if (currentTransaction.GetType().Name == "Deferred")
             {
                 transactionType = "Deferred";
-                StartDate = null;
-                EndDate = null;
+                startDateString = "null";
+                endDateString = "null";
             }
             else if(currentTransaction.GetType().Name == "Permanent")
             {
                 transactionType = "Permanent";
                 Permanent permanentTransaction = (Permanent) currentTransaction;
-                StartDate = permanentTransaction.StartDate.ToString("u");
-                EndDate = permanentTransaction.EndDate.ToString("u");
+                startDateString = "'" + permanentTransaction.StartDate.ToString("yyyy-MM-dd") + "'";
+                endDateString = "'" + permanentTransaction.EndDate.ToString("yyyy-MM-dd") + "'";
                 Periodicity = permanentTransaction.Periodicity;
             }
 
             string sql = "INSERT INTO[Transaction] (idOriginAccount, idDestinationAccount, amount, transactionType, creationDate, transactionDate, beginDate, endDate," +
                 "periodicity) VALUES('" + currentTransaction.AccountOrigin + "' , '" + currentTransaction.AccountDestination + "', '" +
-                currentTransaction.Amount + "', '" + transactionType + "', GetDate(),'" + currentTransaction.TransactionDate + "','" + StartDate + "','" + EndDate + "','" + Periodicity + "'); ";
+                currentTransaction.Amount + "', '" + transactionType + "', GetDate(),'" + currentTransaction.TransactionDate + "'," + startDateString + "," + endDateString + ",'" + Periodicity + "'); ";
 
             SqlCommand cmd = new SqlCommand();
 
