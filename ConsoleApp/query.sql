@@ -43,7 +43,7 @@ CREATE TABLE [Account](
 	[accountNumber] [varchar](250) NOT NULL,
 	[amount] [money] NOT NULL,
 	[type] [varchar](2) NOT NULL,
-    [isDebitAuthorized] [bit] NOT NULL,
+    [isDebitAuthorized] [bit] DEFAULT 0,
 	[creationDate] [datetime] DEFAULT getdate()
   )
 GO
