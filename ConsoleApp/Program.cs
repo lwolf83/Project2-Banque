@@ -3,6 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
+using System.IO;
 
 namespace Project2
 {
@@ -28,11 +32,15 @@ namespace Project2
                 (DoDefferedTransferOptions opts) => RunDefferedTransferCommand(opts),
                 (DoInstantTransferOptions opts) => RunInstantTransferCommand(opts),
                 (DoPermanentTransferOptions opts) => RunPermanentTransferCommand(opts),
+                (Export opts) => RunExportCommand(opts),
                 (parserErrors) => 1
                 );
 
             sqlConnexion.Close();
             sqlConnexion.Dispose();
+
+
+           
         }
 
         static int Connection(Options opts)
@@ -194,6 +202,12 @@ namespace Project2
             return 1;
         }
 
+        static int RunExportCommand(Export opts)
+        {
+            Connection(opts);
+            return 1;
+        }
+
         static void HandleParseError(IEnumerable<Error> errs)
         {
             //handle errors
@@ -232,5 +246,7 @@ namespace Project2
                 IO.DisplayWarning("This client doesn't exist.");
             }*/
         }
+
+        
     }
 }

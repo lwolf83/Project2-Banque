@@ -98,4 +98,15 @@ namespace Project2
         public int Periodicity { get; set; }
 
     }
+
+    [Verb("CSV", HelpText = "Do export of account's customer.")]
+    class Export : Options
+    {
+        [Option('a', "accounts", Required = false, HelpText = "Export account's customer.")]
+        public bool GetAccountList { get; set; }
+    
+        [Option('t', "transactions", Required = false, HelpText = "Export transaction's customer.")]
+        public bool GetTransactionsList { get; set; }
+    }
+
 }
