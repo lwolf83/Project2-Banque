@@ -37,7 +37,9 @@ namespace Project2
             {
                 return true;
             }
+            IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
             return false;
+
         }
 
         public static bool IsComplexPassword(string password)
@@ -157,13 +159,29 @@ namespace Project2
             currentTransaction.AccountOrigin = accountOrigin.IdAccount;
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
-            currentTransaction.TransactionDate = DateTime.Now;
+            currentTransaction.TransferDate = DateTime.Now;
             DBQuery.InsertTransaction(currentTransaction);
 
             DBQuery.UpdateAmountInAccount(accountOrigin);
             DBQuery.UpdateAmountInAccount(accountDestination);
 
             Console.WriteLine("We do the transfer");
+        }
+
+
+        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, string startDate, string endDate, int periodicity)
+        {
+
+
+            Permanent currentTransaction = new Permanent();
+            currentTransaction.AccountOrigin = accountOrigin.IdAccount;
+            currentTransaction.AccountDestination = accountDestination.IdAccount;
+            currentTransaction.Amount = amount;
+            currentTransaction.TransactionDate = DateTime.Now;
+            currentTransaction.StartDate = Convert.ToDateTime(startDate);
+            currentTransaction.EndDate = Convert.ToDateTime(endDate);
+            currentTransaction.Periodicity = periodicity;
+            DBQuery.InsertTransaction(currentTransaction);
         }
 
         public void MakeNewDefferedTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime defferedtransactionDate)
@@ -182,6 +200,7 @@ namespace Project2
 
             DBQuery.UpdateAmountInAccount(accountOrigin);
             DBQuery.UpdateAmountInAccount(accountDestination);
+
 
             Console.WriteLine("We do the transfer");
         }

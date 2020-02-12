@@ -18,8 +18,11 @@ namespace Project2
 
         static void Main(string[] args)
         {
+
+
                         
             DBUtils.GetDBConnection();
+
 
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
@@ -119,6 +122,21 @@ namespace Project2
         static int RunPermanentTransferCommand(DoPermanentTransferOptions opts)
         {
             Connection(opts);
+
+            if (currentCustomer.IsAccountOwner(opts.AccountIdOrigin))
+            {
+                Account accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
+                Account accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
+                // vérifier que l'on peut retirer de l'argent du compte
+
+               
+                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, opts.StartDate, opts.EndDate, opts.Periodicity);
+                
+                // vérifier que l'on peut créditer le compte d'arrivée
+                // si les deux sont ok on crée la transaction
+                // on crée la transaction
+            }
+
             return 1;
         }
 

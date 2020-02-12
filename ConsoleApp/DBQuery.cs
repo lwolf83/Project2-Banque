@@ -30,8 +30,8 @@ namespace Project2
                     {
 
                         currentClient.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
-                        currentClient.Login = reader.GetString(reader.GetOrdinal("name"));
-                        currentClient.Name = reader.GetString(reader.GetOrdinal("login"));
+                        currentClient.Login = reader.GetString(reader.GetOrdinal("login"));
+                        currentClient.Name = reader.GetString(reader.GetOrdinal("name"));
                         currentClient.Password = reader.GetString(reader.GetOrdinal("password"));
                         currentClient.Location = reader.GetString(reader.GetOrdinal("location"));
 
@@ -226,19 +226,23 @@ namespace Project2
             string startDateString="null";
             string endDateString="null";
             int Periodicity=0;
-           
+            string TransferDate = "";
+
+
 
             if (currentTransaction.GetType().Name == "Instant")
             {
                 transactionType = "Instant";
                 startDateString = "null";
                 endDateString = "null";
+                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
             }
             else if (currentTransaction.GetType().Name == "Deferred")
             {
                 transactionType = "Deferred";
                 startDateString = "null";
                 endDateString = "null";
+                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
             }
             else if(currentTransaction.GetType().Name == "Permanent")
             {
@@ -247,11 +251,12 @@ namespace Project2
                 startDateString = "'" + permanentTransaction.StartDate.ToString("yyyy-MM-dd") + "'";
                 endDateString = "'" + permanentTransaction.EndDate.ToString("yyyy-MM-dd") + "'";
                 Periodicity = permanentTransaction.Periodicity;
+                TransferDate = "null"; 
             }
 
-            string sql = "INSERT INTO[Transaction] (idOriginAccount, idDestinationAccount, amount, transactionType, creationDate, transactionDate, beginDate, endDate," +
+            string sql = "INSERT INTO[Transaction] (idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, transferDate, beginDate, endDate," +
                 "periodicity) VALUES('" + currentTransaction.AccountOrigin + "' , '" + currentTransaction.AccountDestination + "', '" +
-                currentTransaction.Amount + "', '" + transactionType + "', GetDate(),'" + currentTransaction.TransactionDate + "'," + startDateString + "," + endDateString + ",'" + Periodicity + "'); ";
+                currentTransaction.Amount + "','"+ transactionType + "', GetDate()," + TransferDate + "," + startDateString + "," + endDateString + ",'" + Periodicity + "'); ";
 
             SqlCommand cmd = new SqlCommand();
 
@@ -262,7 +267,7 @@ namespace Project2
 
         public static List<Account> GetAccountsCustomer(int idCustomer)
         {
-            string sql =" SELECT[idAccount],[idCustomer],[accountNumber],[amount],[type],[isDebitAuthorized],[creationDate] FROM Account " +
+            string sql = " SELECT[idAccount],[idCustomer],[accountNumber],[amount],[type],[isDebitAuthorized],[creationDate] FROM Account " +
                 "WHERE idCustomer = " + idCustomer;
 
             SqlCommand cmd = new SqlCommand();
@@ -270,7 +275,7 @@ namespace Project2
             cmd.Connection = Program.sqlConnexion;
             cmd.CommandText = sql;
 
-            List<Account> ListAccountsCustomer  = new List<Account>();
+            List<Account> ListAccountsCustomer = new List<Account>();
             using (DbDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.HasRows)
@@ -280,7 +285,7 @@ namespace Project2
                     {
                         string typeAccount = reader.GetString(reader.GetOrdinal("type")); ;
                         Account currentCustomerAccount;
-                        if(typeAccount == "CA")
+                        if (typeAccount == "CA")
                         {
                             currentCustomerAccount = new CheckingAccount();
                         }
@@ -288,7 +293,7 @@ namespace Project2
                         {
                             currentCustomerAccount = new SavingsAccount();
                         }
-                       
+
                         currentCustomerAccount.IdAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
                         currentCustomerAccount.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
                         currentCustomerAccount.AccountNumber = reader.GetString(reader.GetOrdinal("accountNumber"));
@@ -302,6 +307,72 @@ namespace Project2
             }
         }
 
+        public static List<Transaction> GetTransactionFromDB(string sql)
+        {
+            // Créez un objet Command.
+            SqlCommand cmd = new SqlCommand();
 
+            // Combinez l'objet Command avec Connection.
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+
+            List<Transaction> currentTransactionList = new List<Transaction>();
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+
+                    while (reader.Read())
+                    {
+                        Transaction newTransaction;
+                        string TransactionType = reader.GetString(reader.GetOrdinal("transactionType"));
+                        if (TransactionType == "Instant")
+                        {
+                            newTransaction = new Instant();
+                        }
+                        else if (TransactionType == "Deffered")
+                        {
+                            newTransaction = new Deferred();
+                        }
+                        else
+                        {
+                            newTransaction = new Permanent();
+                            Permanent newPermanentTransaction = (Permanent)newTransaction;
+
+                            newPermanentTransaction.StartDate = reader.GetDateTime(reader.GetOrdinal("beginDate"));
+                            newPermanentTransaction.EndDate = reader.GetDateTime(reader.GetOrdinal("endDate"));
+                            newPermanentTransaction.Periodicity = reader.GetInt32(reader.GetOrdinal("periodicity"));
+                        }
+                        newTransaction.IdTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));
+                        newTransaction.TransactionDate = reader.GetDateTime(reader.GetOrdinal("transactionDate"));
+                        newTransaction.TransferDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
+                        newTransaction.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
+                        newTransaction.AccountOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
+                        newTransaction.AccountDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
+
+                        currentTransactionList.Add(newTransaction);
+                    }
+                }
+            }
+            return currentTransactionList;
+        }
+
+        public static List<Transaction> GetTransactionFromIdAccount(Account currentIdAccount)
+        {
+            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicity FROM [Transaction] INNER JOIN Account ON[Transaction].idOriginAccount = Account.idAccount WHERE Account.idAccount = " + currentIdAccount + ";";
+            return GetTransactionFromDB(sql);
+        }
+
+        public static List<Transaction> GetTransactionFromLogin(Customer currentLogin)
+        {
+            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicity FROM [Transaction] INNER JOIN Account ON[Transaction].idOriginAccount = Account.idAccount INNER JOIN Customer ON Account.idCustomer = Customer.idCustomer WHERE Customer.login = '" + currentLogin + "'";
+            return GetTransactionFromDB(sql);
+        }
+
+        public static List<Transaction> GetTransactionBetweenTwoDates(DateTime Date1, DateTime Date2)
+        {
+            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicityFROM [Transaction] WHERE " + Date1 + " > transferDate AND transferDate > " + Date2 + "; ";
+            return GetTransactionFromDB(sql);
+        }
     }
 }
