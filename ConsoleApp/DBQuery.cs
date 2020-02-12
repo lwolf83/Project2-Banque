@@ -226,19 +226,23 @@ namespace Project2
             string startDateString=null;
             string endDateString=null;
             int Periodicity=0;
-           
+            string TransferDate = "";
+
+
 
             if (currentTransaction.GetType().Name == "Instant")
             {
                 transactionType = "Instant";
                 startDateString = "null";
                 endDateString = "null";
+                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
             }
             else if (currentTransaction.GetType().Name == "Deferred")
             {
                 transactionType = "Deferred";
                 startDateString = "null";
                 endDateString = "null";
+                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
             }
             else if(currentTransaction.GetType().Name == "Permanent")
             {
@@ -247,11 +251,12 @@ namespace Project2
                 startDateString = "'" + permanentTransaction.StartDate.ToString("yyyy-MM-dd") + "'";
                 endDateString = "'" + permanentTransaction.EndDate.ToString("yyyy-MM-dd") + "'";
                 Periodicity = permanentTransaction.Periodicity;
+                TransferDate = "null"; 
             }
 
-            string sql = "INSERT INTO[Transaction] (idOriginAccount, idDestinationAccount, amount, transactionType, creationDate, transactionDate, beginDate, endDate," +
+            string sql = "INSERT INTO[Transaction] (idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, transferDate, beginDate, endDate," +
                 "periodicity) VALUES('" + currentTransaction.AccountOrigin + "' , '" + currentTransaction.AccountDestination + "', '" +
-                currentTransaction.Amount + "', '" + transactionType + "', GetDate(),'" + currentTransaction.TransactionDate + "'," + startDateString + "," + endDateString + ",'" + Periodicity + "'); ";
+                currentTransaction.Amount + "','"+ transactionType + "', GetDate()," + TransferDate + "," + startDateString + "," + endDateString + ",'" + Periodicity + "'); ";
 
             SqlCommand cmd = new SqlCommand();
 

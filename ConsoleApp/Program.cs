@@ -14,6 +14,18 @@ namespace Project2
 
         static void Main(string[] args)
         {
+            Permanent currentTransaction = new Permanent();
+            /* currentTransaction.AccountOrigin = 1;
+             currentTransaction.AccountDestination = 2;
+             currentTransaction.Amount = 20;
+             currentTransaction.TransactionDate = DateTime.Now;
+             currentTransaction.StartDate = new DateTime(2020, 02, 04);
+             currentTransaction.EndDate = new DateTime(2020, 03, 04);
+             currentTransaction.Periodicity = 10; */
+
+            DBUtils.GetDBConnection();
+
+
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
@@ -97,6 +109,21 @@ namespace Project2
         static int RunPermanentTransferCommand(DoPermanentTransferOptions opts)
         {
             Connection(opts);
+
+            if (currentCustomer.IsAccountOwner(opts.AccountIdOrigin))
+            {
+                Account accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
+                Account accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
+                // vérifier que l'on peut retirer de l'argent du compte
+
+               
+                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, opts.StartDate, opts.EndDate, opts.Periodicity);
+                
+                // vérifier que l'on peut créditer le compte d'arrivée
+                // si les deux sont ok on crée la transaction
+                // on crée la transaction
+            }
+
             return 1;
         }
 
