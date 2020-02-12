@@ -14,12 +14,7 @@ namespace Project2
 
         static void Main(string[] args)
         {
-            Deferred test = new Deferred();
-            test.Amount = 10;
-            test.AccountOrigin = 1;
-            test.AccountOrigin = 2;
-            test.TransactionDate = new DateTime(2020,02,11);
-            
+                        
             DBUtils.GetDBConnection();
 
             CommandLine.Parser.Default
