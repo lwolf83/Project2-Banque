@@ -265,6 +265,48 @@ namespace Project2
             cmd.ExecuteNonQuery();
         }
 
+        public static List<Account> GetAccountsCustomer(int idCustomer)
+        {
+            string sql = " SELECT[idAccount],[idCustomer],[accountNumber],[amount],[type],[isDebitAuthorized],[creationDate] FROM Account " +
+                "WHERE idCustomer = " + idCustomer;
+
+            SqlCommand cmd = new SqlCommand();
+
+            cmd.Connection = Program.sqlConnexion;
+            cmd.CommandText = sql;
+
+            List<Account> ListAccountsCustomer = new List<Account>();
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+
+                    while (reader.Read())
+                    {
+                        string typeAccount = reader.GetString(reader.GetOrdinal("type")); ;
+                        Account currentCustomerAccount;
+                        if (typeAccount == "CA")
+                        {
+                            currentCustomerAccount = new CheckingAccount();
+                        }
+                        else
+                        {
+                            currentCustomerAccount = new SavingsAccount();
+                        }
+
+                        currentCustomerAccount.IdAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
+                        currentCustomerAccount.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
+                        currentCustomerAccount.AccountNumber = reader.GetString(reader.GetOrdinal("accountNumber"));
+                        currentCustomerAccount.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
+                        currentCustomerAccount.IsDebitAuthorized = reader.GetBoolean(reader.GetOrdinal("isDebitAuthorized"));
+                        currentCustomerAccount.CreationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
+                        ListAccountsCustomer.Add(currentCustomerAccount);
+                    }
+                }
+                return ListAccountsCustomer;
+            }
+        }
+
         public static List<Transaction> GetTransactionFromDB(string sql)
         {
             // Créez un objet Command.
@@ -275,7 +317,6 @@ namespace Project2
             cmd.CommandText = sql;
 
             List<Transaction> currentTransactionList = new List<Transaction>();
-
             using (DbDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.HasRows)
