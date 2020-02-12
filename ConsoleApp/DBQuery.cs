@@ -223,8 +223,8 @@ namespace Project2
         public static void InsertTransaction(Transaction currentTransaction)
         {
             string transactionType="";
-            string startDateString=null;
-            string endDateString=null;
+            string startDateString="null";
+            string endDateString="null";
             int Periodicity=0;
            
 
