@@ -59,9 +59,9 @@ CREATE TABLE [Transaction](
 	[idOriginAccount] [int] NOT NULL,
 	[idDestinationAccount] [int] NOT NULL,
 	[amount] [money] NOT NULL,
-	[transactionType] [VARCHAR](10) NOT NULL,
-	[creationDate] DATETIME NOT NULL DEFAULT GETDATE(),
-	[transactionDate] DATETIME NOT NULL,
+	[transactionType] [varchar](10) NOT NULL,
+	[transactionDate] DATETIME NOT NULL DEFAULT GETDATE(),
+	[transferDate] DATETIME NULL,
 	[beginDate] DATETIME NULL,
 	[endDate] DATETIME NULL,
 	[periodicity] INT NULL
