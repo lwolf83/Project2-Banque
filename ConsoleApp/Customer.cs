@@ -153,7 +153,7 @@ namespace Project2
 
             accountDestination.Amount = accountDestination.Amount + amount;
 
-            Transaction currentTransaction = new Transaction();
+            Instant currentTransaction = new Instant();
             currentTransaction.AccountOrigin = accountOrigin.IdAccount;
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
@@ -166,9 +166,10 @@ namespace Project2
             Console.WriteLine("We do the transfer");
         }
 
+
         public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, string startDate, string endDate, int periodicity)
         {
-           
+
 
             Permanent currentTransaction = new Permanent();
             currentTransaction.AccountOrigin = accountOrigin.IdAccount;
@@ -179,6 +180,24 @@ namespace Project2
             currentTransaction.EndDate = Convert.ToDateTime(endDate);
             currentTransaction.Periodicity = periodicity;
             DBQuery.InsertTransaction(currentTransaction);
+        }
+
+        public void MakeNewDefferedTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime defferedtransactionDate)
+        {
+
+            accountOrigin.Amount = accountOrigin.Amount - amount;
+
+            accountDestination.Amount = accountDestination.Amount + amount;
+
+            Deferred currentTransaction = new Deferred();
+            currentTransaction.AccountOrigin = accountOrigin.IdAccount;
+            currentTransaction.AccountDestination = accountDestination.IdAccount;
+            currentTransaction.Amount = amount;
+            currentTransaction.TransactionDate = defferedtransactionDate;
+            DBQuery.InsertTransaction(currentTransaction);
+
+            DBQuery.UpdateAmountInAccount(accountOrigin);
+            DBQuery.UpdateAmountInAccount(accountDestination);
 
 
             Console.WriteLine("We do the transfer");

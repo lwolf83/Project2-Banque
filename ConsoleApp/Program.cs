@@ -14,15 +14,9 @@ namespace Project2
 
         static void Main(string[] args)
         {
-            Permanent currentTransaction = new Permanent();
-            /* currentTransaction.AccountOrigin = 1;
-             currentTransaction.AccountDestination = 2;
-             currentTransaction.Amount = 20;
-             currentTransaction.TransactionDate = DateTime.Now;
-             currentTransaction.StartDate = new DateTime(2020, 02, 04);
-             currentTransaction.EndDate = new DateTime(2020, 03, 04);
-             currentTransaction.Periodicity = 10; */
 
+
+                        
             DBUtils.GetDBConnection();
 
 
@@ -80,6 +74,17 @@ namespace Project2
         static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
         {
             Connection(opts);
+            if (currentCustomer.IsAccountOwner(opts.AccountIdOrigin))
+            {
+                Account accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
+                Account accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
+                // vérifier que l'on peut retirer de l'argent du compte
+
+                if (accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
+                {
+                    currentCustomer.MakeNewDefferedTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse( opts.DefferedDate));
+                }
+            }
             return 1;
         }
 
