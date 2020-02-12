@@ -30,8 +30,8 @@ namespace Project2
                     {
 
                         currentClient.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
-                        currentClient.Login = reader.GetString(reader.GetOrdinal("name"));
-                        currentClient.Name = reader.GetString(reader.GetOrdinal("login"));
+                        currentClient.Login = reader.GetString(reader.GetOrdinal("login"));
+                        currentClient.Name = reader.GetString(reader.GetOrdinal("name"));
                         currentClient.Password = reader.GetString(reader.GetOrdinal("password"));
                         currentClient.Location = reader.GetString(reader.GetOrdinal("location"));
 
