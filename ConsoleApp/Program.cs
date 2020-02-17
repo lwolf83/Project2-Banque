@@ -167,7 +167,7 @@ namespace Project2
                 IO.DisplayInformation("Your password is valid.");
 
                 //sauvegarder le client            
-                DBQuery.saveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
+                DBQuery.SaveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
                 return 1;
             }
         }
@@ -202,7 +202,6 @@ namespace Project2
             return 1;
         }
 
-
         static int RunListAccountCommand(ListAccountOptions opts)
         {
             Connection(opts);
@@ -225,41 +224,6 @@ namespace Project2
         {
             //handle errors
         }
-
-        /*public static void ClientCreation()
-        {
-            IO.DisplayInformation("Creation of a new client");
-            Client newClient = new Client(Program.opts.CreateNewClient);
-            if (newClient.IsClientExisting())
-            {
-                IO.DisplayWarning("This login already exists, we cannot create it.");
-            }
-            else
-            {
-                IO.SaveDB(newClient);
-                IO.DisplayInformation("New client saved in the database.");
-            }
-        }*/
-
-        public static void SavingsAccountCreation()
-        {/*
-            IO.DisplayInformation("Creation of a savings account");
-            Client client = new Client(Program.opts.Login);
-            if (client.IsClientExisting())
-            {
-                IO.DisplayInformation("New account saved in the database.");
-                SavingsAccount newAccount = new SavingsAccount(client.IdClient);
-                List<Account> accountList=client.Accounts;
-                accountList.Add(newAccount);
-                IO.SaveDB(client);
-                IO.SaveDB(newAccount);
-            }
-            else
-            {
-                IO.DisplayWarning("This client doesn't exist.");
-            }*/
-        }
-
         
     }
 }
