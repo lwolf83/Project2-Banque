@@ -18,11 +18,8 @@ namespace Project2
 
         static void Main(string[] args)
         {
-
-
-                        
+    
             DBUtils.GetDBConnection();
-
 
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
@@ -42,8 +39,6 @@ namespace Project2
             sqlConnexion.Close();
             sqlConnexion.Dispose();
 
-
-           
         }
 
         static int Connection(Options opts)

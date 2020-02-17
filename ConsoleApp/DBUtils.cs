@@ -13,12 +13,6 @@ namespace Project2
         public static void
           GetDBConnection()
         {
-            //
-            //Data Source=Data Source=DESKTOP-O7HRM7U\SQLEXPRESS;Initial Catalog=Project2-Banque;Integrated Security=True
-            //
-            //string connString = @"Data Source=LOCALHOST\SQLEXPRESS;Initial Catalog=Project2-Banque;Integrated Security=True";
-            // string connString = @"Data Source=" + datasource + ";Initial Catalog="
-            //           + database + ";Persist Security Info=True;User ID=" + username + ";Password=" + password;
             ConnectionStringSettings connString = ConfigurationManager.ConnectionStrings["SqlConnection"];
             string connectionString = connString.ToString();
             SqlConnection conn = new SqlConnection(connectionString);
