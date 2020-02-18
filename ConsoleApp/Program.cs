@@ -18,10 +18,9 @@ namespace Project2
 
         static void Main(string[] args)
         {
-
-
-                        
+      
             DBUtils.GetDBConnection();
+
 
 
             CommandLine.Parser.Default
