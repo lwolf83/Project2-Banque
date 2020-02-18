@@ -14,12 +14,9 @@ namespace Project2
     {
         public static Customer currentCustomer;
         public static bool Verbose { set; get;}
-        public static SqlConnection sqlConnexion;
 
         static void Main(string[] args)
         {
-    
-            DBUtils.GetDBConnection();
 
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
@@ -36,8 +33,7 @@ namespace Project2
                 (parserErrors) => 1
                 );
 
-            sqlConnexion.Close();
-            sqlConnexion.Dispose();
+            
 
         }
 
