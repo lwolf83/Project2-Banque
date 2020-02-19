@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Project2
 {
-    abstract class Account
+    public abstract class Account
     {
         public int IdAccount { get; set; }
         public  int IdCustomer { get; set; }

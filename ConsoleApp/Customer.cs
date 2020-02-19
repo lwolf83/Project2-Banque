@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Data.Common;
 
 namespace Project2
 {
@@ -14,11 +14,15 @@ namespace Project2
         public List<Account> Accounts { get; set; } = new List<Account>();
 
 
-        public Customer()
-        { }
+        public Customer(DbDataReader reader)
+        {
+            IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
+            Login = reader.GetString(reader.GetOrdinal("login"));
+            Name = reader.GetString(reader.GetOrdinal("name"));
+            Password = reader.GetString(reader.GetOrdinal("password"));
+            Location = reader.GetString(reader.GetOrdinal("location"));
+        }
 
-        public Customer(string name, string login, string location, string password)
-        { }
 
         public Customer(string login)
         {
@@ -162,11 +166,10 @@ namespace Project2
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
             currentTransaction.TransferDate = DateTime.Now;
-            DBQuery.InsertTransaction(currentTransaction);
-
-            DBQuery.UpdateAmountInAccount(accountOrigin);
-            DBQuery.UpdateAmountInAccount(accountDestination);
-
+           // DBQuery.InsertTransaction(currentTransaction);
+            //DBQuery.UpdateAmountInAccount(accountOrigin);
+            //DBQuery.UpdateAmountInAccount(accountDestination);
+            List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
             Console.WriteLine("We do the transfer");
         }
 
