@@ -7,6 +7,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace Project2
 {
@@ -14,12 +15,9 @@ namespace Project2
     {
         public static Customer currentCustomer;
         public static bool Verbose { set; get;}
-        public static SqlConnection sqlConnexion;
 
         static void Main(string[] args)
         {
-    
-            DBUtils.GetDBConnection();
 
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
@@ -36,8 +34,7 @@ namespace Project2
                 (parserErrors) => 1
                 );
 
-            sqlConnexion.Close();
-            sqlConnexion.Dispose();
+            
 
         }
 
@@ -53,6 +50,7 @@ namespace Project2
                 {
                     Console.WriteLine("Please type in your password");
                     password = Console.ReadLine();
+                    password = Sha256Tools.GetHash(password);
                     i++;
                 }
                 while ((password != currentCustomer.Password) && (i <= 2));
@@ -137,10 +135,7 @@ namespace Project2
 
         static int RunCreateCustomerCommand(CreateCustomerOptions opts)
         {
-            string password;
-            bool isComplexPassword;
-            int inputError = 0;
-
+            
             currentCustomer = new Customer(opts.Login);
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
@@ -149,27 +144,33 @@ namespace Project2
             }
             else
             {
-                do
-                {
-                    Console.WriteLine("Please, set your password : ");
-                    password = Console.ReadLine();
-                    isComplexPassword = Customer.IsComplexPassword(password);
-
-                    if (!isComplexPassword)
-                    {
-                        WrongPasswordMessage(password, inputError);
-                    }
-                    inputError++;
-                }
-                while (!isComplexPassword);
-
-
+                string password = SetUpPasswordFromKeyboard();
                 IO.DisplayInformation("Your password is valid.");
-
-                //sauvegarder le client            
+                password = Sha256Tools.GetHash(password);
                 DBQuery.SaveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
                 return 1;
             }
+        }
+
+        private static string SetUpPasswordFromKeyboard()
+        {
+            string password;
+            bool isComplexPassword;
+            int inputError = 0;
+            do
+            {
+                Console.WriteLine("Please, set your password : ");
+                password = Console.ReadLine();
+                isComplexPassword = Customer.IsComplexPassword(password);
+
+                if (!isComplexPassword)
+                {
+                    WrongPasswordMessage(password, inputError);
+                }
+                inputError++;
+            }
+            while (!isComplexPassword);
+            return password;
         }
 
         static bool WrongPasswordMessage(string password, int nbErreurSaisie)
@@ -224,6 +225,7 @@ namespace Project2
         {
             //handle errors
         }
-        
+
+
     }
 }

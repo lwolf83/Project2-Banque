@@ -37,9 +37,11 @@ namespace Project2
             {
                 return true;
             }
+            else
+            { 
             IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
             return false;
-
+            }
         }
 
         public static bool IsComplexPassword(string password)
