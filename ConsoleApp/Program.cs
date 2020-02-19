@@ -7,6 +7,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace Project2
 {
@@ -14,13 +15,10 @@ namespace Project2
     {
         public static Customer currentCustomer;
         public static bool Verbose { set; get;}
-        public static SqlConnection sqlConnexion;
 
         static void Main(string[] args)
         {
-    
-            DBUtils.GetDBConnection();
-
+            
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
@@ -35,9 +33,9 @@ namespace Project2
                 (Export opts) => RunExportCommand(opts),
                 (parserErrors) => 1
                 );
-
-            sqlConnexion.Close();
-            sqlConnexion.Dispose();
+                
+            /*String str = String.Format("{0,-50}{1,5}\n{2,-50}{3,5:C2}", "Description", "Price", "Supère produit qui pète tout", 99.99m);
+            Console.WriteLine(str);*/
 
         }
 
@@ -52,7 +50,8 @@ namespace Project2
                 do
                 {
                     Console.WriteLine("Please type in your password");
-                    password = Console.ReadLine();
+                    password = IO.PromptPassword();
+                    password = Sha256Tools.GetHash(password);
                     i++;
                 }
                 while ((password != currentCustomer.Password) && (i <= 2));
@@ -125,7 +124,7 @@ namespace Project2
                 // vérifier que l'on peut retirer de l'argent du compte
 
                
-                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, opts.StartDate, opts.EndDate, opts.Periodicity);
+                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.StartDate), DateTime.Parse(opts.EndDate), opts.Periodicity);
                 
                 // vérifier que l'on peut créditer le compte d'arrivée
                 // si les deux sont ok on crée la transaction
@@ -137,10 +136,7 @@ namespace Project2
 
         static int RunCreateCustomerCommand(CreateCustomerOptions opts)
         {
-            string password;
-            bool isComplexPassword;
-            int inputError = 0;
-
+            
             currentCustomer = new Customer(opts.Login);
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
@@ -149,27 +145,33 @@ namespace Project2
             }
             else
             {
-                do
-                {
-                    Console.WriteLine("Please, set your password : ");
-                    password = Console.ReadLine();
-                    isComplexPassword = Customer.IsComplexPassword(password);
-
-                    if (!isComplexPassword)
-                    {
-                        WrongPasswordMessage(password, inputError);
-                    }
-                    inputError++;
-                }
-                while (!isComplexPassword);
-
-
+                string password = SetUpPasswordFromKeyboard();
                 IO.DisplayInformation("Your password is valid.");
-
-                //sauvegarder le client            
+                password = Sha256Tools.GetHash(password);
                 DBQuery.SaveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
                 return 1;
             }
+        }
+
+        private static string SetUpPasswordFromKeyboard()
+        {
+            string password;
+            bool isComplexPassword;
+            int inputError = 0;
+            do
+            {
+                Console.WriteLine("Please, set your password : ");
+                password = IO.PromptPassword();
+                isComplexPassword = Customer.IsComplexPassword(password);
+
+                if (!isComplexPassword)
+                {
+                    WrongPasswordMessage(password, inputError);
+                }
+                inputError++;
+            }
+            while (!isComplexPassword);
+            return password;
         }
 
         static bool WrongPasswordMessage(string password, int nbErreurSaisie)
@@ -224,6 +226,7 @@ namespace Project2
         {
             //handle errors
         }
-        
+
+
     }
 }

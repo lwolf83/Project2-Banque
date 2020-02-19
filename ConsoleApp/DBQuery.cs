@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
@@ -8,14 +9,47 @@ namespace Project2
 {
     class DBQuery
     {
-        public DBQuery()
+        private static DBQuery _databaseConnexion;
+        private static SqlConnection _sqlConnexion;
+
+        private DBQuery()
         {
-            
+            ConnectionStringSettings connString = ConfigurationManager.ConnectionStrings["SqlConnection"];
+            string connectionString = connString.ToString();
+            SqlConnection conn = new SqlConnection(connectionString);
+
+            IO.DisplayInformation("Getting Connection ...");
+            _sqlConnexion = conn;
+
+            try
+            {
+                IO.DisplayInformation("Openning Connection ...");
+                conn.Open();
+                IO.DisplayInformation("Connection successful!");
+            }
+            catch (Exception e)
+            {
+                IO.DisplayWarning("Error: " + e.Message);
+            }
+
+        }
+
+        public static SqlConnection GetConnexion
+        {
+            get
+            {
+                if (_databaseConnexion == null)
+                {
+                    _databaseConnexion = new DBQuery();
+                }
+                return _sqlConnexion;
+            }
         }
 
         ~DBQuery()
         {
-
+            GetConnexion.Close();
+            GetConnexion.Dispose();
         }
 
 
@@ -25,7 +59,7 @@ namespace Project2
 
             SqlCommand cmd = new SqlCommand();
 
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
             Customer currentClient = new Customer();
@@ -95,7 +129,7 @@ namespace Project2
             SqlCommand cmd = new SqlCommand();
 
             // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
             int IdCustomer = 0;
 
@@ -117,7 +151,7 @@ namespace Project2
 
 
             SqlCommand cmd = new SqlCommand();
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
             int idCustomer = 0;
@@ -165,7 +199,7 @@ namespace Project2
 
             SqlCommand cmd = new SqlCommand();
 
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
             int nbCustomer = 0;
             using (DbDataReader reader = cmd.ExecuteReader())
@@ -213,14 +247,14 @@ namespace Project2
                 transactionType = "Instant";
                 startDateString = "null";
                 endDateString = "null";
-                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
+                TransferDate = "'" + currentTransaction.TransactionDate.ToString("yyyy-MM-dd") + "'";
             }
             else if (currentTransaction.GetType().Name == "Deferred")
             {
                 transactionType = "Deferred";
                 startDateString = "null";
                 endDateString = "null";
-                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
+                TransferDate = "'" + currentTransaction.TransactionDate.ToString("yyyy-MM-dd") + "'";
             }
             else if(currentTransaction.GetType().Name == "Permanent")
             {
@@ -246,7 +280,7 @@ namespace Project2
 
             SqlCommand cmd = new SqlCommand();
 
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
             List<Account> ListAccountsCustomer = new List<Account>();
@@ -284,7 +318,7 @@ namespace Project2
         public static List<Transaction> GetTransactionFromDB(string sql)
         {
             SqlCommand cmd = new SqlCommand();
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
             List<Transaction> currentTransactionList = new List<Transaction>();
@@ -350,7 +384,7 @@ namespace Project2
         {
             SqlCommand cmd = new SqlCommand();
 
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
         }

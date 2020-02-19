@@ -37,9 +37,11 @@ namespace Project2
             {
                 return true;
             }
+            else
+            { 
             IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
             return false;
-
+            }
         }
 
         public static bool IsComplexPassword(string password)
@@ -169,7 +171,7 @@ namespace Project2
         }
 
 
-        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, string startDate, string endDate, int periodicity)
+        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime startDate, DateTime endDate, int periodicity)
         {
 
 
@@ -178,8 +180,8 @@ namespace Project2
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
             currentTransaction.TransactionDate = DateTime.Now;
-            currentTransaction.StartDate = Convert.ToDateTime(startDate);
-            currentTransaction.EndDate = Convert.ToDateTime(endDate);
+            currentTransaction.StartDate = startDate;
+            currentTransaction.EndDate = endDate;
             currentTransaction.Periodicity = periodicity;
             DBQuery.InsertTransaction(currentTransaction);
         }
