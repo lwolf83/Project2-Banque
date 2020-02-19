@@ -109,14 +109,7 @@ namespace Project2
         {
             string typeOfAccount;
             Type type = account.GetType();
-            if (type.Name == "CheckingAccount")
-            {
-                typeOfAccount = "CA";
-            }
-            else
-            {
-                typeOfAccount = "SA";
-            }
+            AccountFactory.Create(type.ToString());
 
             string sql = "INSERT INTO Account (idCustomer,accountNumber,amount,type) "
                         + " VALUES ('" + account.IdCustomer + "','" + account.AccountNumber + "','" + account.Amount + "','" + typeOfAccount + "')";
@@ -178,15 +171,8 @@ namespace Project2
                     creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
                 }
             }
-            Account resultAccount;
-            if(type == "CA")
-            {
-                resultAccount = new CheckingAccount();
-            }
-            else
-            {
-                resultAccount = new SavingsAccount();
-            }
+            Account resultAccount = AccountFactory.Create(type);
+
             resultAccount.AccountNumber = accountNumber;
             resultAccount.Amount = amount;
             resultAccount.CreationDate = creationDate;
@@ -288,15 +274,7 @@ namespace Project2
                     while (reader.Read())
                     {
                         string typeAccount = reader.GetString(reader.GetOrdinal("type")); ;
-                        Account currentCustomerAccount;
-                        if (typeAccount == "CA")
-                        {
-                            currentCustomerAccount = new CheckingAccount();
-                        }
-                        else
-                        {
-                            currentCustomerAccount = new SavingsAccount();
-                        }
+                        Account currentCustomerAccount = AccountFactory.Create(typeAccount);
 
                         currentCustomerAccount.IdAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
                         currentCustomerAccount.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
