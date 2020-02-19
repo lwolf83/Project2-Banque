@@ -247,14 +247,14 @@ namespace Project2
                 transactionType = "Instant";
                 startDateString = "null";
                 endDateString = "null";
-                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
+                TransferDate = "'" + currentTransaction.TransactionDate.ToString("yyyy-MM-dd") + "'";
             }
             else if (currentTransaction.GetType().Name == "Deferred")
             {
                 transactionType = "Deferred";
                 startDateString = "null";
                 endDateString = "null";
-                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
+                TransferDate = "'" + currentTransaction.TransactionDate.ToString("yyyy-MM-dd") + "'";
             }
             else if(currentTransaction.GetType().Name == "Permanent")
             {
