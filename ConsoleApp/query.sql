@@ -81,12 +81,12 @@ GO
 
 -- Set of test 
 
-INSERT INTO [Customer] (name, login, password, location) VALUES ('laure c' , 'laure', '1234', 'Strasbourg')
-INSERT INTO [Customer] (name, login, password, location) VALUES ('elif' , 'elif', '1234', 'Strasbourg')
-INSERT INTO [Customer] (name, login, password, location) VALUES ('jean' , 'jean', '1234', 'Strasbourg')
-INSERT INTO [Customer] (name, login, password, location) VALUES ('laurent' , 'laurent', '1234', 'Strasbourg')
-INSERT INTO [Customer] (name, login, password, location) VALUES ('john' , 'john', '1234', 'Strasbourg')
-INSERT INTO [Customer] (name, login, password, location) VALUES ('bob' , 'bob', '1234', 'Strasbourg')
+INSERT INTO [Customer] (name, login, password, location) VALUES ('laure c' , 'laure', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
+INSERT INTO [Customer] (name, login, password, location) VALUES ('elif' , 'elif', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
+INSERT INTO [Customer] (name, login, password, location) VALUES ('jean' , 'jean', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
+INSERT INTO [Customer] (name, login, password, location) VALUES ('laurent' , 'laurent', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
+INSERT INTO [Customer] (name, login, password, location) VALUES ('john' , 'john', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
+INSERT INTO [Customer] (name, login, password, location) VALUES ('bob' , 'bob', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
 
 INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (1, 'FR1', 500.00, 'SA', 0)
 INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (1, 'FR2', 10000.00, 'CA', 0)
