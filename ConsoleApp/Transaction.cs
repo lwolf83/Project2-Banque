@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Project2
 {
-    public class Transaction
+    public abstract class Transaction
     {
         public int IdTransaction { get; set; }
         public DateTime TransactionDate { get; set; }
@@ -12,5 +12,8 @@ namespace Project2
         public decimal Amount { get; set; }
         public int AccountOrigin { get; set; }
         public int AccountDestination { get; set; }
+
+        public abstract List<TransfertMoney> GetTransferts();
+
     }
 }

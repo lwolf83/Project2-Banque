@@ -34,6 +34,12 @@ namespace Project2
 
         }
 
+        ~DBQuery()
+        {
+            GetConnexion.Close();
+            GetConnexion.Dispose();
+        }
+
         public static SqlConnection GetConnexion
         {
             get
@@ -46,23 +52,25 @@ namespace Project2
             }
         }
 
-        ~DBQuery()
-        {
-            GetConnexion.Close();
-            GetConnexion.Dispose();
-        }
-
 
         public static Customer GetCustomerFromDB(string field, string value)
         {
-            string sql = "SELECT idCustomer,login,name,password, location FROM Customer WHERE [" + field + "] = '" + value + "'";
+            string sql = "SELECT idCustomer,login,name,password, location FROM Customer WHERE " + field  + " = @value";
 
             SqlCommand cmd = new SqlCommand();
-
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
-            Customer currentClient = new Customer();
+            IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@value", value)
+            };
+            foreach (SqlParameter parameter in parameters)
+            {
+                cmd.Parameters.Add(parameter);
+            }
+
+            Customer currentClient = null;
 
             using (DbDataReader reader = cmd.ExecuteReader())
             {
@@ -70,11 +78,7 @@ namespace Project2
                 {
                     while (reader.Read())
                     {
-                        currentClient.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
-                        currentClient.Login = reader.GetString(reader.GetOrdinal("login"));
-                        currentClient.Name = reader.GetString(reader.GetOrdinal("name"));
-                        currentClient.Password = reader.GetString(reader.GetOrdinal("password"));
-                        currentClient.Location = reader.GetString(reader.GetOrdinal("location"));
+                        currentClient  = new Customer(reader);
                     }
                 }
             }
@@ -198,7 +202,6 @@ namespace Project2
                 + "' AND idCustomer = '" + Program.currentCustomer.IdCustomer + "'";
 
             SqlCommand cmd = new SqlCommand();
-
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
             int nbCustomer = 0;
