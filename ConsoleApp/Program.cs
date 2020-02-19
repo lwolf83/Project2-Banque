@@ -7,6 +7,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace Project2
 {
@@ -49,6 +50,7 @@ namespace Project2
                 {
                     Console.WriteLine("Please type in your password");
                     password = Console.ReadLine();
+                    password = Sha256Tools.GetHash(password);
                     i++;
                 }
                 while ((password != currentCustomer.Password) && (i <= 2));
@@ -134,7 +136,6 @@ namespace Project2
         static int RunCreateCustomerCommand(CreateCustomerOptions opts)
         {
             
-
             currentCustomer = new Customer(opts.Login);
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
@@ -144,10 +145,8 @@ namespace Project2
             else
             {
                 string password = SetUpPasswordFromKeyboard();
-
                 IO.DisplayInformation("Your password is valid.");
-
-                //sauvegarder le client            
+                password = Sha256Tools.GetHash(password);
                 DBQuery.SaveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
                 return 1;
             }
@@ -226,6 +225,7 @@ namespace Project2
         {
             //handle errors
         }
-        
+
+
     }
 }
