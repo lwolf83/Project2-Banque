@@ -171,7 +171,7 @@ namespace Project2
         }
 
 
-        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, string startDate, string endDate, int periodicity)
+        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime startDate, DateTime endDate, int periodicity)
         {
 
 
@@ -180,8 +180,8 @@ namespace Project2
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
             currentTransaction.TransactionDate = DateTime.Now;
-            currentTransaction.StartDate = Convert.ToDateTime(startDate);
-            currentTransaction.EndDate = Convert.ToDateTime(endDate);
+            currentTransaction.StartDate = startDate;
+            currentTransaction.EndDate = endDate;
             currentTransaction.Periodicity = periodicity;
             DBQuery.InsertTransaction(currentTransaction);
         }

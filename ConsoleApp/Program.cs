@@ -18,7 +18,7 @@ namespace Project2
 
         static void Main(string[] args)
         {
-
+            
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
@@ -33,8 +33,9 @@ namespace Project2
                 (Export opts) => RunExportCommand(opts),
                 (parserErrors) => 1
                 );
-
-            
+                
+            /*String str = String.Format("{0,-50}{1,5}\n{2,-50}{3,5:C2}", "Description", "Price", "Supère produit qui pète tout", 99.99m);
+            Console.WriteLine(str);*/
 
         }
 
@@ -123,7 +124,7 @@ namespace Project2
                 // vérifier que l'on peut retirer de l'argent du compte
 
                
-                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, opts.StartDate, opts.EndDate, opts.Periodicity);
+                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.StartDate), DateTime.Parse(opts.EndDate), opts.Periodicity);
                 
                 // vérifier que l'on peut créditer le compte d'arrivée
                 // si les deux sont ok on crée la transaction
