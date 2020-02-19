@@ -109,7 +109,14 @@ namespace Project2
         {
             string typeOfAccount;
             Type type = account.GetType();
-            AccountFactory.Create(type.ToString());
+            if (type.Name == "CheckingAccount")
+            {
+                typeOfAccount = "CA";
+            }
+            else
+            {
+                typeOfAccount = "SA";
+            }
 
             string sql = "INSERT INTO Account (idCustomer,accountNumber,amount,type) "
                         + " VALUES ('" + account.IdCustomer + "','" + account.AccountNumber + "','" + account.Amount + "','" + typeOfAccount + "')";
