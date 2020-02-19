@@ -49,7 +49,7 @@ namespace Project2
                 do
                 {
                     Console.WriteLine("Please type in your password");
-                    password = Console.ReadLine();
+                    password = IO.PromptPassword();
                     password = Sha256Tools.GetHash(password);
                     i++;
                 }
@@ -160,7 +160,7 @@ namespace Project2
             do
             {
                 Console.WriteLine("Please, set your password : ");
-                password = Console.ReadLine();
+                password = IO.PromptPassword();
                 isComplexPassword = Customer.IsComplexPassword(password);
 
                 if (!isComplexPassword)
