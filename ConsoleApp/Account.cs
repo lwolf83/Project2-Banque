@@ -4,53 +4,38 @@ using System.Text;
 
 namespace Project2
 {
-    public class Account
+    abstract class Account
     {
         public int IdAccount { get; set; }
-        public int IdCustomer { get; set; }
+        public  int IdCustomer { get; set; }
         public string AccountNumber { get; set; }
         public decimal Amount { get; set; }
         public bool IsDebitAuthorized { get; set; }
         public DateTime CreationDate { get; set; }
+        public abstract decimal Overdraft { get; }
+        public abstract decimal Ceiling { get;}
+        public abstract double SavingsRate { get;}
 
-
-
-        public virtual void CreateAccount()
+        public Account (string accountIdentifier, decimal amount, int idClient)
         {
-            //assigner le compte à un client --> à faire dans un constructeur 
+            AccountNumber = accountIdentifier;
+            Amount = amount;
+            IdCustomer = idClient;
         }
-
-        public virtual void Debit()
-        {
-        }
-
-        public virtual void Credit()
+        public Account()
         {
         }
 
-        public virtual bool CanBeDebited(decimal amountToTransfer, Account accountDestination)
-        {
-            return true;
-        }
+        public abstract void Debit();
 
-        public virtual bool CanBeCredited(decimal amountToTransfer)
-        {
-            if(amountToTransfer<Amount)
-            {
-                return true;
-            }
-            return false;
-        }
+        public abstract void Credit();
 
-        public virtual bool IsAuthorizeCustomerToCredit()
-        {
-            return true;
-        }
+        public abstract bool CanBeDebited(decimal amountToTransfer, Account accountDestination);
 
-        public virtual bool isDebitAuthorized(Account accountDestination)
-        {
-            return true;
-        }
+        public abstract bool CanBeCredited(decimal amountToTransfer);
 
+        public abstract bool IsAuthorizeCustomerToCredit();
+
+        public abstract bool isDebitAuthorized(Account accountDestination);
     }
 }

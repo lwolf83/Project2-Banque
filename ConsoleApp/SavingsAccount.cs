@@ -6,25 +6,38 @@ namespace Project2
 {
     class SavingsAccount : Account
     {
-        public decimal Ceiling { get; set; } = 1000;
-        public double SavingsRate { get; set; }
-
-
-        public SavingsAccount()
+        public override decimal Ceiling 
         {
+            get { return 1000; }
+        } 
+
+        public override double SavingsRate 
+        {
+            get { return 0.10; } 
         }
 
-        public SavingsAccount(string accountIdentifier, decimal amount, int idClient)
+        public override decimal Overdraft
+        {
+            get { return 0; }
+        }
+
+        public SavingsAccount(string accountIdentifier, decimal amount, int idClient) : base(accountIdentifier,amount,idClient)
         {
             AccountNumber = accountIdentifier;
             Amount = amount;
             IdCustomer = idClient;
         }
 
-        public SavingsAccount(int idClient)
+        public SavingsAccount()
         {
-            IdCustomer = idClient;
-            Amount = 0;
+        }
+
+        public override void Debit()
+        {
+        }
+
+        public override void Credit()
+        {
         }
 
         public override bool CanBeDebited(decimal amountToTransfer, Account accountDestination)
@@ -36,23 +49,31 @@ namespace Project2
             }
             else
             {
-                 return false;
+                return false;
             }
         }
 
-
-        public override bool IsAuthorizeCustomerToCredit()
+        public override bool CanBeCredited(decimal amountToTransfer)
         {
-            if(DBQuery.IsCurrentCustomerAuthorizedOnAccount(this) || (IdCustomer == Program.currentCustomer.IdCustomer))
+            if ((amountToTransfer + Amount) < Ceiling && IsAuthorizeCustomerToCredit())
             {
                 return true;
             }
             return false;
         }
 
-        public override bool CanBeCredited(decimal amountToTransfer)
-        {            
-            if ((amountToTransfer + Amount) < Ceiling && IsAuthorizeCustomerToCredit())
+        public override bool IsAuthorizeCustomerToCredit()
+        {
+            if (DBQuery.IsCurrentCustomerAuthorizedOnAccount(this) || (IdCustomer == Program.currentCustomer.IdCustomer))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public override bool isDebitAuthorized(Account accountDestination)
+        {
+            if(accountDestination.IsDebitAuthorized == true)
             {
                 return true;
             }
