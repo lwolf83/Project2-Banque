@@ -81,6 +81,23 @@ namespace Project2
             Console.WriteLine(text);
         }
 
-
+        public static string PromptPassword()
+        {
+            string password = "";
+            bool finished = false;
+            while (finished == false)
+            {
+                ConsoleKeyInfo typedCharacterInfo = Console.ReadKey(true);
+                if (typedCharacterInfo.Key != ConsoleKey.Enter)
+                {
+                    password += typedCharacterInfo.KeyChar;
+                }
+                else
+                {
+                    finished = true;
+                }
+            }
+            return password;
+        }
     }
 }
