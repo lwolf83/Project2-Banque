@@ -242,19 +242,12 @@ namespace Project2
 
 
 
-            if (currentTransaction.GetType().Name == "Instant")
+            if (currentTransaction.GetType().Name == "Instant" || currentTransaction.GetType().Name == "Deferred")
             {
-                transactionType = "Instant";
                 startDateString = "null";
                 endDateString = "null";
                 TransferDate = "'" + currentTransaction.TransactionDate.ToString("yyyy-MM-dd") + "'";
-            }
-            else if (currentTransaction.GetType().Name == "Deferred")
-            {
-                transactionType = "Deferred";
-                startDateString = "null";
-                endDateString = "null";
-                TransferDate = "'" + currentTransaction.TransactionDate.ToString("yyyy-MM-dd") + "'";
+                transactionType = currentTransaction.GetType().Name;
             }
             else if(currentTransaction.GetType().Name == "Permanent")
             {
