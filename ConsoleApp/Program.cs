@@ -7,6 +7,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace Project2
 {
@@ -17,7 +18,7 @@ namespace Project2
 
         static void Main(string[] args)
         {
-
+            
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
@@ -32,8 +33,9 @@ namespace Project2
                 (Export opts) => RunExportCommand(opts),
                 (parserErrors) => 1
                 );
-
-            
+                
+            /*String str = String.Format("{0,-50}{1,5}\n{2,-50}{3,5:C2}", "Description", "Price", "Supère produit qui pète tout", 99.99m);
+            Console.WriteLine(str);*/
 
         }
 
@@ -48,7 +50,8 @@ namespace Project2
                 do
                 {
                     Console.WriteLine("Please type in your password");
-                    password = Console.ReadLine();
+                    password = IO.PromptPassword();
+                    password = Sha256Tools.GetHash(password);
                     i++;
                 }
                 while ((password != currentCustomer.Password) && (i <= 2));
@@ -121,7 +124,7 @@ namespace Project2
                 // vérifier que l'on peut retirer de l'argent du compte
 
                
-                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, opts.StartDate, opts.EndDate, opts.Periodicity);
+                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.StartDate), DateTime.Parse(opts.EndDate), opts.Periodicity);
                 
                 // vérifier que l'on peut créditer le compte d'arrivée
                 // si les deux sont ok on crée la transaction
@@ -134,7 +137,6 @@ namespace Project2
         static int RunCreateCustomerCommand(CreateCustomerOptions opts)
         {
             
-
             currentCustomer = new Customer(opts.Login);
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
@@ -144,10 +146,8 @@ namespace Project2
             else
             {
                 string password = SetUpPasswordFromKeyboard();
-
                 IO.DisplayInformation("Your password is valid.");
-
-                //sauvegarder le client            
+                password = Sha256Tools.GetHash(password);
                 DBQuery.SaveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
                 return 1;
             }
@@ -161,7 +161,7 @@ namespace Project2
             do
             {
                 Console.WriteLine("Please, set your password : ");
-                password = Console.ReadLine();
+                password = IO.PromptPassword();
                 isComplexPassword = Customer.IsComplexPassword(password);
 
                 if (!isComplexPassword)
@@ -226,6 +226,7 @@ namespace Project2
         {
             //handle errors
         }
-        
+
+
     }
 }

@@ -12,8 +12,11 @@ namespace Project2
         public decimal Amount { get; set; }
         public int AccountOrigin { get; set; }
         public int AccountDestination { get; set; }
-
         public abstract List<TransfertMoney> GetTransferts();
+        public string TypeOfPeriodicity { get; set; } // day, month, year, each
+        public int Periodicity { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
     }
 }
