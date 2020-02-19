@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Data.Common;
 
 namespace Project2
 {
@@ -14,11 +14,15 @@ namespace Project2
         public List<Account> Accounts { get; set; } = new List<Account>();
 
 
-        public Customer()
-        { }
+        public Customer(DbDataReader reader)
+        {
+            IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
+            Login = reader.GetString(reader.GetOrdinal("login"));
+            Name = reader.GetString(reader.GetOrdinal("name"));
+            Password = reader.GetString(reader.GetOrdinal("password"));
+            Location = reader.GetString(reader.GetOrdinal("location"));
+        }
 
-        public Customer(string name, string login, string location, string password)
-        { }
 
         public Customer(string login)
         {
@@ -32,14 +36,16 @@ namespace Project2
 
         public bool IsAccountOwner(string accountNumber)
         {
-            int id = DBQuery.getCustomerFromAccountNumber(accountNumber);
+            int id = DBQuery.GetIdCustomerFromAccountNumber(accountNumber);
             if (IdCustomer == id)
             {
                 return true;
             }
+            else
+            { 
             IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
             return false;
-
+            }
         }
 
         public static bool IsComplexPassword(string password)
@@ -132,7 +138,7 @@ namespace Project2
             account.Amount = 0;
             account.AccountNumber = "";
 
-            DBQuery.saveNewAccountInDb(account);
+            DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
             
         }
@@ -144,7 +150,7 @@ namespace Project2
             account.Amount = 0;
             account.AccountNumber = "";
 
-            DBQuery.saveNewAccountInDb(account);
+            DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
         }
 
@@ -160,16 +166,15 @@ namespace Project2
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
             currentTransaction.TransferDate = DateTime.Now;
-            DBQuery.InsertTransaction(currentTransaction);
-
-            DBQuery.UpdateAmountInAccount(accountOrigin);
-            DBQuery.UpdateAmountInAccount(accountDestination);
-
+           // DBQuery.InsertTransaction(currentTransaction);
+            //DBQuery.UpdateAmountInAccount(accountOrigin);
+            //DBQuery.UpdateAmountInAccount(accountDestination);
+            List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
             Console.WriteLine("We do the transfer");
         }
 
 
-        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, string startDate, string endDate, int periodicity)
+        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime startDate, DateTime endDate, int periodicity)
         {
 
 
@@ -178,8 +183,8 @@ namespace Project2
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
             currentTransaction.TransactionDate = DateTime.Now;
-            currentTransaction.StartDate = Convert.ToDateTime(startDate);
-            currentTransaction.EndDate = Convert.ToDateTime(endDate);
+            currentTransaction.StartDate = startDate;
+            currentTransaction.EndDate = endDate;
             currentTransaction.Periodicity = periodicity;
             DBQuery.InsertTransaction(currentTransaction);
         }

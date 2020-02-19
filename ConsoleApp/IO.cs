@@ -13,10 +13,12 @@ namespace Project2
         {
             IO.DisplayInformation("Client saved in DataBase");
         }
+
         public static void SaveDB(Account account)
         {
             IO.DisplayInformation("Account saved in DataBase");
         }
+
         public static void DisplayWarning(string message)
         {
             Console.BackgroundColor = ConsoleColor.Red;
@@ -36,21 +38,6 @@ namespace Project2
         {
             return null;
         }
-        /* public static void GetTypeAccount(string[] args)
-         {
-             string typeAccount;
-             //recupere les infos via commandlineparser
-
-             if (typeAccount == "SA")
-             {
-
-             }
-             else if( typeAccount == "CA" )
-             {
-
-             }
-
-         }*/
 
         public static void DisplayAccountList(Customer client, List<Account> AccountsList)
         {
@@ -94,6 +81,23 @@ namespace Project2
             Console.WriteLine(text);
         }
 
-
+        public static string PromptPassword()
+        {
+            string password = "";
+            bool finished = false;
+            while (finished == false)
+            {
+                ConsoleKeyInfo typedCharacterInfo = Console.ReadKey(true);
+                if (typedCharacterInfo.Key != ConsoleKey.Enter)
+                {
+                    password += typedCharacterInfo.KeyChar;
+                }
+                else
+                {
+                    finished = true;
+                }
+            }
+            return password;
+        }
     }
 }
