@@ -32,7 +32,7 @@ namespace Project2
 
         public bool IsAccountOwner(string accountNumber)
         {
-            int id = DBQuery.getCustomerFromAccountNumber(accountNumber);
+            int id = DBQuery.GetIdCustomerFromAccountNumber(accountNumber);
             if (IdCustomer == id)
             {
                 return true;
@@ -134,7 +134,7 @@ namespace Project2
             account.Amount = 0;
             account.AccountNumber = "";
 
-            DBQuery.saveNewAccountInDb(account);
+            DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
             
         }
@@ -146,7 +146,7 @@ namespace Project2
             account.Amount = 0;
             account.AccountNumber = "";
 
-            DBQuery.saveNewAccountInDb(account);
+            DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
         }
 

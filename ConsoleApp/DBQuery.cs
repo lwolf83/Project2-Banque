@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
@@ -8,33 +9,72 @@ namespace Project2
 {
     class DBQuery
     {
-        public static Customer getCustomerFromDB(string field, string value)
-        {
-            string sql = "SELECT * FROM [dbo].[Customer] WHERE [" + field + "] = '" + value + "'";
+        private static DBQuery _databaseConnexion;
+        private static SqlConnection _sqlConnexion;
 
-            // Créez un objet Command.
+        private DBQuery()
+        {
+            ConnectionStringSettings connString = ConfigurationManager.ConnectionStrings["SqlConnection"];
+            string connectionString = connString.ToString();
+            SqlConnection conn = new SqlConnection(connectionString);
+
+            IO.DisplayInformation("Getting Connection ...");
+            _sqlConnexion = conn;
+
+            try
+            {
+                IO.DisplayInformation("Openning Connection ...");
+                conn.Open();
+                IO.DisplayInformation("Connection successful!");
+            }
+            catch (Exception e)
+            {
+                IO.DisplayWarning("Error: " + e.Message);
+            }
+
+        }
+
+        public static SqlConnection GetConnexion
+        {
+            get
+            {
+                if (_databaseConnexion == null)
+                {
+                    _databaseConnexion = new DBQuery();
+                }
+                return _sqlConnexion;
+            }
+        }
+
+        ~DBQuery()
+        {
+            GetConnexion.Close();
+            GetConnexion.Dispose();
+        }
+
+
+        public static Customer GetCustomerFromDB(string field, string value)
+        {
+            string sql = "SELECT idCustomer,login,name,password, location FROM Customer WHERE [" + field + "] = '" + value + "'";
+
             SqlCommand cmd = new SqlCommand();
 
-            // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
-
             Customer currentClient = new Customer();
+
             using (DbDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.HasRows)
                 {
-
                     while (reader.Read())
                     {
-
                         currentClient.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
                         currentClient.Login = reader.GetString(reader.GetOrdinal("login"));
                         currentClient.Name = reader.GetString(reader.GetOrdinal("name"));
                         currentClient.Password = reader.GetString(reader.GetOrdinal("password"));
                         currentClient.Location = reader.GetString(reader.GetOrdinal("location"));
-
                     }
                 }
             }
@@ -42,36 +82,26 @@ namespace Project2
             return currentClient;
         }
 
-
-
         public static Customer getCustomerFromDbWhereLogin(string login)
         {
-            return getCustomerFromDB("login", login);
+            return GetCustomerFromDB("login", login);
         }
 
         public static Customer getCustomerFromDbWhereID(int id)
         {
             string idClient = Convert.ToString(id);
-            return getCustomerFromDB("idClient", idClient);
+            return GetCustomerFromDB("idClient", idClient);
         }
 
-        public static void saveNewCustomerInDb(string name, string login, string password, string location)
+        public static void SaveNewCustomerInDb(string name, string login, string password, string location)
         {
-            string sql = "INSERT INTO [dbo].[Customer] ([name],[login],[password],[location]) "
-                    + " VALUES ('" +name + "', '" + login + "' , '"+ password + "' , '" + location + "')";
-
-            // Créez un objet Command.
-            SqlCommand cmd = new SqlCommand();
-
-            // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
-            cmd.CommandText = sql;
-            int queryResult = cmd.ExecuteNonQuery();
+            string sql = "INSERT INTO Customer (name,login,password,location) "
+                    + " VALUES ('" + name + "', '" + login + "' , '" + password + "' , '" + location + "')";
+            ExecuteQuery(sql);
 
         }
 
-
-        public static void saveNewAccountInDb(Account account)
+        public static void SaveNewAccountInDb(Account account)
         {
             string typeOfAccount;
             Type type = account.GetType();
@@ -83,28 +113,23 @@ namespace Project2
             {
                 typeOfAccount = "SA";
             }
-                string sql = "INSERT INTO [dbo].[Account] ([idCustomer],[accountNumber],[amount],[type]) "
+
+            string sql = "INSERT INTO Account (idCustomer,accountNumber,amount,type) "
                         + " VALUES ('" + account.IdCustomer + "','" + account.AccountNumber + "','" + account.Amount + "','" + typeOfAccount + "')";
 
-            // Créez un objet Command.
-            SqlCommand cmd = new SqlCommand();
-
-            // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
-            cmd.CommandText = sql;
-            int queryResult = cmd.ExecuteNonQuery();
+            ExecuteQuery(sql);
 
         }
 
-        public static int getCustomerFromAccountNumber(string accountNumber)
+        public static int GetIdCustomerFromAccountNumber(string accountNumber)
         {
-            string sql = "SELECT [idCustomer] FROM [Project2-Banque].[dbo].[Account] WHERE accountNumber = '"+ accountNumber +"'";
+            string sql = "SELECT [idCustomer] FROM Account WHERE accountNumber = '"+ accountNumber +"'";
 
             // Créez un objet Command.
             SqlCommand cmd = new SqlCommand();
 
             // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
             int IdCustomer = 0;
 
@@ -121,14 +146,14 @@ namespace Project2
 
         public static Account GetAccountFromDB(string accountNumber)
         {
-            string sql = "SELECT * FROM [Account] WHERE accountNumber = '" + accountNumber + "'";
+            string sql = "SELECT idCustomer,idAccount,amount, type, isDebitAuthorized, creationDate " +
+                            "FROM [Account] WHERE accountNumber = '" + accountNumber + "'";
 
-            // Créez un objet Command.
+
             SqlCommand cmd = new SqlCommand();
-
-            // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
+
             int idCustomer = 0;
             int idAccount = 0;
             decimal amount = 0;
@@ -172,11 +197,9 @@ namespace Project2
             string sql = "SELECT COUNT([idCustomer]) AS nbCustomer FROM AccountAuthorizedCustomers WHERE idAccount = '" + account.IdAccount 
                 + "' AND idCustomer = '" + Program.currentCustomer.IdCustomer + "'";
 
-            // Créez un objet Command.
             SqlCommand cmd = new SqlCommand();
 
-            // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
             int nbCustomer = 0;
             using (DbDataReader reader = cmd.ExecuteReader())
@@ -187,6 +210,7 @@ namespace Project2
                     nbCustomer = reader.GetInt32(reader.GetOrdinal("nbCustomer"));
                 }
             }
+
             if(nbCustomer == 0)
             {
                 return false;
@@ -198,26 +222,14 @@ namespace Project2
         {
             string sql = "UPDATE Account SET amount = '" + account.Amount + "' WHERE idAccount = " + "'" + account.IdAccount + "'";
 
-            // Créez un objet Command.
-            SqlCommand cmd = new SqlCommand();
-
-            // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
+            ExecuteQuery(sql);
         }
 
         public static void UpdateAccountNumberInAccount(Account account)
         {
             string sql = "UPDATE Account SET accountNumber = '" + account.AccountNumber + "' WHERE idAccount = " + "'" + account.IdAccount + "'";
 
-            // Créez un objet Command.
-            SqlCommand cmd = new SqlCommand();
-
-            // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
+            ExecuteQuery(sql);
         }
 
         public static void InsertTransaction(Transaction currentTransaction)
@@ -258,11 +270,7 @@ namespace Project2
                 "periodicity) VALUES('" + currentTransaction.AccountOrigin + "' , '" + currentTransaction.AccountDestination + "', '" +
                 currentTransaction.Amount + "','"+ transactionType + "', GetDate()," + TransferDate + "," + startDateString + "," + endDateString + ",'" + Periodicity + "'); ";
 
-            SqlCommand cmd = new SqlCommand();
-
-            cmd.Connection = Program.sqlConnexion;
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
+            ExecuteQuery(sql);
         }
 
         public static List<Account> GetAccountsCustomer(int idCustomer)
@@ -272,7 +280,7 @@ namespace Project2
 
             SqlCommand cmd = new SqlCommand();
 
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
             List<Account> ListAccountsCustomer = new List<Account>();
@@ -309,11 +317,8 @@ namespace Project2
 
         public static List<Transaction> GetTransactionFromDB(string sql)
         {
-            // Créez un objet Command.
             SqlCommand cmd = new SqlCommand();
-
-            // Combinez l'objet Command avec Connection.
-            cmd.Connection = Program.sqlConnexion;
+            cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
             List<Transaction> currentTransactionList = new List<Transaction>();
@@ -373,6 +378,15 @@ namespace Project2
         {
             string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicityFROM [Transaction] WHERE " + Date1 + " > transferDate AND transferDate > " + Date2 + "; ";
             return GetTransactionFromDB(sql);
+        }
+
+        private static void ExecuteQuery(string sql)
+        {
+            SqlCommand cmd = new SqlCommand();
+
+            cmd.Connection = GetConnexion;
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
         }
     }
 }
