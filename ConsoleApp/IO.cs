@@ -49,12 +49,6 @@ namespace Project2
             Console.WriteLine($"\n{array}");
         }
 
-        public static void TextCenter(string text)
-        {
-            int spaceNb = (Console.WindowWidth - text.Length) / 2;
-            Console.SetCursorPosition(spaceNb, Console.CursorTop);
-            Console.WriteLine(text);
-        }
 
         public static string PromptPassword()
         {
