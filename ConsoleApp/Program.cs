@@ -17,7 +17,7 @@ namespace Project2
 
         static void Main(string[] args)
         {
-
+            
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
                 ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
@@ -32,8 +32,6 @@ namespace Project2
                 (Export opts) => RunExportCommand(opts),
                 (parserErrors) => 1
                 );
-
-            
 
         }
 
