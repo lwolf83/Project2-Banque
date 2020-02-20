@@ -99,5 +99,74 @@ namespace Project2
             }
             return password;
         }
+
+        public static bool IsComplexPassword(string password)
+        {
+            bool hasUpperletter = HasUpperletter(password);
+            bool hasLowerletter = HasLowerletter(password);
+            bool hasEnoughLetters = HasEnoughLetters(password);
+            bool hasNumber = HasNumber(password);
+            bool hasSpecialCharacter = HasSpecialCharacter(password);
+            bool result = hasUpperletter && hasLowerletter && hasEnoughLetters && hasNumber && hasSpecialCharacter;
+            return result;
+        }
+
+        public static bool HasUpperletter(string password)
+        {
+            foreach (char letter in password)
+            {
+                if (char.IsUpper(letter))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool HasLowerletter(string password)
+        {
+            foreach (char letter in password)
+            {
+                if (char.IsLower(letter))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool HasEnoughLetters(string password)
+        {
+            if (password.Length >= 8)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool HasNumber(string password)
+        {
+            foreach (char character in password)
+            {
+                if (char.IsDigit(character))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool HasSpecialCharacter(string password)
+        {
+            string specialCharacter = "/#+=-*@%&_.;,!?()[]{}<>²~'|`\\\"^°£$¤µ¨§:";
+            foreach (char character in password)
+            {
+                if (specialCharacter.Contains(character))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

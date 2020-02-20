@@ -165,7 +165,7 @@ namespace Project2
             {
                 Console.WriteLine("Please, set your password : ");
                 password = IO.PromptPassword();
-                isComplexPassword = Customer.IsComplexPassword(password);
+                isComplexPassword = IO.IsComplexPassword(password);
 
                 if (!isComplexPassword)
                 {
