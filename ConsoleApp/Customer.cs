@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Data.Common;
 
 namespace Project2
 {
@@ -14,11 +14,15 @@ namespace Project2
         public List<Account> Accounts { get; set; } = new List<Account>();
 
 
-        public Customer()
-        { }
+        public Customer(DbDataReader reader)
+        {
+            IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
+            Login = reader.GetString(reader.GetOrdinal("login"));
+            Name = reader.GetString(reader.GetOrdinal("name"));
+            Password = reader.GetString(reader.GetOrdinal("password"));
+            Location = reader.GetString(reader.GetOrdinal("location"));
+        }
 
-        public Customer(string name, string login, string location, string password)
-        { }
 
         public Customer(string login)
         {
@@ -39,84 +43,16 @@ namespace Project2
             }
             else
             { 
-            IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
-            return false;
+                IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
+                return false;
             }
         }
 
-        public static bool IsComplexPassword(string password)
-        {
-            bool hasUpperletter = HasUpperletter(password);
-            bool hasLowerletter = HasLowerletter(password);
-            bool hasEnoughLetters = HasEnoughLetters(password);
-            bool hasNumber = HasNumber(password);
-            bool hasSpecialCharacter = HasSpecialCharacter(password);
-            bool result = hasUpperletter && hasLowerletter && hasEnoughLetters && hasNumber && hasSpecialCharacter;
-            return result;
-        }
-
-        public static bool HasUpperletter(string password)
-        {
-            foreach(char letter in password)
-            {
-                if (char.IsUpper(letter))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static bool HasLowerletter(string password)
-        {
-            foreach (char letter in password)
-            {
-                if (char.IsLower(letter))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static bool HasEnoughLetters(string password)
-        {
-            if(password.Length >= 8)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public static bool HasNumber(string password)
-        {
-            foreach(char character in password)
-            {
-                if(char.IsDigit(character))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static bool HasSpecialCharacter(string password)
-        {
-            string specialCharacter = "/#+=-*@%&_.;,!?()[]{}<>";
-            foreach(char character in password)
-            {
-                if(specialCharacter.Contains(character))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
+      
         public bool IsCustomerExisting(string login)
         { // vérifie dans la base de données si le client existe en fonction de son login
             Customer existingCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
-            if (existingCustomer.Login == null)
+            if (existingCustomer == null)
             {
                 return false;
             }
@@ -161,17 +97,17 @@ namespace Project2
             currentTransaction.AccountOrigin = accountOrigin.IdAccount;
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
+            currentTransaction.TransactionDate = DateTime.Now;
             currentTransaction.TransferDate = DateTime.Now;
             DBQuery.InsertTransaction(currentTransaction);
-
-            DBQuery.UpdateAmountInAccount(accountOrigin);
-            DBQuery.UpdateAmountInAccount(accountDestination);
-
+            //DBQuery.UpdateAmountInAccount(accountOrigin);
+            //DBQuery.UpdateAmountInAccount(accountDestination);
+            List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
             Console.WriteLine("We do the transfer");
         }
 
 
-        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, string startDate, string endDate, int periodicity)
+        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime startDate, DateTime endDate, int periodicity)
         {
 
 
@@ -180,8 +116,8 @@ namespace Project2
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
             currentTransaction.TransactionDate = DateTime.Now;
-            currentTransaction.StartDate = Convert.ToDateTime(startDate);
-            currentTransaction.EndDate = Convert.ToDateTime(endDate);
+            currentTransaction.StartDate = startDate;
+            currentTransaction.EndDate = endDate;
             currentTransaction.Periodicity = periodicity;
             DBQuery.InsertTransaction(currentTransaction);
         }

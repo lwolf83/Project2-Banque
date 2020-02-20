@@ -34,6 +34,12 @@ namespace Project2
 
         }
 
+        ~DBQuery()
+        {
+            GetConnexion.Close();
+            GetConnexion.Dispose();
+        }
+
         public static SqlConnection GetConnexion
         {
             get
@@ -46,23 +52,25 @@ namespace Project2
             }
         }
 
-        ~DBQuery()
-        {
-            GetConnexion.Close();
-            GetConnexion.Dispose();
-        }
-
 
         public static Customer GetCustomerFromDB(string field, string value)
         {
-            string sql = "SELECT idCustomer,login,name,password, location FROM Customer WHERE [" + field + "] = '" + value + "'";
+            string sql = "SELECT idCustomer,login,name,password, location FROM Customer WHERE " + field  + " = @value";
 
             SqlCommand cmd = new SqlCommand();
-
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
-            Customer currentClient = new Customer();
+            IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@value", value)
+            };
+            foreach (SqlParameter parameter in parameters)
+            {
+                cmd.Parameters.Add(parameter);
+            }
+
+            Customer currentClient = null;
 
             using (DbDataReader reader = cmd.ExecuteReader())
             {
@@ -70,11 +78,7 @@ namespace Project2
                 {
                     while (reader.Read())
                     {
-                        currentClient.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
-                        currentClient.Login = reader.GetString(reader.GetOrdinal("login"));
-                        currentClient.Name = reader.GetString(reader.GetOrdinal("name"));
-                        currentClient.Password = reader.GetString(reader.GetOrdinal("password"));
-                        currentClient.Location = reader.GetString(reader.GetOrdinal("location"));
+                        currentClient  = new Customer(reader);
                     }
                 }
             }
@@ -96,8 +100,18 @@ namespace Project2
         public static void SaveNewCustomerInDb(string name, string login, string password, string location)
         {
             string sql = "INSERT INTO Customer (name,login,password,location) "
-                    + " VALUES ('" + name + "', '" + login + "' , '" + password + "' , '" + location + "')";
-            ExecuteQuery(sql);
+                    + " VALUES ('@name', '@login' , '@password' , '@location')";
+
+            IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@name", name),
+                new SqlParameter("@login", login),
+                new SqlParameter("@password", password),
+                new SqlParameter("@location", location)
+
+             };
+
+            ExecuteQuery(sql, parameters);
 
         }
 
@@ -115,22 +129,31 @@ namespace Project2
             }
 
             string sql = "INSERT INTO Account (idCustomer,accountNumber,amount,type) "
-                        + " VALUES ('" + account.IdCustomer + "','" + account.AccountNumber + "','" + account.Amount + "','" + typeOfAccount + "')";
+                        + " VALUES ('@idCustomer','@accountNumber','@amount','@type')";
 
-            ExecuteQuery(sql);
+
+            IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@idCustomer", account.IdCustomer),
+                new SqlParameter("@accountNumber", account.AccountNumber),
+                new SqlParameter("@amount", account.Amount),
+                new SqlParameter("@type", typeOfAccount)
+
+             };
+
+            ExecuteQuery(sql, parameters);
 
         }
 
         public static int GetIdCustomerFromAccountNumber(string accountNumber)
         {
-            string sql = "SELECT [idCustomer] FROM Account WHERE accountNumber = '"+ accountNumber +"'";
+            string sql = "SELECT [idCustomer] FROM Account WHERE accountNumber = '@accountNumber'";
 
-            // Créez un objet Command.
             SqlCommand cmd = new SqlCommand();
-
-            // Combinez l'objet Command avec Connection.
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@accountNumber", accountNumber));
+
             int IdCustomer = 0;
 
             using (DbDataReader reader = cmd.ExecuteReader())
@@ -141,18 +164,20 @@ namespace Project2
                     IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
                 }
             }
+
             return IdCustomer;
         }
 
         public static Account GetAccountFromDB(string accountNumber)
         {
             string sql = "SELECT idCustomer,idAccount,amount, type, isDebitAuthorized, creationDate " +
-                            "FROM [Account] WHERE accountNumber = '" + accountNumber + "'";
+                            "FROM [Account] WHERE accountNumber = '@accountNumber'";
 
 
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@accountNumber", accountNumber));
 
             int idCustomer = 0;
             int idAccount = 0;
@@ -174,15 +199,8 @@ namespace Project2
                     creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
                 }
             }
-            Account resultAccount;
-            if(type == "CA")
-            {
-                resultAccount = new CheckingAccount();
-            }
-            else
-            {
-                resultAccount = new SavingsAccount();
-            }
+            Account resultAccount = AccountFactory.Create(type);
+
             resultAccount.AccountNumber = accountNumber;
             resultAccount.Amount = amount;
             resultAccount.CreationDate = creationDate;
@@ -194,13 +212,15 @@ namespace Project2
 
         public static bool IsCurrentCustomerAuthorizedOnAccount(Account account)
         {
-            string sql = "SELECT COUNT([idCustomer]) AS nbCustomer FROM AccountAuthorizedCustomers WHERE idAccount = '" + account.IdAccount 
-                + "' AND idCustomer = '" + Program.currentCustomer.IdCustomer + "'";
+            string sql = "SELECT COUNT([idCustomer]) AS nbCustomer FROM AccountAuthorizedCustomers WHERE idAccount = '@idAccount' " +
+                         "AND idCustomer = '@idCustomer'";
 
             SqlCommand cmd = new SqlCommand();
-
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@idAccount", account.IdAccount));
+            cmd.Parameters.Add(new SqlParameter("@idCustomer", Program.currentCustomer.IdCustomer));
+
             int nbCustomer = 0;
             using (DbDataReader reader = cmd.ExecuteReader())
             {
@@ -220,16 +240,28 @@ namespace Project2
 
         public static void  UpdateAmountInAccount(Account account)
         {
-            string sql = "UPDATE Account SET amount = '" + account.Amount + "' WHERE idAccount = " + "'" + account.IdAccount + "'";
+            string sql = "UPDATE Account SET amount = '@amount' WHERE idAccount = '@idAccount'";
 
-            ExecuteQuery(sql);
+            IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@amount", account.Amount),
+                new SqlParameter("@idAccount", account.IdAccount)
+             };
+
+            ExecuteQuery(sql, parameters);
         }
 
         public static void UpdateAccountNumberInAccount(Account account)
         {
-            string sql = "UPDATE Account SET accountNumber = '" + account.AccountNumber + "' WHERE idAccount = " + "'" + account.IdAccount + "'";
+            string sql = "UPDATE Account SET accountNumber = '@AccountNumber' WHERE idAccount = '@idAccount'";
 
-            ExecuteQuery(sql);
+            IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@AccountNumber", account.AccountNumber),
+                new SqlParameter("@idAccount", account.IdAccount)
+             };
+
+            ExecuteQuery(sql, parameters);
         }
 
         public static void InsertTransaction(Transaction currentTransaction)
@@ -240,21 +272,12 @@ namespace Project2
             int Periodicity=0;
             string TransferDate = "";
 
-
-
-            if (currentTransaction.GetType().Name == "Instant")
+            if (currentTransaction.GetType().Name == "Instant" || currentTransaction.GetType().Name == "Deferred")
             {
-                transactionType = "Instant";
                 startDateString = "null";
                 endDateString = "null";
-                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
-            }
-            else if (currentTransaction.GetType().Name == "Deferred")
-            {
-                transactionType = "Deferred";
-                startDateString = "null";
-                endDateString = "null";
-                TransferDate = "'" + Convert.ToString(currentTransaction.TransferDate) + "'";
+                TransferDate = "'" + currentTransaction.TransactionDate.ToString("yyyy-MM-dd") + "'";
+                transactionType = currentTransaction.GetType().Name;
             }
             else if(currentTransaction.GetType().Name == "Permanent")
             {
@@ -267,21 +290,33 @@ namespace Project2
             }
 
             string sql = "INSERT INTO[Transaction] (idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, transferDate, beginDate, endDate," +
-                "periodicity) VALUES('" + currentTransaction.AccountOrigin + "' , '" + currentTransaction.AccountDestination + "', '" +
-                currentTransaction.Amount + "','"+ transactionType + "', GetDate()," + TransferDate + "," + startDateString + "," + endDateString + ",'" + Periodicity + "'); ";
+                "periodicity) VALUES('@AccountOrigin' , '@AccountDestination', '@Amount','@transactionType', GetDate(), @TransferDate, @startDateString, @endDateString,'@Periodicity'); ";
 
-            ExecuteQuery(sql);
+            IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@AccountOrigin", currentTransaction.AccountOrigin),
+                new SqlParameter("@AccountDestination", currentTransaction.AccountDestination),
+                new SqlParameter("@Amount", currentTransaction.Amount),
+                new SqlParameter("@transactionType", transactionType),
+                new SqlParameter("@TransferDate", TransferDate),
+                new SqlParameter("@startDateString", startDateString),
+                new SqlParameter("@endDateString", endDateString),
+                new SqlParameter("@Periodicity", Periodicity)
+             };
+
+            ExecuteQuery(sql, parameters);
         }
 
         public static List<Account> GetAccountsCustomer(int idCustomer)
         {
             string sql = " SELECT[idAccount],[idCustomer],[accountNumber],[amount],[type],[isDebitAuthorized],[creationDate] FROM Account " +
-                "WHERE idCustomer = " + idCustomer;
+                            "WHERE idCustomer = @idCustomer";
 
             SqlCommand cmd = new SqlCommand();
 
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@idCustomer", idCustomer));
 
             List<Account> ListAccountsCustomer = new List<Account>();
             using (DbDataReader reader = cmd.ExecuteReader())
@@ -292,15 +327,7 @@ namespace Project2
                     while (reader.Read())
                     {
                         string typeAccount = reader.GetString(reader.GetOrdinal("type")); ;
-                        Account currentCustomerAccount;
-                        if (typeAccount == "CA")
-                        {
-                            currentCustomerAccount = new CheckingAccount();
-                        }
-                        else
-                        {
-                            currentCustomerAccount = new SavingsAccount();
-                        }
+                        Account currentCustomerAccount = AccountFactory.Create(typeAccount);
 
                         currentCustomerAccount.IdAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
                         currentCustomerAccount.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
@@ -380,12 +407,20 @@ namespace Project2
             return GetTransactionFromDB(sql);
         }
 
-        private static void ExecuteQuery(string sql)
+        private static void ExecuteQuery(string sql, IEnumerable<SqlParameter> parameters = null)
         {
             SqlCommand cmd = new SqlCommand();
-
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
+
+            if(parameters != null)
+            {
+                foreach (SqlParameter parameter in parameters)
+                {
+                    cmd.Parameters.Add(parameter);
+                }
+            }
+
             cmd.ExecuteNonQuery();
         }
     }
