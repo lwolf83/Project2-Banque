@@ -120,7 +120,7 @@ namespace Project2
         public bool IsCustomerExisting(string login)
         { // vérifie dans la base de données si le client existe en fonction de son login
             Customer existingCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
-            if (existingCustomer.Login == null)
+            if (existingCustomer == null)
             {
                 return false;
             }
