@@ -43,8 +43,8 @@ namespace Project2
             }
             else
             { 
-            IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
-            return false;
+                IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
+                return false;
             }
         }
 
@@ -165,8 +165,9 @@ namespace Project2
             currentTransaction.AccountOrigin = accountOrigin.IdAccount;
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
+            currentTransaction.TransactionDate = DateTime.Now;
             currentTransaction.TransferDate = DateTime.Now;
-           // DBQuery.InsertTransaction(currentTransaction);
+            DBQuery.InsertTransaction(currentTransaction);
             //DBQuery.UpdateAmountInAccount(accountOrigin);
             //DBQuery.UpdateAmountInAccount(accountDestination);
             List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
