@@ -8,6 +8,7 @@ using CsvHelper.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Project2
 {
@@ -18,6 +19,8 @@ namespace Project2
 
         static void Main(string[] args)
         {
+
+            Console.InputEncoding = Encoding.UTF8;
 
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,

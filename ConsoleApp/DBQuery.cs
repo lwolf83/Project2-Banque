@@ -243,8 +243,6 @@ namespace Project2
             int Periodicity=0;
             string TransferDate = "";
 
-
-
             if (currentTransaction.GetType().Name == "Instant" || currentTransaction.GetType().Name == "Deferred")
             {
                 startDateString = "null";
