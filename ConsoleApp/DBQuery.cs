@@ -233,6 +233,96 @@ namespace Project2
             return resultAccount;
         }
 
+        public static List<TransfertMoney> GetTransfertList(string accountNumber)
+        {
+            string sql = "SELECT [idTransfert],[idOriginAccount],[idDestinationAccount],[amount],[transferDate],isDone, idTransaction" +
+                            " FROM [Transfert] WHERE idOriginAccount= @idAccount";
+
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = GetConnexion;
+            cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@idAccount", GetIdAccountFromAccountNumber(accountNumber)));
+            List<TransfertMoney> newTransfertList = new List<TransfertMoney>();
+
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        TransfertMoney transfertMoney = new TransfertMoney();
+                        transfertMoney.idTransfert = reader.GetInt32(reader.GetOrdinal("idTransfert"));
+                        transfertMoney.IdOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
+                        transfertMoney.idDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
+                        transfertMoney.TransfertDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
+                        transfertMoney.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
+                        transfertMoney.IsDone = reader.GetBoolean(reader.GetOrdinal("isDone"));
+                        transfertMoney.IdTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));
+                        newTransfertList.Add(transfertMoney);
+                    }
+                }
+                return newTransfertList;
+            }
+        }
+        
+        public static List<Transaction> GetTransactionList(string accountNumber)
+        {
+            string sql = "SELECT [idTransaction],[idOriginAccount],[idDestinationAccount],[amount],[transactionType],[transactionDate],[transferDate],[beginDate],[endDate],[periodicity]" +
+                            " FROM [Transaction] WHERE idOriginAccount= @idAccount";
+
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = GetConnexion;
+            cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@idAccount", GetIdAccountFromAccountNumber(accountNumber)));
+            List<Transaction> newTransactiontList = new List<Transaction>();
+
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Transaction transaction = Transaction.Create(reader.GetString(reader.GetOrdinal("transactionType")));
+                        transaction.IdTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));
+                        transaction.AccountOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
+                        transaction.AccountDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
+                        transaction.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
+                        transaction.TransactionDate = reader.GetDateTime(reader.GetOrdinal("transactionDate"));
+                        transaction.TransferDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
+                        transaction.StartDate = reader.GetDateTime(reader.GetOrdinal("beginDate"));
+                        transaction.EndDate = reader.GetDateTime(reader.GetOrdinal("endDate"));
+                        transaction.Periodicity = reader.GetInt32(reader.GetOrdinal("periodicity"));
+
+                        newTransactiontList.Add(transaction);
+                    }
+                }
+                return newTransactiontList;
+            }
+        }
+
+        public static int GetIdAccountFromAccountNumber(string accountNumber)
+        {
+            string sql = "SELECT [idAccount] FROM [Account] WHERE accountNumber = @accountNumber";
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = GetConnexion;
+            cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@accountNumber", accountNumber));
+
+            int idAccount = 0;
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    idAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
+                }
+                return idAccount;
+            }
+        }
+
         public static bool IsCurrentCustomerAuthorizedOnAccount(Account account)
         {
             string sql = "SELECT COUNT([idCustomer]) AS nbCustomer FROM AccountAuthorizedCustomers WHERE idAccount = '@idAccount' " +

@@ -19,5 +19,24 @@ namespace Project2
 
         public abstract List<TransfertMoney> GetTransferts();
 
+        public static Transaction Create (string transactionType)
+        {
+            Transaction transaction;
+            if(transactionType == "Instant")
+            {
+               transaction = new Instant();
+            }
+            else if (transactionType == "Deffered")
+            {
+                transaction = new Deferred();
+
+            }
+            else
+            {
+                transaction = new Permanent();
+
+            }
+            return transaction;
+        }
     }
 }
