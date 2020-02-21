@@ -36,9 +36,6 @@ namespace Project2
                 (Export opts) => RunExportCommand(opts),
                 (parserErrors) => 1
                 );
-                
-            /*String str = String.Format("{0,-50}{1,5}\n{2,-50}{3,5:C2}", "Description", "Price", "Supère produit qui pète tout", 99.99m);
-            Console.WriteLine(str);*/
 
         }
 
@@ -165,7 +162,7 @@ namespace Project2
             {
                 Console.WriteLine("Please, set your password : ");
                 password = IO.PromptPassword();
-                isComplexPassword = Customer.IsComplexPassword(password);
+                isComplexPassword = IO.IsComplexPassword(password);
 
                 if (!isComplexPassword)
                 {
