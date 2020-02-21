@@ -27,9 +27,14 @@ BEGIN
 	DROP TABLE [Transaction]
 END
 
+IF(EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Transfert'))
+BEGIN
+	DROP TABLE [Transfert]
+END
+
 CREATE TABLE [Customer](
 	[idCustomer] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	[name] [varchar](50) NOT NULL,
+	[name] [varchar](50) NULL,
 	[login] [varchar](50) NOT NULL,
 	[password] [varchar](256) NOT NULL,
 	[location] [varchar](50) NULL,
