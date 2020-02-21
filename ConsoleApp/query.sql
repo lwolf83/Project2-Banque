@@ -73,7 +73,9 @@ CREATE TABLE [Transfert](
 	[idOriginAccount] [int] NOT NULL, 
 	[idDestinationAccount] [int] NOT NULL,
 	[amount] [money] NOT NULL,
-	[transferDate] DATETIME NOT NULL
+	[transferDate] DATETIME NOT NULL,
+	[isDone] [bit] DEFAULT 0,
+	[idTransaction] [int] NOT NULL
 	) 
 GO
 

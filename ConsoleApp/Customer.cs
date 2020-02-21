@@ -99,9 +99,9 @@ namespace Project2
             currentTransaction.Amount = amount;
             currentTransaction.TransactionDate = DateTime.Now;
             currentTransaction.TransferDate = DateTime.Now;
-            DBQuery.InsertTransaction(currentTransaction);
-            DBQuery.UpdateAmountInAccount(accountOrigin);
-            DBQuery.UpdateAmountInAccount(accountDestination);
+            //DBQuery.InsertTransaction(currentTransaction);
+            //DBQuery.UpdateAmountInAccount(accountOrigin);
+            //DBQuery.UpdateAmountInAccount(accountDestination);
             List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
             Console.WriteLine("We do the transfer");
             DBQuery.SaveNewTransferInDb(transfertList);

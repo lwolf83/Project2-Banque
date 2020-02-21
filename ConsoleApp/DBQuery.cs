@@ -149,8 +149,8 @@ namespace Project2
         {
             foreach (TransfertMoney transfert in transfertList)
             {
-                string sql = "INSERT INTO Account (idOriginAccount,idDestinationAccount,amount,transferDate) "
-                        + " VALUES ('@transfert.IdOrigin','@idDestinationAccount','@amount','@idOriginAccount')";
+                string sql = "INSERT INTO Transfert (idOriginAccount,idDestinationAccount,amount,transferDate) "
+                        + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate)";
 
                 IEnumerable<SqlParameter> parameters = new List<SqlParameter>
                 {
@@ -165,7 +165,7 @@ namespace Project2
 
         public static int GetIdCustomerFromAccountNumber(string accountNumber)
         {
-            string sql = "SELECT [idCustomer] FROM Account WHERE accountNumber = '@accountNumber'";
+            string sql = "SELECT [idCustomer] FROM Account WHERE accountNumber = @accountNumber";
 
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = GetConnexion;
@@ -189,7 +189,7 @@ namespace Project2
         public static Account GetAccountFromDB(string accountNumber)
         {
             string sql = "SELECT idCustomer,idAccount,amount, type, isDebitAuthorized, creationDate " +
-                            "FROM [Account] WHERE accountNumber = '@accountNumber'";
+                            "FROM [Account] WHERE accountNumber = @accountNumber";
 
 
             SqlCommand cmd = new SqlCommand();
