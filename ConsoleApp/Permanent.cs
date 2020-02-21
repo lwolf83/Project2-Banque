@@ -13,7 +13,7 @@ namespace Project2
             {
                 TransfertMoney currentTransfert = new TransfertMoney(this);
                 Transfert.Add(currentTransfert);
-                StartDate.AddDays(Periodicity);
+                StartDate = StartDate.AddDays(Periodicity);
             }
             return Transfert;
         }
