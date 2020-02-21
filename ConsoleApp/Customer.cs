@@ -144,18 +144,15 @@ namespace Project2
         }
 
 
-        /*public List<Account> GetAccountList()
+        public static List<Account> GetAccountList(int id)
         {
-            CheckingAccount newca1 = new CheckingAccount("CANUM01", 2850.50, 006984);
+            /*CheckingAccount newca1 = new CheckingAccount("CANUM01", 2850.50, 006984);
             CheckingAccount newca2 = new CheckingAccount("CANUM02", 00.00, 006984);
-            SavingsAccount newsa1 = new SavingsAccount("SANUM01", 20800.00, 006984);
+            SavingsAccount newsa1 = new SavingsAccount("SANUM01", 20800.00, 006984);*/
+            
+            List<Account> currentCustomerAccountsList = DBQuery.GetAccountsCustomer(id);
 
-            List<Account> currentClientAccountsList = new List<Account>();
-            currentClientAccountsList.Add(newca1);
-            currentClientAccountsList.Add(newca2);
-            currentClientAccountsList.Add(newsa1);
-
-            return currentClientAccountsList;
-        }*/
+            return currentCustomerAccountsList;
+        }
     }
 }

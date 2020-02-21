@@ -203,13 +203,23 @@ namespace Project2
                 currentCustomer.AddSavingAccount();
             }
 
-
+            
             return 1;
         }
 
         static int RunListAccountCommand(ListAccountOptions opts)
         {
             Connection(opts);
+            Customer currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
+            List<Account> AccountsList = Customer.GetAccountList(currentCustomer.IdCustomer);
+            
+            int i = 1;
+            foreach (Account account in AccountsList)
+            {
+                
+                Console.WriteLine($"Compte n°{i} : {account}");
+                i = i+1;
+            }
             return 1;
         }
 
