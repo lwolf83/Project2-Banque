@@ -100,7 +100,7 @@ namespace Project2
             currentTransaction.Amount = amount;
             currentTransaction.TransactionDate = DateTime.Now;
             currentTransaction.TransferDate = DateTime.Now;
-            //DBQuery.InsertTransaction(currentTransaction);
+            DBQuery.InsertTransaction(currentTransaction);
             //DBQuery.UpdateAmountInAccount(accountOrigin);
             //DBQuery.UpdateAmountInAccount(accountDestination);
             List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
@@ -121,7 +121,10 @@ namespace Project2
             currentTransaction.StartDate = startDate;
             currentTransaction.EndDate = endDate;
             currentTransaction.Periodicity = periodicity;
-            DBQuery.InsertTransaction(currentTransaction);
+            int idTransaction = DBQuery.InsertTransaction(currentTransaction);
+            currentTransaction.IdTransaction = idTransaction;
+            List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
+            DBQuery.SaveNewTransferInDb(transfertList);
         }
 
         public void MakeNewDefferedTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime defferedtransactionDate)
@@ -135,11 +138,14 @@ namespace Project2
             currentTransaction.AccountOrigin = accountOrigin.IdAccount;
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
-            currentTransaction.TransactionDate = defferedtransactionDate;
+            currentTransaction.TransferDate = defferedtransactionDate;
+            currentTransaction.TransactionDate = DateTime.Now;
             DBQuery.InsertTransaction(currentTransaction);
+            List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
+            DBQuery.SaveNewTransferInDb(transfertList);
 
-            DBQuery.UpdateAmountInAccount(accountOrigin);
-            DBQuery.UpdateAmountInAccount(accountDestination);
+            //DBQuery.UpdateAmountInAccount(accountOrigin);
+            //DBQuery.UpdateAmountInAccount(accountDestination);
 
 
             Console.WriteLine("We do the transfer");

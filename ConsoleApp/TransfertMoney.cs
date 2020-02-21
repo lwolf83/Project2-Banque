@@ -23,7 +23,7 @@ namespace Project2
             TransfertDate = transaction.TransferDate;
             Amount = transaction.Amount;
             IsDone = false;
-            IdTransaction = IdTransaction;
+            IdTransaction = transaction.IdTransaction;
         }
 
         public TransfertMoney(Deferred transaction)
@@ -33,9 +33,8 @@ namespace Project2
             TransfertDate = transaction.TransferDate;
             Amount = transaction.Amount;
             IsDone = false;
-            IdTransaction = IdTransaction;
+            IdTransaction = transaction.IdTransaction;
         }
-
 
         public TransfertMoney(Permanent transaction)
         {
@@ -44,7 +43,7 @@ namespace Project2
             TransfertDate = transaction.StartDate;
             Amount = transaction.Amount;
             IsDone = false;
-            IdTransaction = IdTransaction;
+            IdTransaction = transaction.IdTransaction;
         }
 
     }

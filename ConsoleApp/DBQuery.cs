@@ -153,8 +153,8 @@ namespace Project2
         {
             foreach (TransfertMoney transfert in transfertList)
             {
-                string sql = "INSERT INTO Transfert (idOriginAccount,idDestinationAccount,amount,transferDate) "
-                        + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate)";
+                string sql = "INSERT INTO Transfert (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) "
+                        + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate, 0, @idTransaction)";
 
                 IEnumerable<SqlParameter> parameters = new List<SqlParameter>
                 {
@@ -162,6 +162,7 @@ namespace Project2
                     new SqlParameter ("@idDestinationAccount", transfert.idDestination),
                     new SqlParameter ("@amount", transfert.Amount),
                     new SqlParameter ("@transferDate", transfert.TransfertDate),
+                    new SqlParameter ("@idTransaction", transfert.IdTransaction)
                 };
                 ExecuteQuery(sql,parameters);
             }
@@ -376,47 +377,42 @@ namespace Project2
             ExecuteQuery(sql, parameters);
         }
 
-        public static void InsertTransaction(Transaction currentTransaction)
+        public static int InsertTransaction(Transaction currentTransaction)
         {
-            string transactionType="";
-            string startDateString="null";
-            string endDateString="null";
-            int Periodicity=0;
-            string TransferDate = "";
+            string transactionType = currentTransaction.GetType().Name;
+            DateTime startDateString = currentTransaction.StartDate;
+            DateTime endDateString = currentTransaction.EndDate;
+            int Periodicity= currentTransaction.Periodicity;
+            DateTime TransferDate = currentTransaction.TransferDate;
 
-            if (currentTransaction.GetType().Name == "Instant" || currentTransaction.GetType().Name == "Deferred")
-            {
-                startDateString = "null";
-                endDateString = "null";
-                TransferDate = "'" + currentTransaction.TransactionDate.ToString("yyyy-MM-dd") + "'";
-                transactionType = currentTransaction.GetType().Name;
-            }
-            else if(currentTransaction.GetType().Name == "Permanent")
-            {
-                transactionType = "Permanent";
-                Permanent permanentTransaction = (Permanent) currentTransaction;
-                startDateString = "'" + permanentTransaction.StartDate.ToString("yyyy-MM-dd") + "'";
-                endDateString = "'" + permanentTransaction.EndDate.ToString("yyyy-MM-dd") + "'";
-                Periodicity = permanentTransaction.Periodicity;
-                TransferDate = "null"; 
-            }
+            string sql;
 
-            string sql = "INSERT INTO[Transaction] (idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, transferDate, beginDate, endDate," +
-                "periodicity) VALUES('@AccountOrigin' , '@AccountDestination', '@Amount','@transactionType', GetDate(), @TransferDate, @startDateString, @endDateString,'@Periodicity'); ";
-
-            IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+            List<SqlParameter> parameters = new List<SqlParameter>
             {
                 new SqlParameter("@AccountOrigin", currentTransaction.AccountOrigin),
                 new SqlParameter("@AccountDestination", currentTransaction.AccountDestination),
                 new SqlParameter("@Amount", currentTransaction.Amount),
                 new SqlParameter("@transactionType", transactionType),
-                new SqlParameter("@TransferDate", TransferDate),
-                new SqlParameter("@startDateString", startDateString),
-                new SqlParameter("@endDateString", endDateString),
-                new SqlParameter("@Periodicity", Periodicity)
+                
              };
 
-            ExecuteQuery(sql, parameters);
+            if (currentTransaction.GetType().Name == "Instant" || currentTransaction.GetType().Name == "Deferred")
+            {
+                parameters.Add(new SqlParameter("@TransferDate", TransferDate));
+                sql = "INSERT INTO[Transaction] " +
+                    "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, transferDate) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @TransferDate);SELECT CAST(SCOPE_IDENTITY() AS int)";
+
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@startDateString", startDateString));
+                parameters.Add(new SqlParameter("@endDateString", endDateString));
+                parameters.Add(new SqlParameter("@Periodicity", Periodicity));
+                sql = "INSERT INTO[Transaction] " +
+                    "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, beginDate, endDate, periodicity) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @startDateString, @endDateString,@Periodicity);SELECT CAST(SCOPE_IDENTITY() AS int)";
+            }
+
+            return ExecuteQueryWithID(sql, parameters);
         }
 
         public static List<Account> GetAccountsCustomer(int idCustomer)
