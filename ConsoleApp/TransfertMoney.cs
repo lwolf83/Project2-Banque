@@ -11,7 +11,7 @@ namespace Project2
         public DateTime TransfertDate { get; set; }
         public Decimal Amount { get; set; }
         public bool IsDone { get; set; }
-        public Int16 IdTransaction { get; set; }
+        public int IdTransaction { get; set; }
 
         public TransfertMoney(Instant transaction)
         {
@@ -20,7 +20,7 @@ namespace Project2
             TransfertDate = transaction.TransferDate;
             Amount = transaction.Amount;
             IsDone = false;
-            IdTransaction = IdTransaction;
+            IdTransaction = transaction.IdTransaction;
         }
 
         public TransfertMoney(Deferred transaction)
@@ -30,9 +30,8 @@ namespace Project2
             TransfertDate = transaction.TransferDate;
             Amount = transaction.Amount;
             IsDone = false;
-            IdTransaction = IdTransaction;
+            IdTransaction = transaction.IdTransaction;
         }
-
 
         public TransfertMoney(Permanent transaction)
         {
@@ -41,7 +40,7 @@ namespace Project2
             TransfertDate = transaction.StartDate;
             Amount = transaction.Amount;
             IsDone = false;
-            IdTransaction = IdTransaction;
+            IdTransaction = transaction.IdTransaction;
         }
 
     }

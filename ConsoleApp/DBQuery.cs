@@ -153,8 +153,8 @@ namespace Project2
         {
             foreach (TransfertMoney transfert in transfertList)
             {
-                string sql = "INSERT INTO Transfert (idOriginAccount,idDestinationAccount,amount,transferDate) "
-                        + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate)";
+                string sql = "INSERT INTO Transfert (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) "
+                        + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate, 0, @idTransaction)";
 
                 IEnumerable<SqlParameter> parameters = new List<SqlParameter>
                 {
@@ -162,6 +162,7 @@ namespace Project2
                     new SqlParameter ("@idDestinationAccount", transfert.idDestination),
                     new SqlParameter ("@amount", transfert.Amount),
                     new SqlParameter ("@transferDate", transfert.TransfertDate),
+                    new SqlParameter ("@idTransaction", transfert.IdTransaction)
                 };
                 ExecuteQuery(sql,parameters);
             }
@@ -286,7 +287,7 @@ namespace Project2
             ExecuteQuery(sql, parameters);
         }
 
-        public static void InsertTransaction(Transaction currentTransaction)
+        public static int InsertTransaction(Transaction currentTransaction)
         {
             string transactionType = currentTransaction.GetType().Name;
             DateTime startDateString = currentTransaction.StartDate;
@@ -309,7 +310,7 @@ namespace Project2
             {
                 parameters.Add(new SqlParameter("@TransferDate", TransferDate));
                 sql = "INSERT INTO[Transaction] " +
-                    "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, transferDate) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @TransferDate); ";
+                    "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, transferDate) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @TransferDate);SELECT CAST(SCOPE_IDENTITY() AS int)";
 
             }
             else
@@ -318,10 +319,10 @@ namespace Project2
                 parameters.Add(new SqlParameter("@endDateString", endDateString));
                 parameters.Add(new SqlParameter("@Periodicity", Periodicity));
                 sql = "INSERT INTO[Transaction] " +
-                    "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, beginDate, endDate, periodicity) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @startDateString, @endDateString,@Periodicity); ";
+                    "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, beginDate, endDate, periodicity) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @startDateString, @endDateString,@Periodicity);SELECT CAST(SCOPE_IDENTITY() AS int)";
             }
 
-            ExecuteQuery(sql, parameters);
+            return ExecuteQueryWithID(sql, parameters);
         }
 
         public static List<Account> GetAccountsCustomer(int idCustomer)
