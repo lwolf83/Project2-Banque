@@ -149,9 +149,27 @@ namespace Project2
 
         }
 
+        public static void SaveNewTransferInDb(List<TransfertMoney> transfertList)
+        {
+            foreach (TransfertMoney transfert in transfertList)
+            {
+                string sql = "INSERT INTO Transfert (idOriginAccount,idDestinationAccount,amount,transferDate) "
+                        + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate)";
+
+                IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter ("@idOriginAccount", transfert.IdOrigin),
+                    new SqlParameter ("@idDestinationAccount", transfert.idDestination),
+                    new SqlParameter ("@amount", transfert.Amount),
+                    new SqlParameter ("@transferDate", transfert.TransfertDate),
+                };
+                ExecuteQuery(sql,parameters);
+            }
+        }
+
         public static int GetIdCustomerFromAccountNumber(string accountNumber)
         {
-            string sql = "SELECT [idCustomer] FROM Account WHERE accountNumber = '@accountNumber'";
+            string sql = "SELECT [idCustomer] FROM Account WHERE accountNumber = @accountNumber";
 
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = GetConnexion;
@@ -175,7 +193,7 @@ namespace Project2
         public static Account GetAccountFromDB(string accountNumber)
         {
             string sql = "SELECT idCustomer,idAccount,amount, type, isDebitAuthorized, creationDate " +
-                            "FROM [Account] WHERE accountNumber = '@accountNumber'";
+                            "FROM [Account] WHERE accountNumber = @accountNumber";
 
 
             SqlCommand cmd = new SqlCommand();
