@@ -65,7 +65,7 @@ namespace Project2
                 else
                 {
                     IO.DisplayWarning("Too many attempts, please try again later!");
-                    return 1;
+                    Environment.Exit(1);
                 }
                 
             }
