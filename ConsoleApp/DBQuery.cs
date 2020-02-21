@@ -100,7 +100,10 @@ namespace Project2
         public static void SaveNewCustomerInDb(string name, string login, string password, string location)
         {
             string sql = "INSERT INTO Customer (name,login,password,location) "
-                    + " VALUES ('@name', '@login' , '@password' , '@location')";
+                    + " VALUES (@name, @login , @password , @location)";
+
+            name = name != null ? name : ""; 
+            location = location != null ? location : "";
 
             IEnumerable<SqlParameter> parameters = new List<SqlParameter>
             {
@@ -119,18 +122,18 @@ namespace Project2
         {
             string typeOfAccount;
             Type type = account.GetType();
-            if (type.Name == "CheckingAccount")
+            /*if (type.Name == "CheckingAccount")
             {
                 typeOfAccount = "CA";
             }
             else
             {
                 typeOfAccount = "SA";
-            }
+            }*/
+            typeOfAccount = (type.Name == "CheckingAccount") ? "CA" : "SA";
 
             string sql = "INSERT INTO Account (idCustomer,accountNumber,amount,type) "
-                        + " VALUES ('@idCustomer','@accountNumber','@amount','@type')";
-
+                        + " VALUES (@idCustomer,@accountNumber,@amount,@type);SELECT CAST(SCOPE_IDENTITY() AS int)";
 
             IEnumerable<SqlParameter> parameters = new List<SqlParameter>
             {
@@ -141,7 +144,8 @@ namespace Project2
 
              };
 
-            ExecuteQuery(sql, parameters);
+            int lastIdInserted = ExecuteQueryWithID(sql, parameters);
+            UpdateAccountNumberInAccount(lastIdInserted, "FR" + lastIdInserted);
 
         }
 
@@ -251,14 +255,14 @@ namespace Project2
             ExecuteQuery(sql, parameters);
         }
 
-        public static void UpdateAccountNumberInAccount(Account account)
+        public static void UpdateAccountNumberInAccount(int idAccount, String accountNumber)
         {
-            string sql = "UPDATE Account SET accountNumber = '@AccountNumber' WHERE idAccount = '@idAccount'";
+            string sql = "UPDATE Account SET accountNumber = @AccountNumber WHERE idAccount = @idAccount";
 
             IEnumerable<SqlParameter> parameters = new List<SqlParameter>
             {
-                new SqlParameter("@AccountNumber", account.AccountNumber),
-                new SqlParameter("@idAccount", account.IdAccount)
+                new SqlParameter("@AccountNumber", accountNumber),
+                new SqlParameter("@idAccount", idAccount)
              };
 
             ExecuteQuery(sql, parameters);
@@ -422,6 +426,23 @@ namespace Project2
             }
 
             cmd.ExecuteNonQuery();
+        }
+
+        private static Int32 ExecuteQueryWithID(string sql, IEnumerable<SqlParameter> parameters = null)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = GetConnexion;
+            cmd.CommandText = sql;
+
+            if (parameters != null)
+            {
+                foreach (SqlParameter parameter in parameters)
+                {
+                    cmd.Parameters.Add(parameter);
+                }
+            }
+
+            return (Int32)cmd.ExecuteScalar();
         }
     }
 }
