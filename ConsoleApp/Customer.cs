@@ -120,7 +120,8 @@ namespace Project2
             currentTransaction.StartDate = startDate;
             currentTransaction.EndDate = endDate;
             currentTransaction.Periodicity = periodicity;
-            DBQuery.InsertTransaction(currentTransaction);
+            int idTransaction = DBQuery.InsertTransaction(currentTransaction);
+            currentTransaction.IdTransaction = idTransaction;
             List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
             DBQuery.SaveNewTransferInDb(transfertList);
         }
