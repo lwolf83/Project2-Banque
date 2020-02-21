@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Numerics;
 
 namespace Project2
 {
@@ -64,7 +65,7 @@ namespace Project2
                 else
                 {
                     IO.DisplayWarning("Too many attempts, please try again later!");
-                    return 1;
+                    Environment.Exit(1);
                 }
                 
             }
@@ -190,17 +191,25 @@ namespace Project2
 
         static int RunCreateAccountCommand(CreateAccountOptions opts)
         {
-            Connection(opts);
-            if(opts.CheckingAccount)
+            currentCustomer = new Customer(opts.Login);
+            if (currentCustomer.IsCustomerExisting(opts.Login))
             {
-                currentCustomer.AddCheckingAccount();
-            }
-            if(opts.SavingsAccount)
-            {
-                currentCustomer.AddSavingAccount();
-            }
+                Connection(opts);
 
-            
+                if (opts.CheckingAccount)
+                {
+                    currentCustomer.AddCheckingAccount();
+                }
+                if (opts.SavingsAccount)
+                {
+                    currentCustomer.AddSavingAccount();
+                } 
+            }
+            else
+            {
+                IO.DisplayWarning("Cannot create an account on a customer not existing.");
+                Environment.Exit(1);
+            }
             return 1;
         }
 
