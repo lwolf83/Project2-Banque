@@ -24,7 +24,7 @@ namespace Project2
 
             CommandLine.Parser.Default
                 .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
-                ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions>(args)
+                ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions,Export>(args)
                 .MapResult(
                 (CreateCustomerOptions opts) => RunCreateCustomerCommand(opts),
                 (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
@@ -45,6 +45,7 @@ namespace Project2
             if (currentCustomer.IsCustomerExisting(opts.Login))
             {
                 currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
+                currentCustomer.Accounts = DBQuery.GetAccountsCustomer(currentCustomer.IdCustomer);
                 string password = " ";
                 int i = 0;
                 do
@@ -229,6 +230,38 @@ namespace Project2
         static int RunExportCommand(Export opts)
         {
             Connection(opts);
+            if (opts.GetAccountList)
+            {
+                using (var writer = new StreamWriter("E://testListAccount.csv"))
+                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    csv.Configuration.RegisterClassMap<CSV>();
+                    csv.WriteRecords(currentCustomer.Accounts);
+                }
+                Console.WriteLine("CVSFile is created.");
+            }
+            else if (opts.GetTransactionsList)
+            {
+                using (var writer = new StreamWriter("E://testTransaction.csv"))
+                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    List<Transaction> transactionList = DBQuery.GetTransactionList(Convert.ToString(opts.GetAccountNumberForTransaction));
+                    csv.Configuration.RegisterClassMap<CSV>();
+                    csv.WriteRecords(transactionList);
+                }
+                Console.WriteLine("CVSFile is created.");
+            }
+            else if (opts.GetTransfertList)
+            {
+                using (var writer = new StreamWriter("E://testTransfer.csv"))
+                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    List<TransfertMoney> transfertMoneyList = DBQuery.GetTransfertList(Convert.ToString(opts.GetAccountNumber));
+                    csv.Configuration.RegisterClassMap<CSV>();
+                    csv.WriteRecords(transfertMoneyList);
+                }
+                Console.WriteLine("CVSFile is created.");
+            }
             return 1;
         }
 

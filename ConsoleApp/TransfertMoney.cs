@@ -6,13 +6,16 @@ namespace Project2
 {
     public class TransfertMoney
     {
+        public int idTransfert { get; set; }
         public int IdOrigin { get; set; }
         public int  idDestination { get; set; }
         public DateTime TransfertDate { get; set; }
         public Decimal Amount { get; set; }
         public bool IsDone { get; set; }
-        public Int16 IdTransaction { get; set; }
+        public int IdTransaction { get; set; }
 
+        public TransfertMoney()
+        { }
         public TransfertMoney(Instant transaction)
         {
             IdOrigin = transaction.AccountOrigin;

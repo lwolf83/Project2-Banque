@@ -99,14 +99,24 @@ namespace Project2
 
     }
 
-    [Verb("CSV", HelpText = "Do export of account's customer.")]
+    [Verb("csv", HelpText = "Do export of customer's account.")]
     class Export : Options
     {
-        [Option('a', "accounts", Required = false, HelpText = "Export account's customer.")]
+        [Option('a', "accounts", Required = false, HelpText = "Export customer's account.")]
         public bool GetAccountList { get; set; }
     
-        [Option('t', "transactions", Required = false, HelpText = "Export transaction's customer.")]
+        [Option('t', "transactions", Required = false, HelpText = "Export customer's transaction.", SetName = "lt")]
         public bool GetTransactionsList { get; set; }
+
+        [Option('r', "accountNumberT", Required = false, HelpText = "Precise your account number", SetName = "lt")]
+        public string GetAccountNumberForTransaction { get; set; }
+
+        [Option('f', "transfer", Required = false, HelpText = "Export customer's transfer.", SetName = "la")]
+        public bool GetTransfertList { get; set; }
+
+        [Option('b', "accountNumber", Required = false, HelpText = "Precise your account number",SetName = "la")]
+        public string GetAccountNumber { get; set; }
+
     }
 
 

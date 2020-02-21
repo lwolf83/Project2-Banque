@@ -24,11 +24,7 @@ namespace Project2
             Map(c => c.AccountDestination).Index(5);
             Map(c => c.Periodicity).Index(6);
             Map(c => c.StartDate).Index(7);
-            Map(c => c.EndDate).Index(8);
-
-            
-
-
+            Map(c => c.EndDate).Index(8);        
         }
     }
 }
