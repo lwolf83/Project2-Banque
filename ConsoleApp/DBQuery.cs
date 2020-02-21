@@ -125,6 +125,24 @@ namespace Project2
 
         }
 
+        public static void SaveNewTransferInDb(List<TransfertMoney> transfertList)
+        {
+            foreach (TransfertMoney transfert in transfertList)
+            {
+                string sql = "INSERT INTO Account (idOriginAccount,idDestinationAccount,amount,transferDate) "
+                        + " VALUES ('@transfert.IdOrigin','@idDestinationAccount','@amount','@idOriginAccount')";
+
+                IEnumerable<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter ("@idOriginAccount", transfert.IdOrigin),
+                    new SqlParameter ("@idDestinationAccount", transfert.idDestination),
+                    new SqlParameter ("@amount", transfert.Amount),
+                    new SqlParameter ("@transferDate", transfert.TransfertDate),
+                };
+                ExecuteQuery(sql,parameters);
+            }
+        }
+
         public static int GetIdCustomerFromAccountNumber(string accountNumber)
         {
             string sql = "SELECT [idCustomer] FROM Account WHERE accountNumber = '"+ accountNumber +"'";
