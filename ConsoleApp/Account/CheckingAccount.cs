@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Project2
 {
-    class CheckingAccount : Account
+    class CheckingAccount : AbstractAccount
     {
         public override decimal Ceiling
         {
@@ -38,11 +38,9 @@ namespace Project2
         {
         }
 
-        public override bool CanBeDebited(decimal amountToTransfer, Account accountDestination)
+        public override bool CanBeDebited(decimal amountToTransfer, AbstractAccount accountDestination)
         {
-            Account currentAccount = DBQuery.GetAccountFromDB(AccountNumber);
-
-            if (currentAccount.Amount > Overdraft)
+            if ((Amount - Overdraft) >= amountToTransfer)
             {
                 return true;
             }
@@ -62,7 +60,7 @@ namespace Project2
             return true;
         }
 
-        public override bool isDebitAuthorized(Account accountDestination)
+        public override bool isDebitAuthorized(AbstractAccount accountDestination)
         {
             if (IdCustomer == Program.currentCustomer.IdCustomer)
             {

@@ -20,30 +20,23 @@ namespace Project2
 
         static void Main(string[] args)
         {
-
             Console.InputEncoding = Encoding.UTF8;
-
-            CommandLine.Parser.Default
-                .ParseArguments<CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
-                ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions,Export>(args)
-                .MapResult(
-                (CreateCustomerOptions opts) => RunCreateCustomerCommand(opts),
-                (CreateAccountOptions opts) => RunCreateAccountCommand(opts),
-                (ListAccountOptions opts) => RunListAccountCommand(opts),
-                (ShowInfoOptions opts) => RunShowInfoCommand(opts),
-                (DoDefferedTransferOptions opts) => RunDefferedTransferCommand(opts),
-                (DoInstantTransferOptions opts) => RunInstantTransferCommand(opts),
-                (DoPermanentTransferOptions opts) => RunPermanentTransferCommand(opts),
-                (Export opts) => RunExportCommand(opts),
-                (parserErrors) => 1
-                );
-
+            Parser.Default.ParseArguments<LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
+                ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions, Export>(args)
+                .WithParsed<LoginOptions>(RunLoginCommand)
+                .WithParsed<CreateCustomerOptions>(RunCreateCustomerCommand)
+                .WithParsed<CreateAccountOptions>(RunCreateAccountCommand)
+                .WithParsed<ListAccountOptions>(RunListAccountCommand)
+                .WithParsed<ShowInfoOptions>(RunShowInfoCommand)
+                .WithParsed<DoDefferedTransferOptions>(RunDefferedTransferCommand)
+                .WithParsed<DoInstantTransferOptions>(RunInstantTransferCommand)
+                .WithParsed<DoPermanentTransferOptions>(RunPermanentTransferCommand)
+                .WithParsed<Export>(RunExportCommand);
         }
 
-        static int Connection(Options opts)
+        static void RunLoginCommand(LoginOptions opts)
         {
-            currentCustomer = new Customer(opts.Login);
-            if (currentCustomer.IsCustomerExisting(opts.Login))
+            if (Customer.IsCustomerExisting(opts.Login))
             {
                 currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
                 currentCustomer.Accounts = DBQuery.GetAccountsCustomer(currentCustomer.IdCustomer);
@@ -57,93 +50,70 @@ namespace Project2
                     i++;
                 }
                 while ((password != currentCustomer.Password) && (i <= 2));
-                
+
                 if (password == currentCustomer.Password)
                 {
                     IO.DisplayInformation("You are connected!");
-                    return 0;
                 }
                 else
                 {
                     IO.DisplayWarning("Too many attempts, please try again later!");
                     Environment.Exit(1);
                 }
-                
             }
-            IO.DisplayWarning("Your account doesn't exist!");
-            return 1;
-
+            else
+            {
+                IO.DisplayWarning("Your account doesn't exist!");
+            }
         }
             
-        static int RunDefferedTransferCommand(DoDefferedTransferOptions opts)
+        static void RunDefferedTransferCommand(DoDefferedTransferOptions opts)
         {
-            Connection(opts);
-            if (currentCustomer.IsAccountOwner(opts.AccountIdOrigin))
+            if (Customer.IsAccountOwner(currentCustomer.IdCustomer, opts.AccountIdOrigin))
             {
-                Account accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
-                Account accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
-                // vérifier que l'on peut retirer de l'argent du compte
+                AbstractAccount accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
+                AbstractAccount accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
 
                 if (accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
                 {
-                    currentCustomer.MakeNewDefferedTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse( opts.DefferedDate));
+                    currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse( opts.DefferedDate));
                 }
             }
-            return 1;
         }
 
-        static int RunInstantTransferCommand(DoInstantTransferOptions opts)
+        static void RunInstantTransferCommand(DoInstantTransferOptions opts)
         {
-            Connection(opts);
-            // définir le type de compte d'origine
-            // définir le type de compte d'arrivée
-            // vérifier si le compte de départ appartient bien au client
-            if(currentCustomer.IsAccountOwner(opts.AccountIdOrigin))
+            if(Customer.IsAccountOwner(currentCustomer.IdCustomer, opts.AccountIdOrigin))
             {
-                Account accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
-                Account accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
-                // vérifier que l'on peut retirer de l'argent du compte
+                AbstractAccount accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
+                AbstractAccount accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
 
                 if(accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
                 {
-                    currentCustomer.MakeNewInstantTransaction(opts.AmountToTransfer, accountOrigin, accountDestination);
+                    currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination);
                 }
-                // vérifier que l'on peut créditer le compte d'arrivée
-                // si les deux sont ok on crée la transaction
-                // on crée la transaction
             }
-            return 1;
         }
 
-        static int RunPermanentTransferCommand(DoPermanentTransferOptions opts)
+        static void RunPermanentTransferCommand(DoPermanentTransferOptions opts)
         {
-            Connection(opts);
-
-            if (currentCustomer.IsAccountOwner(opts.AccountIdOrigin))
+            if (Customer.IsAccountOwner(currentCustomer.IdCustomer, opts.AccountIdOrigin))
             {
-                Account accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
-                Account accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
-                // vérifier que l'on peut retirer de l'argent du compte
+                AbstractAccount accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
+                AbstractAccount accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
 
-               
-                    currentCustomer.MakeNewPermanentTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.StartDate), DateTime.Parse(opts.EndDate), opts.Periodicity);
-                
-                // vérifier que l'on peut créditer le compte d'arrivée
-                // si les deux sont ok on crée la transaction
-                // on crée la transaction
+                if (accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
+                {
+                    currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.StartDate), DateTime.Parse(opts.EndDate), opts.Periodicity);
+                }
             }
-
-            return 1;
         }
 
-        static int RunCreateCustomerCommand(CreateCustomerOptions opts)
-        {
-            
-            currentCustomer = new Customer(opts.Login);
-            if (currentCustomer.IsCustomerExisting(opts.Login))
+        static void RunCreateCustomerCommand(CreateCustomerOptions opts)
+        {  
+            if (Customer.IsCustomerExisting(opts.Login))
             {
                 Console.WriteLine("Your account already exists.");
-                return 0;
             }
             else
             {
@@ -151,7 +121,6 @@ namespace Project2
                 IO.DisplayInformation("Your password is valid.");
                 password = Sha256Tools.GetHash(password);
                 DBQuery.SaveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
-                return 1;
             }
         }
 
@@ -190,13 +159,10 @@ namespace Project2
             return true;
         }
 
-        static int RunCreateAccountCommand(CreateAccountOptions opts)
+        static void RunCreateAccountCommand(CreateAccountOptions opts)
         {
-            currentCustomer = new Customer(opts.Login);
-            if (currentCustomer.IsCustomerExisting(opts.Login))
+            if (Customer.IsCustomerExisting(opts.Login))
             {
-                Connection(opts);
-
                 if (opts.CheckingAccount)
                 {
                     currentCustomer.AddCheckingAccount();
@@ -211,35 +177,30 @@ namespace Project2
                 IO.DisplayWarning("Cannot create an account on a customer not existing.");
                 Environment.Exit(1);
             }
-            return 1;
         }
 
-        static int RunListAccountCommand(ListAccountOptions opts)
+        static void RunListAccountCommand(ListAccountOptions opts)
         {
-            Connection(opts);
             Customer currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
-            List<Account> AccountsList = Customer.GetAccountList(currentCustomer.IdCustomer);
+            List<AbstractAccount> AccountsList = Customer.GetAccountList(currentCustomer.IdCustomer);
             
             int i = 1;
-            foreach (Account account in AccountsList)
+            foreach (AbstractAccount account in AccountsList)
             {
                 
                 Console.WriteLine($"Compte n°{i} : {account}");
                 i = i+1;
             }
-            return 1;
         }
 
-        static int RunShowInfoCommand(ShowInfoOptions opts)
+        static void RunShowInfoCommand(ShowInfoOptions opts)
         {
-            Connection(opts);
-            return 1;
+            return;
         }
 
-        static int RunExportCommand(Export opts)
+        static void RunExportCommand(Export opts)
         {
-            Connection(opts);
-            if (opts.GetAccountList)
+            if (opts.ExportAccounts)
             {
                 using (var writer = new StreamWriter("E://testListAccount.csv"))
                 using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
@@ -247,31 +208,30 @@ namespace Project2
                     csv.Configuration.RegisterClassMap<CSV>();
                     csv.WriteRecords(currentCustomer.Accounts);
                 }
-                Console.WriteLine("CVSFile is created.");
+                Console.WriteLine("CSV File is created.");
             }
-            else if (opts.GetTransactionsList)
+            else if (opts.ExportTransactions)
             {
                 using (var writer = new StreamWriter("E://testTransaction.csv"))
                 using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                 {
-                    List<Transaction> transactionList = DBQuery.GetTransactionList(Convert.ToString(opts.GetAccountNumberForTransaction));
+                    List<AbstractTransaction> transactionList = DBQuery.GetTransactionList(Convert.ToString(opts.AccountNumber));
                     csv.Configuration.RegisterClassMap<CSV>();
                     csv.WriteRecords(transactionList);
                 }
-                Console.WriteLine("CVSFile is created.");
+                Console.WriteLine("CSV File is created.");
             }
-            else if (opts.GetTransfertList)
+            else if (opts.ExportTransfers)
             {
                 using (var writer = new StreamWriter("E://testTransfer.csv"))
                 using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                 {
-                    List<TransfertMoney> transfertMoneyList = DBQuery.GetTransfertList(Convert.ToString(opts.GetAccountNumber));
+                    List<TransferMoney> transfertMoneyList = DBQuery.GetTransfertList(Convert.ToString(opts.AccountNumber));
                     csv.Configuration.RegisterClassMap<CSV>();
                     csv.WriteRecords(transfertMoneyList);
                 }
-                Console.WriteLine("CVSFile is created.");
+                Console.WriteLine("CSV File is created.");
             }
-            return 1;
         }
 
         static void HandleParseError(IEnumerable<Error> errs)

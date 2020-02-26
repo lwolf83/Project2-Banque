@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Project2
 {
-    public class CSV : ClassMap<Account>
+    public class CSV : ClassMap<AbstractAccount>
     {
         public CSV()
         {

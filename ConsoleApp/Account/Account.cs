@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Project2
 {
-    public abstract class Account
+    public abstract class AbstractAccount
     {
         public int IdAccount { get; set; }
         public  int IdCustomer { get; set; }
@@ -16,13 +16,13 @@ namespace Project2
         public abstract decimal Ceiling { get;}
         public abstract double SavingsRate { get;}
 
-        public Account (string accountIdentifier, decimal amount, int idClient)
+        public AbstractAccount (string accountIdentifier, decimal amount, int idClient)
         {
             AccountNumber = accountIdentifier;
             Amount = amount;
             IdCustomer = idClient;
         }
-        public Account()
+        public AbstractAccount()
         {
         }
 
@@ -30,12 +30,12 @@ namespace Project2
 
         public abstract void Credit();
 
-        public abstract bool CanBeDebited(decimal amountToTransfer, Account accountDestination);
+        public abstract bool CanBeDebited(decimal amountToTransfer, AbstractAccount accountDestination);
 
         public abstract bool CanBeCredited(decimal amountToTransfer);
 
         public abstract bool IsAuthorizeCustomerToCredit();
 
-        public abstract bool isDebitAuthorized(Account accountDestination);
+        public abstract bool isDebitAuthorized(AbstractAccount accountDestination);
     }
 }
