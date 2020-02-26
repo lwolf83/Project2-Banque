@@ -129,25 +129,20 @@ namespace Project2
         {
             string typeOfAccount;
             Type type = account.GetType();
-            /*if (type.Name == "CheckingAccount")
-            {
-                typeOfAccount = "CA";
-            }
-            else
-            {
-                typeOfAccount = "SA";
-            }*/
             typeOfAccount = (type.Name == "CheckingAccount") ? "CA" : "SA";
 
-            string sql = "INSERT INTO Account (idCustomer,accountNumber,amount,type) "
-                        + " VALUES (@idCustomer,@accountNumber,@amount,@type);SELECT CAST(SCOPE_IDENTITY() AS int)";
+            string sql = "INSERT INTO Account (idCustomer,accountNumber,amount,type, ceiling, overdraft, savingsRate) "
+                        + " VALUES (@idCustomer,@accountNumber,@amount,@type,@ceiling,@overdraft,@savingsRate);SELECT CAST(SCOPE_IDENTITY() AS int)";
 
             IEnumerable<SqlParameter> parameters = new List<SqlParameter>
             {
                 new SqlParameter("@idCustomer", account.IdCustomer),
                 new SqlParameter("@accountNumber", account.AccountNumber),
                 new SqlParameter("@amount", account.Amount),
-                new SqlParameter("@type", typeOfAccount)
+                new SqlParameter("@type", typeOfAccount),
+                new SqlParameter("@ceiling", account.Ceiling),
+                new SqlParameter("@overdraft", account.Overdraft),
+                new SqlParameter("@savingsRate", account.SavingsRate)
 
              };
 
@@ -200,7 +195,7 @@ namespace Project2
 
         public static AbstractAccount GetAccountFromDB(string accountNumber)
         {
-            string sql = "SELECT idCustomer,idAccount,amount, type, isDebitAuthorized, creationDate " +
+            string sql = "SELECT idCustomer,idAccount,amount, type, isDebitAuthorized, creationDate, ceiling, overdraft,savingsRate " +
                             "FROM [Account] WHERE accountNumber = @accountNumber";
 
 
@@ -214,6 +209,9 @@ namespace Project2
             decimal amount = 0;
             string type = "";
             bool isDebitAuthorized = true;
+            decimal ceiling = 0;
+            decimal overdraft = 0;
+            decimal savingsRate = 0;
             DateTime creationDate = new DateTime();
 
             using (DbDataReader reader = cmd.ExecuteReader())
@@ -227,6 +225,9 @@ namespace Project2
                     type = reader.GetString(reader.GetOrdinal("type"));
                     isDebitAuthorized = reader.GetBoolean(reader.GetOrdinal("isDebitAuthorized"));
                     creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
+                    ceiling = reader.GetDecimal(reader.GetOrdinal("ceiling"));
+                    overdraft = reader.GetDecimal(reader.GetOrdinal("overdraft"));
+                    savingsRate = reader.GetDecimal(reader.GetOrdinal("savingsRate"));
                 }
             }
             AbstractAccount resultAccount = AccountFactory.Create(type);
@@ -237,6 +238,9 @@ namespace Project2
             resultAccount.IdAccount = idAccount;
             resultAccount.IdCustomer = idCustomer;
             resultAccount.IsDebitAuthorized = isDebitAuthorized;
+            resultAccount.Ceiling = ceiling;
+            resultAccount.Overdraft = overdraft;
+            resultAccount.SavingsRate = savingsRate;
             return resultAccount;
         }
 
@@ -414,7 +418,7 @@ namespace Project2
 
         public static List<AbstractAccount> GetAccountsCustomer(int idCustomer)
         {
-            string sql = " SELECT[idAccount],[idCustomer],[accountNumber],[amount],[type],[isDebitAuthorized],[creationDate] FROM Account " +
+            string sql = " SELECT[idAccount],[idCustomer],[accountNumber],[amount],[type],[isDebitAuthorized],[creationDate], [ceiling], [overdraft], [savingsRate] FROM Account " +
                             "WHERE idCustomer = @idCustomer";
 
             SqlCommand cmd = new SqlCommand();
@@ -440,6 +444,9 @@ namespace Project2
                         currentCustomerAccount.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                         currentCustomerAccount.IsDebitAuthorized = reader.GetBoolean(reader.GetOrdinal("isDebitAuthorized"));
                         currentCustomerAccount.CreationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
+                        currentCustomerAccount.Ceiling = reader.GetDecimal(reader.GetOrdinal("ceiling"));
+                        currentCustomerAccount.Overdraft = reader.GetDecimal(reader.GetOrdinal("overdraft"));
+                        currentCustomerAccount.SavingsRate = reader.GetDecimal(reader.GetOrdinal("savingsRate"));
                         ListAccountsCustomer.Add(currentCustomerAccount);
                     }
                 }

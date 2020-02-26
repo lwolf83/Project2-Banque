@@ -69,6 +69,8 @@ namespace Project2
             account.IdCustomer = Program.currentCustomer.IdCustomer;
             account.Amount = 0;
             account.AccountNumber = "";
+            account.Ceiling = 61200;
+            account.SavingsRate = 0.01m;
 
             DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
@@ -81,6 +83,7 @@ namespace Project2
             account.IdCustomer = Program.currentCustomer.IdCustomer;
             account.Amount = 0;
             account.AccountNumber = "";
+            account.Overdraft = -200;
 
             DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
