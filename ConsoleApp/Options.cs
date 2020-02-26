@@ -6,12 +6,14 @@ using CommandLine.Text;
 
 namespace Project2
 {
-
-    class Options
+    class LoginOptions : Options
     {
         [Option('l', "login", Required = true, HelpText = "Enter the login")]
         public string Login { get; set; }
+    }
 
+    class Options
+    {
         [Option('v', "verbose", Required = false, HelpText = "Activate Verbose Mode")]
         public bool Verbose
         {
@@ -28,6 +30,8 @@ namespace Project2
     class CreateCustomerOptions : Options
 
     {
+        [Option('u', "username", Required = true, HelpText = "The customer username")]
+        public string Login { get; set; }
 
         [Option('n',"name", Required = false, HelpText = "Enter a name")]
         public string Name { get; set; }
@@ -37,7 +41,7 @@ namespace Project2
     }
 
     [Verb("createaccount", HelpText = "Create a new account.")]
-    class CreateAccountOptions : Options
+    class CreateAccountOptions : LoginOptions
     {
         [Option('s', "sa", Required = false, HelpText = "Create a savings account")]
         public bool SavingsAccount { get; set; }
@@ -48,19 +52,19 @@ namespace Project2
     }
 
     [Verb("listaccount", HelpText = "List your accounts.")]
-    class ListAccountOptions : Options
+    class ListAccountOptions : LoginOptions
     {
         //on pourra après ajouter en option des entrées de dates
     }
 
     [Verb("showinfo", HelpText = "Show your account's informations.")]
-    class ShowInfoOptions : Options
+    class ShowInfoOptions : LoginOptions
     {
         [Value(0)]
         public string AccountId { get; set; }
     }
 
-     class DoTransferOptions : Options
+     class DoTransferOptions : LoginOptions
     {
         [Option('a', "amount", Required = false, HelpText = "Amount to transfer.")]
         public decimal AmountToTransfer { get; set; }
@@ -81,42 +85,38 @@ namespace Project2
     [Verb("deffered", HelpText = "Do a deffered transfer .")]
     class DoDefferedTransferOptions : DoTransferOptions
     {
-        [Value(3)]
+        [Option('t', "date", Required = true , HelpText = "Transfer date", MetaValue = "yyyy-mm-dd")]
         public string DefferedDate { get; set; }
     }
 
     [Verb("permanent", HelpText = "Do a permanent transfer .")]
     class DoPermanentTransferOptions : DoTransferOptions
     {
-        [Value(4)]
+        [Option('s', "start", Required = true, HelpText = "Starting date of a transaction", MetaValue = "yyyy-mm-dd")]
         public string StartDate { get; set; }
 
-        [Value(5)]
+        [Option('e', "end", Required = true, HelpText = "Ending date of a transaction", MetaValue = "yyyy-mm-dd")]
         public string EndDate { get; set; }
 
-        [Value(6)]
+        [Option('p', "periodicity", Required = true, HelpText = "Number of days between subsequent transfers", MetaValue = "periodicity")]
         public int Periodicity { get; set; }
 
     }
 
     [Verb("csv", HelpText = "Do export of customer's account.")]
-    class Export : Options
+    class Export : LoginOptions
     {
         [Option('a', "accounts", Required = false, HelpText = "Export customer's account.")]
-        public bool GetAccountList { get; set; }
+        public bool ExportAccounts { get; set; }
     
-        [Option('t', "transactions", Required = false, HelpText = "Export customer's transaction.", SetName = "lt")]
-        public bool GetTransactionsList { get; set; }
+        [Option('t', "transactions", Required = false, HelpText = "Export customer's transaction.")]
+        public bool ExportTransactions { get; set; }
 
-        [Option('r', "accountNumberT", Required = false, HelpText = "Precise your account number", SetName = "lt")]
-        public string GetAccountNumberForTransaction { get; set; }
+        [Option('f', "transfer", Required = false, HelpText = "Export customer's transfer.")]
+        public bool ExportTransfers { get; set; }
 
-        [Option('f', "transfer", Required = false, HelpText = "Export customer's transfer.", SetName = "la")]
-        public bool GetTransfertList { get; set; }
-
-        [Option('b', "accountNumber", Required = false, HelpText = "Precise your account number",SetName = "la")]
-        public string GetAccountNumber { get; set; }
-
+        [Option('i', "id", Required = false, HelpText = "Account number", MetaValue = "account-number")]
+        public string AccountNumber { get; set; }
     }
 
 

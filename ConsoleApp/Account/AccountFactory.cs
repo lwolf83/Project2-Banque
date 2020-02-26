@@ -6,7 +6,7 @@ namespace Project2
 {
     abstract class AccountFactory
     {
-        public static Account Create(string type)
+        public static AbstractAccount Create(string type)
         {
             if (type == "SA")
             {

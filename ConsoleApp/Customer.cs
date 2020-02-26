@@ -11,7 +11,7 @@ namespace Project2
         public string Login { get; set; }
         public string Password { get; set; }
         public string Location { get; set; }
-        public List<Account> Accounts { get; set; } = new List<Account>();
+        public List<AbstractAccount> Accounts { get; set; } = new List<AbstractAccount>();
 
 
         public Customer(DbDataReader reader)
@@ -35,22 +35,21 @@ namespace Project2
             return true;
         }
 
-        public bool IsAccountOwner(string accountNumber)
+        public static bool IsAccountOwner(int customerId, string accountNumber)
         {
             int id = DBQuery.GetIdCustomerFromAccountNumber(accountNumber);
-            if (IdCustomer == id)
+            if (customerId == id)
             {
                 return true;
             }
             else
-            { 
-                IO.DisplayWarning("The origin account is not one of yours, you are not allowed to request a transfer from somebody else's account.");
+            {
                 return false;
             }
         }
 
       
-        public bool IsCustomerExisting(string login)
+        public static bool IsCustomerExisting(string login)
         { // vérifie dans la base de données si le client existe en fonction de son login
             Customer existingCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
             if (existingCustomer == null)
@@ -87,74 +86,24 @@ namespace Project2
             Accounts.Add(account);
         }
 
-        public void MakeNewInstantTransaction(decimal amount, Account accountOrigin, Account accountDestination)
+        public void MakeNewTransaction(decimal amount, AbstractAccount accountOrigin, AbstractAccount accountDestination, DateTime? startDate = null, DateTime? endDate = null, int periodicity = 0)
         {
-            
-            accountOrigin.Amount = accountOrigin.Amount - amount;
-
-            accountDestination.Amount = accountDestination.Amount + amount;
-
-            Instant currentTransaction = new Instant();
+            AbstractTransaction currentTransaction = AbstractTransaction.Create(startDate, endDate);
             currentTransaction.AccountOrigin = accountOrigin.IdAccount;
             currentTransaction.AccountDestination = accountDestination.IdAccount;
             currentTransaction.Amount = amount;
+            currentTransaction.Periodicity = periodicity;
             currentTransaction.TransactionDate = DateTime.Now;
             currentTransaction.TransferDate = DateTime.Now;
             DBQuery.InsertTransaction(currentTransaction);
-            //DBQuery.UpdateAmountInAccount(accountOrigin);
-            //DBQuery.UpdateAmountInAccount(accountDestination);
-            List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
+            List<TransferMoney> transfertList = currentTransaction.GetTransferts();
             Console.WriteLine("We do the transfer");
             DBQuery.SaveNewTransferInDb(transfertList);
         }
 
-
-        public void MakeNewPermanentTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime startDate, DateTime endDate, int periodicity)
-        {
-
-
-            Permanent currentTransaction = new Permanent();
-            currentTransaction.AccountOrigin = accountOrigin.IdAccount;
-            currentTransaction.AccountDestination = accountDestination.IdAccount;
-            currentTransaction.Amount = amount;
-            currentTransaction.TransactionDate = DateTime.Now;
-            currentTransaction.StartDate = startDate;
-            currentTransaction.EndDate = endDate;
-            currentTransaction.Periodicity = periodicity;
-            int idTransaction = DBQuery.InsertTransaction(currentTransaction);
-            currentTransaction.IdTransaction = idTransaction;
-            List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
-            DBQuery.SaveNewTransferInDb(transfertList);
-        }
-
-        public void MakeNewDefferedTransaction(decimal amount, Account accountOrigin, Account accountDestination, DateTime defferedtransactionDate)
-        {
-
-            accountOrigin.Amount = accountOrigin.Amount - amount;
-
-            accountDestination.Amount = accountDestination.Amount + amount;
-
-            Deferred currentTransaction = new Deferred();
-            currentTransaction.AccountOrigin = accountOrigin.IdAccount;
-            currentTransaction.AccountDestination = accountDestination.IdAccount;
-            currentTransaction.Amount = amount;
-            currentTransaction.TransferDate = defferedtransactionDate;
-            currentTransaction.TransactionDate = DateTime.Now;
-            DBQuery.InsertTransaction(currentTransaction);
-            List<TransfertMoney> transfertList = currentTransaction.GetTransferts();
-            DBQuery.SaveNewTransferInDb(transfertList);
-
-            //DBQuery.UpdateAmountInAccount(accountOrigin);
-            //DBQuery.UpdateAmountInAccount(accountDestination);
-
-
-            Console.WriteLine("We do the transfer");
-        }
-
-
-        public static List<Account> GetAccountList(int id)
+        public static List<AbstractAccount> GetAccountList(int id)
         {          
-            List<Account> currentCustomerAccountsList = DBQuery.GetAccountsCustomer(id);
+            List<AbstractAccount> currentCustomerAccountsList = DBQuery.GetAccountsCustomer(id);
 
             return currentCustomerAccountsList;
         }

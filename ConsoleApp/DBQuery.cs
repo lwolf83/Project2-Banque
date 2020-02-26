@@ -82,8 +82,15 @@ namespace Project2
                     }
                 }
             }
-            
-            return currentClient;
+
+            if (currentClient == null)
+            {
+                throw new ArgumentException($"There is no customer with field {field} equals {value}");
+            }
+            else
+            {
+                return currentClient;
+            }
         }
 
         public static Customer getCustomerFromDbWhereLogin(string login)
@@ -118,7 +125,7 @@ namespace Project2
 
         }
 
-        public static void SaveNewAccountInDb(Account account)
+        public static void SaveNewAccountInDb(AbstractAccount account)
         {
             string typeOfAccount;
             Type type = account.GetType();
@@ -149,9 +156,9 @@ namespace Project2
 
         }
 
-        public static void SaveNewTransferInDb(List<TransfertMoney> transfertList)
+        public static void SaveNewTransferInDb(List<TransferMoney> transfertList)
         {
-            foreach (TransfertMoney transfert in transfertList)
+            foreach (TransferMoney transfert in transfertList)
             {
                 string sql = "INSERT INTO Transfert (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) "
                         + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate, 0, @idTransaction)";
@@ -161,7 +168,7 @@ namespace Project2
                     new SqlParameter ("@idOriginAccount", transfert.IdOrigin),
                     new SqlParameter ("@idDestinationAccount", transfert.idDestination),
                     new SqlParameter ("@amount", transfert.Amount),
-                    new SqlParameter ("@transferDate", transfert.TransfertDate),
+                    new SqlParameter ("@transferDate", transfert.TransferDate),
                     new SqlParameter ("@idTransaction", transfert.IdTransaction)
                 };
                 ExecuteQuery(sql,parameters);
@@ -191,7 +198,7 @@ namespace Project2
             return IdCustomer;
         }
 
-        public static Account GetAccountFromDB(string accountNumber)
+        public static AbstractAccount GetAccountFromDB(string accountNumber)
         {
             string sql = "SELECT idCustomer,idAccount,amount, type, isDebitAuthorized, creationDate " +
                             "FROM [Account] WHERE accountNumber = @accountNumber";
@@ -222,7 +229,7 @@ namespace Project2
                     creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
                 }
             }
-            Account resultAccount = AccountFactory.Create(type);
+            AbstractAccount resultAccount = AccountFactory.Create(type);
 
             resultAccount.AccountNumber = accountNumber;
             resultAccount.Amount = amount;
@@ -233,7 +240,7 @@ namespace Project2
             return resultAccount;
         }
 
-        public static List<TransfertMoney> GetTransfertList(string accountNumber)
+        public static List<TransferMoney> GetTransfertList(string accountNumber)
         {
             string sql = "SELECT [idTransfert],[idOriginAccount],[idDestinationAccount],[amount],[transferDate],isDone, idTransaction" +
                             " FROM [Transfert] WHERE idOriginAccount= @idAccount";
@@ -243,7 +250,7 @@ namespace Project2
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
             cmd.Parameters.Add(new SqlParameter("@idAccount", GetIdAccountFromAccountNumber(accountNumber)));
-            List<TransfertMoney> newTransfertList = new List<TransfertMoney>();
+            List<TransferMoney> newTransfertList = new List<TransferMoney>();
 
             using (DbDataReader reader = cmd.ExecuteReader())
             {
@@ -251,11 +258,11 @@ namespace Project2
                 {
                     while (reader.Read())
                     {
-                        TransfertMoney transfertMoney = new TransfertMoney();
+                        TransferMoney transfertMoney = new TransferMoney();
                         transfertMoney.idTransfert = reader.GetInt32(reader.GetOrdinal("idTransfert"));
                         transfertMoney.IdOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
                         transfertMoney.idDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
-                        transfertMoney.TransfertDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
+                        transfertMoney.TransferDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
                         transfertMoney.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                         transfertMoney.IsDone = reader.GetBoolean(reader.GetOrdinal("isDone"));
                         transfertMoney.IdTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));
@@ -266,7 +273,7 @@ namespace Project2
             }
         }
         
-        public static List<Transaction> GetTransactionList(string accountNumber)
+        public static List<AbstractTransaction> GetTransactionList(string accountNumber)
         {
             string sql = "SELECT [idTransaction],[idOriginAccount],[idDestinationAccount],[amount],[transactionType],[transactionDate],[transferDate],[beginDate],[endDate],[periodicity]" +
                             " FROM [Transaction] WHERE idOriginAccount= @idAccount";
@@ -276,7 +283,7 @@ namespace Project2
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
             cmd.Parameters.Add(new SqlParameter("@idAccount", GetIdAccountFromAccountNumber(accountNumber)));
-            List<Transaction> newTransactiontList = new List<Transaction>();
+            List<AbstractTransaction> newTransactiontList = new List<AbstractTransaction>();
 
             using (DbDataReader reader = cmd.ExecuteReader())
             {
@@ -284,7 +291,8 @@ namespace Project2
                 {
                     while (reader.Read())
                     {
-                        Transaction transaction = Transaction.Create(reader.GetString(reader.GetOrdinal("transactionType")));
+                        String transactionType = reader.GetString(reader.GetOrdinal("transactionType"));
+                        AbstractTransaction transaction = AbstractTransaction.Create(transactionType);
                         transaction.IdTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));
                         transaction.AccountOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
                         transaction.AccountDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
@@ -323,8 +331,13 @@ namespace Project2
             }
         }
 
-        public static bool IsCurrentCustomerAuthorizedOnAccount(Account account)
+        public static bool IsCurrentCustomerAuthorizedOnAccount(AbstractAccount account)
         {
+            if (account.IdCustomer == Program.currentCustomer.IdCustomer)
+            {
+                return true;
+            }
+
             string sql = "SELECT COUNT([idCustomer]) AS nbCustomer FROM AccountAuthorizedCustomers WHERE idAccount = '@idAccount' " +
                          "AND idCustomer = '@idCustomer'";
 
@@ -351,7 +364,7 @@ namespace Project2
             return true;
         }
 
-        public static void  UpdateAmountInAccount(Account account)
+        public static void  UpdateAmountInAccount(AbstractAccount account)
         {
             string sql = "UPDATE Account SET amount = '@amount' WHERE idAccount = '@idAccount'";
 
@@ -377,15 +390,10 @@ namespace Project2
             ExecuteQuery(sql, parameters);
         }
 
-        public static int InsertTransaction(Transaction currentTransaction)
+        public static void InsertTransaction(AbstractTransaction currentTransaction)
         {
             string transactionType = currentTransaction.GetType().Name;
-            DateTime startDateString = currentTransaction.StartDate;
-            DateTime endDateString = currentTransaction.EndDate;
-            int Periodicity= currentTransaction.Periodicity;
             DateTime TransferDate = currentTransaction.TransferDate;
-
-            string sql;
 
             List<SqlParameter> parameters = new List<SqlParameter>
             {
@@ -393,29 +401,18 @@ namespace Project2
                 new SqlParameter("@AccountDestination", currentTransaction.AccountDestination),
                 new SqlParameter("@Amount", currentTransaction.Amount),
                 new SqlParameter("@transactionType", transactionType),
-                
-             };
-
-            if (currentTransaction.GetType().Name == "Instant" || currentTransaction.GetType().Name == "Deferred")
-            {
-                parameters.Add(new SqlParameter("@TransferDate", TransferDate));
-                sql = "INSERT INTO[Transaction] " +
-                    "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, transferDate) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @TransferDate);SELECT CAST(SCOPE_IDENTITY() AS int)";
-
-            }
-            else
-            {
-                parameters.Add(new SqlParameter("@startDateString", startDateString));
-                parameters.Add(new SqlParameter("@endDateString", endDateString));
-                parameters.Add(new SqlParameter("@Periodicity", Periodicity));
-                sql = "INSERT INTO[Transaction] " +
-                    "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, beginDate, endDate, periodicity) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @startDateString, @endDateString,@Periodicity);SELECT CAST(SCOPE_IDENTITY() AS int)";
-            }
-
-            return ExecuteQueryWithID(sql, parameters);
+                new SqlParameter("@TransferDate", TransferDate),
+                new SqlParameter("@startDateString", currentTransaction.StartDate),
+                new SqlParameter("@endDateString", currentTransaction.EndDate),
+                new SqlParameter("@Periodicity", currentTransaction.Periodicity)
+            };
+            String sql = "INSERT INTO[Transaction] " +
+                "(idOriginAccount, idDestinationAccount, amount, transactionType, transactionDate, beginDate, endDate, periodicity) VALUES(@AccountOrigin , @AccountDestination, @Amount,@transactionType, GetDate(), @startDateString, @endDateString,@Periodicity);SELECT CAST(SCOPE_IDENTITY() AS int)";
+            int transactionId = ExecuteQueryWithID(sql, parameters);
+            currentTransaction.IdTransaction = transactionId;
         }
 
-        public static List<Account> GetAccountsCustomer(int idCustomer)
+        public static List<AbstractAccount> GetAccountsCustomer(int idCustomer)
         {
             string sql = " SELECT[idAccount],[idCustomer],[accountNumber],[amount],[type],[isDebitAuthorized],[creationDate] FROM Account " +
                             "WHERE idCustomer = @idCustomer";
@@ -426,7 +423,7 @@ namespace Project2
             cmd.CommandText = sql;
             cmd.Parameters.Add(new SqlParameter("@idCustomer", idCustomer));
 
-            List<Account> ListAccountsCustomer = new List<Account>();
+            List<AbstractAccount> ListAccountsCustomer = new List<AbstractAccount>();
             using (DbDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.HasRows)
@@ -435,7 +432,7 @@ namespace Project2
                     while (reader.Read())
                     {
                         string typeAccount = reader.GetString(reader.GetOrdinal("type")); ;
-                        Account currentCustomerAccount = AccountFactory.Create(typeAccount);
+                        AbstractAccount currentCustomerAccount = AccountFactory.Create(typeAccount);
 
                         currentCustomerAccount.IdAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
                         currentCustomerAccount.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
@@ -450,13 +447,13 @@ namespace Project2
             }
         }
 
-        public static List<Transaction> GetTransactionFromDB(string sql)
+        public static List<AbstractTransaction> GetTransactionFromDB(string sql)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
 
-            List<Transaction> currentTransactionList = new List<Transaction>();
+            List<AbstractTransaction> currentTransactionList = new List<AbstractTransaction>();
             using (DbDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.HasRows)
@@ -464,20 +461,20 @@ namespace Project2
 
                     while (reader.Read())
                     {
-                        Transaction newTransaction;
+                        AbstractTransaction newTransaction;
                         string TransactionType = reader.GetString(reader.GetOrdinal("transactionType"));
                         if (TransactionType == "Instant")
                         {
-                            newTransaction = new Instant();
+                            newTransaction = new InstantTransaction();
                         }
                         else if (TransactionType == "Deffered")
                         {
-                            newTransaction = new Deferred();
+                            newTransaction = new DeferredTransaction();
                         }
                         else
                         {
-                            newTransaction = new Permanent();
-                            Permanent newPermanentTransaction = (Permanent)newTransaction;
+                            newTransaction = new PermanentTransaction();
+                            PermanentTransaction newPermanentTransaction = (PermanentTransaction)newTransaction;
 
                             newPermanentTransaction.StartDate = reader.GetDateTime(reader.GetOrdinal("beginDate"));
                             newPermanentTransaction.EndDate = reader.GetDateTime(reader.GetOrdinal("endDate"));
@@ -497,19 +494,19 @@ namespace Project2
             return currentTransactionList;
         }
 
-        public static List<Transaction> GetTransactionFromIdAccount(Account currentIdAccount)
+        public static List<AbstractTransaction> GetTransactionFromIdAccount(AbstractAccount currentIdAccount)
         {
             string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicity FROM [Transaction] INNER JOIN Account ON[Transaction].idOriginAccount = Account.idAccount WHERE Account.idAccount = " + currentIdAccount + ";";
             return GetTransactionFromDB(sql);
         }
 
-        public static List<Transaction> GetTransactionFromLogin(Customer currentLogin)
+        public static List<AbstractTransaction> GetTransactionFromLogin(Customer currentLogin)
         {
             string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicity FROM [Transaction] INNER JOIN Account ON[Transaction].idOriginAccount = Account.idAccount INNER JOIN Customer ON Account.idCustomer = Customer.idCustomer WHERE Customer.login = '" + currentLogin + "'";
             return GetTransactionFromDB(sql);
         }
 
-        public static List<Transaction> GetTransactionBetweenTwoDates(DateTime Date1, DateTime Date2)
+        public static List<AbstractTransaction> GetTransactionBetweenTwoDates(DateTime Date1, DateTime Date2)
         {
             string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicityFROM [Transaction] WHERE " + Date1 + " > transferDate AND transferDate > " + Date2 + "; ";
             return GetTransactionFromDB(sql);

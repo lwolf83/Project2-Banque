@@ -12,7 +12,7 @@ namespace Project2
     {
         public string IdTransaction { get; set; }
     }
-    class CSVTransactionCustomer : ClassMap<Transaction>
+    class CSVTransactionCustomer : ClassMap<AbstractTransaction>
     {
         public CSVTransactionCustomer()
         {
