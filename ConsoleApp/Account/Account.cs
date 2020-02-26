@@ -12,9 +12,9 @@ namespace Project2
         public decimal Amount { get; set; }
         public bool IsDebitAuthorized { get; set; }
         public DateTime CreationDate { get; set; }
-        public abstract decimal Overdraft { get; }
-        public abstract decimal Ceiling { get;}
-        public abstract double SavingsRate { get;}
+        public abstract decimal Overdraft { get; set; }
+        public abstract decimal Ceiling { get; set; }
+        public abstract decimal SavingsRate { get; set; }
 
         public AbstractAccount (string accountIdentifier, decimal amount, int idClient)
         {

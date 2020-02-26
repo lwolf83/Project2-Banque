@@ -49,7 +49,10 @@ CREATE TABLE [Account](
 	[amount] [money] NOT NULL,
 	[type] [varchar](2) NOT NULL,
     [isDebitAuthorized] [bit] DEFAULT 0,
-	[creationDate] [datetime] DEFAULT getdate()
+	[creationDate] [datetime] DEFAULT getdate(),
+	[ceiling] [money] DEFAULT 0,
+	[overdraft] [money] DEFAULT -200,
+	[savingsRate] [decimal] (2,2) DEFAULT 0.75
   )
 GO
 

@@ -8,17 +8,20 @@ namespace Project2
     {
         public override decimal Ceiling 
         {
-            get { return 1000; }
+            get;
+            set;
         } 
 
-        public override double SavingsRate 
+        public override decimal SavingsRate 
         {
-            get { return 0.10; } 
+            get;
+            set;
         }
 
         public override decimal Overdraft
         {
             get { return 0; }
+            set { }
         }
 
         public SavingsAccount(string accountIdentifier, decimal amount, int idClient) : base(accountIdentifier,amount,idClient)
