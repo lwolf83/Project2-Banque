@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data.Common;
 
 namespace JELListener
 {
@@ -34,9 +35,42 @@ namespace JELListener
             _connection.Open();
         }
 
-        public IEnumerable<Transaction> GetTransactions(DateTime startDate, DateTime? endDate)
+        public IEnumerable<Transaction> GetTransactions(DateTime beginDate, DateTime? endDate)
         {
-            throw new NotImplementedException("Retourne toutes les transaction avec les comptes associés (Account) et les transferts associés");
+            string sql = "SELECT [idTransaction], [idOriginAccount], [idDestinationAccount], [amount], [transactionType], [transactionDate], [beginDate], [endDate], [periodicity] FROM Transaction WHERE beginDate >= @beginDate AND endDate <= @endDate";
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = Database.Instance._connection;
+            cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@beginDate", beginDate));
+            cmd.Parameters.Add(new SqlParameter("@endDate", endDate));
+            List<Transaction> newTransactiontList = new List<Transaction>();
+
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        String transactionType = reader.GetString(reader.GetOrdinal("transactionType"));
+                        Transaction transaction = new Transaction();
+                        transaction.idTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));
+                        transaction.idOriginAccount = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
+                        transaction.idDestinationAccount = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
+                        transaction.amount = reader.GetDecimal(reader.GetOrdinal("amount"));
+                        transaction.transactionDate = reader.GetDateTime(reader.GetOrdinal("transactionDate"));
+                        transaction.beginDate = reader.GetDateTime(reader.GetOrdinal("beginDate"));
+                        transaction.endDate = reader.GetDateTime(reader.GetOrdinal("endDate"));
+                        transaction.periodicity = reader.GetInt32(reader.GetOrdinal("periodicity"));
+                        newTransactiontList.Add(transaction);
+                    }
+                }
+            }
+            foreach (Transaction transaction in newTransactiontList)
+            {
+                transaction.Transfer = Database.Instance.GetTransfersByTransaction(transaction);
+            }
+            return newTransactiontList;
         }
 
         public IEnumerable<Transfer> GetTransfersByTransaction(Transaction transaction)
@@ -56,6 +90,7 @@ namespace JELListener
 
         public void UpdateTransaction(Transaction transaction)
         {
+
             throw new NotImplementedException("Mettre à jour la transaction et TOUS ses transfert associés en base");
         }
         
