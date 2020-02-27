@@ -22,7 +22,7 @@ namespace Project2
         public static void DisplayWarning(string message)
         {
             Console.BackgroundColor = ConsoleColor.Red;
-            DisplayInformation(message);
+            Console.WriteLine(message);
             Console.BackgroundColor = ConsoleColor.Black;
         }
 
