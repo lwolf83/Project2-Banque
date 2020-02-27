@@ -118,9 +118,9 @@ namespace Project2
             else
             {
                 string password = SetUpPasswordFromKeyboard();
-                IO.DisplayInformation("Your password is valid.");
                 password = Sha256Tools.GetHash(password);
                 DBQuery.SaveNewCustomerInDb(opts.Name, opts.Login, password, opts.Location);
+                Console.WriteLine("Your account has been created.");
             }
         }
 
@@ -142,6 +142,7 @@ namespace Project2
                 inputError++;
             }
             while (!isComplexPassword);
+            Console.WriteLine("Your password is valid.");
             return password;
         }
 
