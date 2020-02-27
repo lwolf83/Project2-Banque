@@ -41,11 +41,8 @@ namespace Project2
     [Verb("createaccount", HelpText = "Create a new account.")]
     class CreateAccountOptions : LoginOptions
     {
-        [Option('s', "sa", Required = false, HelpText = "Create a savings account")]
-        public bool SavingsAccount { get; set; }
-
-        [Option('c', "ca", Required = false, HelpText = "Create a checking account")]
-        public bool CheckingAccount { get; set; }
+        [Option('t', "type", Required = false, HelpText = "Choose your type account", MetaValue = "sa/ca")]
+        public string AccountType { get; set; }
     }
 
     [Verb("listaccount", HelpText = "List your accounts.")]
