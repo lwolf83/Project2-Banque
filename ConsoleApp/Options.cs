@@ -60,8 +60,8 @@ namespace Project2
     [Verb("showinfo", HelpText = "Show your account's informations.")]
     class ShowInfoOptions : LoginOptions
     {
-        [Value(0)]
-        public string AccountId { get; set; }
+        [Option('a', "accounts", Required = false, HelpText = "Export customer's account.")]
+        public bool ExportAccounts { get; set; }
     }
 
      class DoTransferOptions : LoginOptions
