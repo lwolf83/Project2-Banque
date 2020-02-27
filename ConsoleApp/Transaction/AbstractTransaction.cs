@@ -8,7 +8,6 @@ namespace Project2
     {
         public int IdTransaction { get; set; }
         public DateTime TransactionDate { get; set; }
-        public DateTime TransferDate { get; set; }
         public decimal Amount { get; set; }
         public int AccountOrigin { get; set; }
         public int AccountDestination { get; set; }

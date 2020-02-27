@@ -69,7 +69,6 @@ CREATE TABLE [Transaction](
 	[amount] [money] NOT NULL,
 	[transactionType] [varchar](25) NOT NULL,
 	[transactionDate] DATETIME NOT NULL DEFAULT GETDATE(),
-	[transferDate] DATETIME NULL,
 	[beginDate] DATETIME NULL,
 	[endDate] DATETIME NULL,
 	[periodicity] INT NULL
@@ -87,8 +86,6 @@ CREATE TABLE [Transfert](
 	) 
 GO
 
-
-
 -- Set of test 
 
 INSERT INTO [Customer] (name, login, password, location) VALUES ('laure c' , 'laure', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
@@ -98,18 +95,18 @@ INSERT INTO [Customer] (name, login, password, location) VALUES ('laurent' , 'la
 INSERT INTO [Customer] (name, login, password, location) VALUES ('john' , 'john', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
 INSERT INTO [Customer] (name, login, password, location) VALUES ('bob' , 'bob', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'Strasbourg')
 
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (1, 'FR1', 500.00, 'SA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (1, 'FR2', 10000.00, 'CA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (2, 'FR3', 120.00, 'SA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (2, 'FR4', 134.00, 'CA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (3, 'FR5', 120.00, 'SA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (3, 'FR6', 134.00, 'CA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (4, 'FR7', 120.00, 'SA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (4, 'FR8', 10.00, 'CA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (5, 'FR9', 0.00, 'SA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (5, 'FR10', 90.10, 'CA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (6, 'FR11', 10.99, 'SA', 0)
-INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized) VALUES (6, 'FR12', -12.00, 'CA', 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (1, 'FR1', 500.00, 'SA', 0, '62400', 0, 0.01)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (1, 'FR2', 10000.00, 'CA', 0, 0, -200, 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (2, 'FR3', 120.00, 'SA', 0,  62400, 0, 0.01)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (2, 'FR4', 134.00, 'CA', 0,  0, -200, 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (3, 'FR5', 120.00, 'SA', 0,  62400, 0, 0.01)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (3, 'FR6', 134.00, 'CA', 0,  0, -200, 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (4, 'FR7', 120.00, 'SA', 0,  62400, 0, 0.01)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (4, 'FR8', 10.00, 'CA', 0, 0, -200, 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (5, 'FR9', 0.00, 'SA', 0,  62400, 0, 0.01)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (5, 'FR10', 90.10, 'CA', 0,  0, -200, 0)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (6, 'FR11', 10.99, 'SA', 0,  62400, 0, 0.01)
+INSERT INTO [Account] (idCustomer, accountNumber, amount, type, isDebitAuthorized, ceiling, overdraft, savingsrate) VALUES (6, 'FR12', -12.00, 'CA', 0, 0, -200, 0)
 
 INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (1, 2)
 INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (1, 4)
@@ -118,11 +115,11 @@ INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (5, 1)
 INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (5, 2)
 INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (5, 3)
 
-  INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,transferDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-22','','','','')
-INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,transferDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-24','','','','')
-INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,transferDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-26','','','','')
+INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-22','','','')
+INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-24','','','')
+INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-26','','','')
 
-  INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-22', 0, 1)
+INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-22', 0, 1)
 INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-24', 0, 2)
 INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-26', 0, 3)
 

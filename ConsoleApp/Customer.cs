@@ -96,7 +96,6 @@ namespace Project2
             currentTransaction.Amount = amount;
             currentTransaction.Periodicity = periodicity;
             currentTransaction.TransactionDate = DateTime.Now;
-            currentTransaction.TransferDate = DateTime.Now;
             DBQuery.InsertTransaction(currentTransaction);
             List<TransferMoney> transfertList = currentTransaction.GetTransferts();
             Console.WriteLine("We do the transfer");
