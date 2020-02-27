@@ -74,7 +74,8 @@ namespace Project2
 
             DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
-            
+            Console.WriteLine("Your Saving Account has been created with default " +
+                "values (Ceiling set to - " + account.Ceiling + " and SavingsRate set to  " + account.SavingsRate  + ")");
         }
 
         public void AddCheckingAccount()
@@ -87,6 +88,7 @@ namespace Project2
 
             DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
+            Console.WriteLine("Your Checking Account has been created with default value (Overdraft set to - " + account.Overdraft + ")");
         }
 
         public void MakeNewTransaction(decimal amount, AbstractAccount accountOrigin, AbstractAccount accountDestination, DateTime? startDate = null, DateTime? endDate = null, int periodicity = 0)
