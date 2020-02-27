@@ -41,7 +41,7 @@ namespace Project2
     [Verb("createaccount", HelpText = "Create a new account.")]
     class CreateAccountOptions : LoginOptions
     {
-        [Option('t', "type", Required = false, HelpText = "Choose your type account", MetaValue = "sa/ca")]
+        [Option('t', "type", Required = true, HelpText = "Choose your type account", MetaValue = "sa/ca")]
         public string AccountType { get; set; }
     }
 
@@ -51,22 +51,15 @@ namespace Project2
         //on pourra après ajouter en option des entrées de dates
     }
 
-    [Verb("showinfo", HelpText = "Show your account's informations.")]
-    class ShowInfoOptions : LoginOptions
-    {
-        [Option('a', "accounts", Required = false, HelpText = "Export customer's account.")]
-        public bool ExportAccounts { get; set; }
-    }
-
      class DoTransferOptions : LoginOptions
     {
-        [Option('a', "amount", Required = false, HelpText = "Amount to transfer.")]
+        [Option('a', "amount", Required = true, HelpText = "Amount to transfer.")]
         public decimal AmountToTransfer { get; set; }
 
-        [Option('o', "origin", Required = false, HelpText = "Origin account.")]
+        [Option('o', "origin", Required = true, HelpText = "Origin account.")]
         public string AccountIdOrigin { get; set; }
 
-        [Option('d', "destination", Required = false, HelpText = "Destination account.")]
+        [Option('d', "destination", Required = true, HelpText = "Destination account.")]
         public string AccountIdDestination { get; set; }
     }
 
