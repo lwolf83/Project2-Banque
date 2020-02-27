@@ -8,6 +8,8 @@ namespace JELListener
 {
     class Transaction
     {
+
+
         public int idTransaction { get; set; }
         public int idOriginAccount { get; set; }
         public int idDestinationAccount { get; set; }
@@ -20,6 +22,3 @@ namespace JELListener
         public IEnumerable<Transfer> Transfer { get; set; }
     }
 }
-
-
-

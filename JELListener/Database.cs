@@ -102,14 +102,68 @@ namespace JELListener
             }
         }
 
+        public Account GetAccountByTransaction(int Account)
+        {
+            string sql = "SELECT [idAccount],[idCustomer],[accountNumber],[amount],[type],[isDebitAuthorized],[creationDate],[ceiling],[overdraft],[savingsRate]  " +
+                            "FROM [Account] WHERE idAccount = @idAccount";
+
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = Database.Instance._connection;
+            cmd.CommandText = sql;
+            cmd.Parameters.Add(new SqlParameter("@idAccount", Account));
+
+            int idAccount = 0;
+            int idCustomer = 0;
+            string accountNumber = "";
+            decimal amount = 0;
+            string type = "";
+            bool isDebitAuthorized = true;
+            DateTime creationDate = new DateTime();
+            decimal ceiling = 0;
+            decimal overdraft = 0;
+            decimal savingsRate = 0;
+
+
+            using (DbDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    idAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
+                    idCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
+                    accountNumber = reader.GetString(reader.GetOrdinal("accountNumber"));
+                    amount = reader.GetDecimal(reader.GetOrdinal("amount"));
+                    type = reader.GetString(reader.GetOrdinal("type"));
+                    isDebitAuthorized = reader.GetBoolean(reader.GetOrdinal("isDebitAuthorized"));
+                    creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate"));
+                    ceiling = reader.GetDecimal(reader.GetOrdinal("ceiling"));
+                    overdraft = reader.GetDecimal(reader.GetOrdinal("overdraft"));
+                    savingsRate = reader.GetDecimal(reader.GetOrdinal("savingsRate"));
+                }
+            }
+            Account resultAccount = new Account();
+            resultAccount.accountNumber = accountNumber;
+            resultAccount.amount = amount;
+            resultAccount.creationDate = creationDate;
+            resultAccount.idAccount = idAccount;
+            resultAccount.idCustomer = idCustomer;
+            resultAccount.isDebitAuthorized = isDebitAuthorized;
+            resultAccount.ceiling = ceiling;
+            resultAccount.overdraft = overdraft;
+            resultAccount.savingsRate = savingsRate;
+            return resultAccount;
+
+        }
+
         public Account GetOriginAccountByTransaction(Transaction transaction)
         {
-            throw new NotImplementedException("Récupérer le compte d'origine d'une transaction");
+            return GetAccountByTransaction(transaction.idOriginAccount);
         }
 
         public Account GetDestinaryAccountByTransaction(Transaction transaction)
         {
-            throw new NotImplementedException("Récupérer le compte destinataire");
+            return GetAccountByTransaction(transaction.idDestinationAccount);
         }
 
         public void UpdateTransaction(Transaction transaction)
@@ -146,6 +200,9 @@ namespace JELListener
 
         public void UpdateAccount(Account account)
         {
+            
+
+
             throw new NotImplementedException("Mettre à jour le compte en fonction du paramètre account");
         }
     }
