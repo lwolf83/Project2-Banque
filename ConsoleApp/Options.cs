@@ -41,7 +41,7 @@ namespace Project2
     [Verb("createaccount", HelpText = "Create a new account.")]
     class CreateAccountOptions : LoginOptions
     {
-        [Option('t', "type", Required = false, HelpText = "Choose your type account", MetaValue = "sa/ca")]
+        [Option('t', "type", Required = true, HelpText = "Choose your type account", MetaValue = "sa/ca")]
         public string AccountType { get; set; }
     }
 

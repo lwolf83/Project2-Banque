@@ -242,7 +242,7 @@ namespace Project2
 
         public static List<TransferMoney> GetTransfertList(string accountNumber)
         {
-            string sql = "SELECT [idTransfert],[idOriginAccount],[idDestinationAccount],[amount],isDone, idTransaction" +
+            string sql = "SELECT [idTransfert],[idOriginAccount],[idDestinationAccount], [TransferDate], [amount],isDone, idTransaction" +
                             " FROM [Transfert] WHERE idOriginAccount= @idAccount";
 
             SqlCommand cmd = new SqlCommand();
@@ -261,6 +261,7 @@ namespace Project2
                         transfertMoney.idTransfert = reader.GetInt32(reader.GetOrdinal("idTransfert"));
                         transfertMoney.IdOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
                         transfertMoney.idDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
+                        transfertMoney.TransferDate = reader.GetDateTime(reader.GetOrdinal("TransferDate"));
                         transfertMoney.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                         transfertMoney.IsDone = reader.GetBoolean(reader.GetOrdinal("isDone"));
                         transfertMoney.IdTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));

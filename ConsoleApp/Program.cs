@@ -21,6 +21,7 @@ namespace Project2
         static void Main(string[] args)
         {
             Console.InputEncoding = Encoding.UTF8;
+
             Parser.Default.ParseArguments<LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions, TransactionListOptions,
                  DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions, Export>(args)
                 .WithParsed<LoginOptions>(RunLoginCommand)
@@ -32,7 +33,6 @@ namespace Project2
                 .WithParsed<DoInstantTransferOptions>(RunInstantTransferCommand)
                 .WithParsed<DoPermanentTransferOptions>(RunPermanentTransferCommand)
                 .WithParsed<Export>(RunExportCommand);
-
         }
 
         
@@ -213,7 +213,6 @@ namespace Project2
             List<AbstractAccount> AccountsList = Customer.GetAccountList(currentCustomer.IdCustomer);
             IO.DisplayAccountList(currentCustomer, AccountsList);
         }
-
         static void RunListTransactionCommand(TransactionListOptions opts)
         {
             List<AbstractTransaction> transactionList = DBQuery.GetTransactionList(opts.AccountNumber);
@@ -222,9 +221,10 @@ namespace Project2
 
         static void RunExportCommand(Export opts)
         {
+            string dateExport = DateTime.Now.ToString("yyyyMMddHmmss");
             if (opts.ExportAccounts)
             {
-                using (var writer = new StreamWriter("E://testListAccount.csv"))
+                using (var writer = new StreamWriter("./" + dateExport + "AccountCsv.csv"))
                 using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                 {
                     csv.Configuration.RegisterClassMap<CSV>();
@@ -234,10 +234,10 @@ namespace Project2
             }
             else if (opts.ExportTransactions)
             {
-                using (var writer = new StreamWriter("E://testTransaction.csv"))
+                using (var writer = new StreamWriter("./" + dateExport + "TransactionCsv.csv"))
                 using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                 {
-                    List<AbstractTransaction> transactionList = DBQuery.GetTransactionList(Convert.ToString(opts.AccountNumber));
+                    List<AbstractTransaction> transactionList = DBQuery.GetTransactionList(opts.AccountNumber);
                     csv.Configuration.RegisterClassMap<CSV>();
                     csv.WriteRecords(transactionList);
                 }
@@ -245,7 +245,7 @@ namespace Project2
             }
             else if (opts.ExportTransfers)
             {
-                using (var writer = new StreamWriter("E://testTransfer.csv"))
+                using (var writer = new StreamWriter("./" + dateExport + "TransferCsv.csv"))
                 using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                 {
                     List<TransferMoney> transfertMoneyList = DBQuery.GetTransfertList(Convert.ToString(opts.AccountNumber));
@@ -256,7 +256,7 @@ namespace Project2
             }
             else
             {
-                IO.DisplayWarning("Cannot create your CSV File!");
+                IO.DisplayWarning("Cannot create your CSV File please choose an option!");
             }
         }
 
