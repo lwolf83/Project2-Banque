@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace JELListener
 {
+
     public class Account
     {
         public int idAccount { get; set; }
@@ -18,12 +19,6 @@ namespace JELListener
         public decimal ceiling { get; set; }
         public decimal overdraft { get; set; }
         public decimal savingsRate { get; set; }
-
-
-
-
-
-
 
 
     }

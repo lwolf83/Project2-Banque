@@ -8,9 +8,17 @@ namespace JELListener
 {
     class Transaction
     {
-        public int Id { get; set; }
-        public int DestinaryAccount { get; set; }
-        public int OriginAccount { get; set; }
-        public IEnumerable<Transfer> Transfers { get; set; }
+
+
+        public int idTransaction { get; set; }
+        public int idOriginAccount { get; set; }
+        public int idDestinationAccount { get; set; }
+        public decimal amount { get; set; }
+        public string transactionType { get; set; }
+        public DateTime transactionDate { get; set; }
+        public DateTime? beginDate { get; set; }
+        public DateTime? endDate { get; set; }
+        public int periodicity { get; set; }
+        public IEnumerable<Transfer> Transfer { get; set; }
     }
 }
