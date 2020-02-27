@@ -114,10 +114,12 @@ namespace JELListener
 
         public void UpdateTransaction(Transaction transaction)
         {
-
-            throw new NotImplementedException("Mettre à jour la transaction et TOUS ses transfert associés en base");
+            foreach (Transfer transfer in transaction.Transfer)
+            {
+                UpdateTransfer(transfer);
+            }
         }
-
+        
         public void UpdateTransfer(Transfer transfer)
         {
             string sql = "UPDATE Transfert SET isDone WHERE idTransfert = @idTransfert";
