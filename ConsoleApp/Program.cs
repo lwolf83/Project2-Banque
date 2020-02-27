@@ -21,19 +21,21 @@ namespace Project2
         static void Main(string[] args)
         {
             Console.InputEncoding = Encoding.UTF8;
-            Parser.Default.ParseArguments<LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions,
-                ShowInfoOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions, Export>(args)
+            Parser.Default.ParseArguments<LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions, TransactionListOptions,
+                 DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions, Export>(args)
                 .WithParsed<LoginOptions>(RunLoginCommand)
                 .WithParsed<CreateCustomerOptions>(RunCreateCustomerCommand)
                 .WithParsed<CreateAccountOptions>(RunCreateAccountCommand)
                 .WithParsed<ListAccountOptions>(RunListAccountCommand)
-                .WithParsed<ShowInfoOptions>(RunShowInfoCommand)
+                .WithParsed<TransactionListOptions>(RunListTransactionCommand)
                 .WithParsed<DoDefferedTransferOptions>(RunDefferedTransferCommand)
                 .WithParsed<DoInstantTransferOptions>(RunInstantTransferCommand)
                 .WithParsed<DoPermanentTransferOptions>(RunPermanentTransferCommand)
                 .WithParsed<Export>(RunExportCommand);
+
         }
 
+        
         static void RunLoginCommand(LoginOptions opts)
         {
             if (Customer.IsCustomerExisting(opts.Login))
@@ -208,19 +210,14 @@ namespace Project2
 
         static void RunListAccountCommand(ListAccountOptions opts)
         {
-            Customer currentCustomer = DBQuery.getCustomerFromDbWhereLogin(opts.Login);
             List<AbstractAccount> AccountsList = Customer.GetAccountList(currentCustomer.IdCustomer);
-            int i = 1;
-            foreach (AbstractAccount account in AccountsList)
-            {
-                Console.WriteLine($"Compte n°{i} : {account}");
-                i = i+1;
-            }
+            IO.DisplayAccountList(currentCustomer, AccountsList);
         }
 
-        static void RunShowInfoCommand(ShowInfoOptions opts)
+        static void RunListTransactionCommand(TransactionListOptions opts)
         {
-            return;
+            List<AbstractTransaction> transactionList = DBQuery.GetTransactionList(opts.AccountNumber);
+            IO.DisplayTransactionList(transactionList);
         }
 
         static void RunExportCommand(Export opts)
