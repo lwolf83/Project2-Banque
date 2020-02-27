@@ -279,7 +279,7 @@ namespace Project2
         
         public static List<AbstractTransaction> GetTransactionList(string accountNumber)
         {
-            string sql = "SELECT [idTransaction],[idOriginAccount],[idDestinationAccount],[amount],[transactionType],[transactionDate],[transferDate],[beginDate],[endDate],[periodicity]" +
+            string sql = "SELECT [idTransaction],[idOriginAccount],[idDestinationAccount],[amount],[transactionType],[transactionDate],[beginDate],[endDate],[periodicity]" +
                             " FROM [Transaction] WHERE idOriginAccount= @idAccount";
 
 
@@ -302,7 +302,6 @@ namespace Project2
                         transaction.AccountDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
                         transaction.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                         transaction.TransactionDate = reader.GetDateTime(reader.GetOrdinal("transactionDate"));
-                        transaction.TransferDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
                         transaction.StartDate = reader.GetDateTime(reader.GetOrdinal("beginDate"));
                         transaction.EndDate = reader.GetDateTime(reader.GetOrdinal("endDate"));
                         transaction.Periodicity = reader.GetInt32(reader.GetOrdinal("periodicity"));

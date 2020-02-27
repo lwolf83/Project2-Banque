@@ -54,14 +54,16 @@ namespace Project2
     [Verb("listaccount", HelpText = "List your accounts.")]
     class ListAccountOptions : LoginOptions
     {
+        [Option('a', "accounts", Required = false, HelpText = "Export customer's account.")]
+        public bool ExportAccounts { get; set; }
         //on pourra après ajouter en option des entrées de dates
     }
 
-    [Verb("showinfo", HelpText = "Show your account's informations.")]
-    class ShowInfoOptions : LoginOptions
+    [Verb("transactionlist", HelpText = "List your transaction's account")]
+    class TransactionListOptions : LoginOptions
     {
-        [Option('a', "accounts", Required = false, HelpText = "Export customer's account.")]
-        public bool ExportAccounts { get; set; }
+        [Option('n', "accountnumber", Required = false, HelpText = "Export transaction's account.")]
+        public string AccountNumber { get; set; }
     }
 
      class DoTransferOptions : LoginOptions
