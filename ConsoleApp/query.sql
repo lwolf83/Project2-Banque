@@ -7,6 +7,9 @@ GO
 USE [Project2-Banque]
 GO
 
+SET DATEFORMAT ymd
+GO
+
 IF(EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Customer'))
 BEGIN
 	DROP TABLE [Customer]
@@ -115,12 +118,12 @@ INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (5, 1)
 INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (5, 2)
 INSERT INTO [AccountAuthorizedCustomers] (idAccount, idCustomer) VALUES (5, 3)
 
-INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-03','','','')
-INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-05','','','')
-INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-02','','','')
+INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-22','','','')
+INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-24','','','')
+INSERT INTO [Transaction] (idOriginAccount,idDestinationAccount,amount,transactionType,transactionDate,beginDate,endDate,periodicity) VALUES (1, 2, 10, 'deffered','2020-02-26','','','')
 
-INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-01', 0, 1)
-INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-06', 0, 2)
-INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-02', 0, 3)
+INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-22', 0, 1)
+INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-24', 0, 2)
+INSERT INTO [Transfert] (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) VALUES (1, 2, 10, '2020-02-26', 0, 3)
 
 GO
