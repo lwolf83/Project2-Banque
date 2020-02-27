@@ -18,7 +18,6 @@ namespace Project2
         {
             Map(c => c.IdTransaction).Index(0);
             Map(c => c.TransactionDate).Index(1);
-            Map(c => c.TransferDate).Index(2);
             Map(c => c.Amount).Index(3);
             Map(c => c.AccountOrigin).Index(4);
             Map(c => c.AccountDestination).Index(5);

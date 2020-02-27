@@ -48,7 +48,7 @@ namespace Project2
             }
             Console.WriteLine($"\n{array}");
         }
-
+        
 
         public static string PromptPassword()
         {
