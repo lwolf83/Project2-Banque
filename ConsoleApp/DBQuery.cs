@@ -152,16 +152,16 @@ namespace Project2
         {
             foreach (TransferMoney transfert in transfertList)
             {
-                string sql = "INSERT INTO Transfert (idOriginAccount,idDestinationAccount,amount,transferDate, isDone, idTransaction) "
-                        + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate, 0, @idTransaction)";
+                string sql = "INSERT INTO Transfert(idOriginAccount, idDestinationAccount, amount, transferDate, isDone, idTransaction) "
+                          + " VALUES (@idOriginAccount,@idDestinationAccount,@amount,@transferDate, 0, @idTransaction)";
 
                 IEnumerable<SqlParameter> parameters = new List<SqlParameter>
                 {
                     new SqlParameter ("@idOriginAccount", transfert.IdOrigin),
                     new SqlParameter ("@idDestinationAccount", transfert.idDestination),
                     new SqlParameter ("@amount", transfert.Amount),
-                    new SqlParameter ("@transferDate", transfert.TransferDate),
-                    new SqlParameter ("@idTransaction", transfert.IdTransaction)
+                    new SqlParameter ("@idTransaction", transfert.IdTransaction),
+                    new SqlParameter ("@transferDate", transfert.TransferDate)
                 };
                 ExecuteQuery(sql,parameters);
             }
@@ -242,7 +242,7 @@ namespace Project2
 
         public static List<TransferMoney> GetTransfertList(string accountNumber)
         {
-            string sql = "SELECT [idTransfert],[idOriginAccount],[idDestinationAccount],[amount],[transferDate],isDone, idTransaction" +
+            string sql = "SELECT [idTransfert],[idOriginAccount],[idDestinationAccount],[amount],isDone, idTransaction" +
                             " FROM [Transfert] WHERE idOriginAccount= @idAccount";
 
             SqlCommand cmd = new SqlCommand();
@@ -261,7 +261,6 @@ namespace Project2
                         transfertMoney.idTransfert = reader.GetInt32(reader.GetOrdinal("idTransfert"));
                         transfertMoney.IdOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
                         transfertMoney.idDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
-                        transfertMoney.TransferDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
                         transfertMoney.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                         transfertMoney.IsDone = reader.GetBoolean(reader.GetOrdinal("isDone"));
                         transfertMoney.IdTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));
@@ -274,7 +273,7 @@ namespace Project2
         
         public static List<AbstractTransaction> GetTransactionList(string accountNumber)
         {
-            string sql = "SELECT [idTransaction],[idOriginAccount],[idDestinationAccount],[amount],[transactionType],[transactionDate],[transferDate],[beginDate],[endDate],[periodicity]" +
+            string sql = "SELECT [idTransaction],[idOriginAccount],[idDestinationAccount],[amount],[transactionType],[transactionDate],[beginDate],[endDate],[periodicity]" +
                             " FROM [Transaction] WHERE idOriginAccount= @idAccount";
 
             SqlCommand cmd = new SqlCommand();
@@ -296,7 +295,6 @@ namespace Project2
                         transaction.AccountDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
                         transaction.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                         transaction.TransactionDate = reader.GetDateTime(reader.GetOrdinal("transactionDate"));
-                        transaction.TransferDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
                         transaction.StartDate = reader.GetDateTime(reader.GetOrdinal("beginDate"));
                         transaction.EndDate = reader.GetDateTime(reader.GetOrdinal("endDate"));
                         transaction.Periodicity = reader.GetInt32(reader.GetOrdinal("periodicity"));
@@ -388,7 +386,6 @@ namespace Project2
         public static void InsertTransaction(AbstractTransaction currentTransaction)
         {
             string transactionType = currentTransaction.GetType().Name;
-            DateTime TransferDate = currentTransaction.TransferDate;
 
             List<SqlParameter> parameters = new List<SqlParameter>
             {
@@ -396,7 +393,6 @@ namespace Project2
                 new SqlParameter("@AccountDestination", currentTransaction.AccountDestination),
                 new SqlParameter("@Amount", currentTransaction.Amount),
                 new SqlParameter("@transactionType", transactionType),
-                new SqlParameter("@TransferDate", TransferDate),
                 new SqlParameter("@startDateString", currentTransaction.StartDate),
                 new SqlParameter("@endDateString", currentTransaction.EndDate),
                 new SqlParameter("@Periodicity", currentTransaction.Periodicity)
@@ -478,7 +474,6 @@ namespace Project2
                         }
                         newTransaction.IdTransaction = reader.GetInt32(reader.GetOrdinal("idTransaction"));
                         newTransaction.TransactionDate = reader.GetDateTime(reader.GetOrdinal("transactionDate"));
-                        newTransaction.TransferDate = reader.GetDateTime(reader.GetOrdinal("transferDate"));
                         newTransaction.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                         newTransaction.AccountOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
                         newTransaction.AccountDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
@@ -491,19 +486,19 @@ namespace Project2
 
         public static List<AbstractTransaction> GetTransactionFromIdAccount(AbstractAccount currentIdAccount)
         {
-            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicity FROM [Transaction] INNER JOIN Account ON[Transaction].idOriginAccount = Account.idAccount WHERE Account.idAccount = " + currentIdAccount + ";";
+            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicity FROM [Transaction] INNER JOIN Account ON[Transaction].idOriginAccount = Account.idAccount WHERE Account.idAccount = " + currentIdAccount + ";";
             return GetTransactionFromDB(sql);
         }
 
         public static List<AbstractTransaction> GetTransactionFromLogin(Customer currentLogin)
         {
-            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicity FROM [Transaction] INNER JOIN Account ON[Transaction].idOriginAccount = Account.idAccount INNER JOIN Customer ON Account.idCustomer = Customer.idCustomer WHERE Customer.login = '" + currentLogin + "'";
+            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicity FROM [Transaction] INNER JOIN Account ON[Transaction].idOriginAccount = Account.idAccount INNER JOIN Customer ON Account.idCustomer = Customer.idCustomer WHERE Customer.login = '" + currentLogin + "'";
             return GetTransactionFromDB(sql);
         }
 
         public static List<AbstractTransaction> GetTransactionBetweenTwoDates(DateTime Date1, DateTime Date2)
         {
-            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].transferDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicityFROM [Transaction] WHERE " + Date1 + " > transferDate AND transferDate > " + Date2 + "; ";
+            string sql = "SELECT [transaction].idTransaction, [transaction].idOriginAccount, [transaction].idDestinationAccount, [transaction].amount, [transaction].transactionDate, [transaction].beginDate, [transaction].endDate, [transaction].periodicityFROM [Transaction] WHERE " + Date1 + " > startDate AND startDate > " + Date2 + "; ";
             return GetTransactionFromDB(sql);
         }
 
