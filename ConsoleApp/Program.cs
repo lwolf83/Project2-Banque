@@ -187,11 +187,11 @@ namespace Project2
         {
             if (Customer.IsCustomerExisting(opts.Login))
             {
-                if (opts.CheckingAccount)
+                if (opts.AccountType == "ca")
                 {
                     currentCustomer.AddCheckingAccount();
                 }
-                else if (opts.SavingsAccount)
+                else if (opts.AccountType == "sa")
                 {
                     currentCustomer.AddSavingAccount();
                 }
@@ -203,7 +203,6 @@ namespace Project2
             else
             {
                 IO.DisplayWarning("Cannot create an account on a customer not existing!");
-                Environment.Exit(1);
             }
         }
 
