@@ -120,7 +120,7 @@ namespace JELListener
 
         public void UpdateTransfer(Transfer transfer)
         {
-            string sql = "UPDATE Transfert SET isDone WHERE idTransfert = @idTransfert";
+            string sql = "UPDATE Transfert SET isDone = 0 WHERE idTransfert = @idTransfert";
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandText = sql;
