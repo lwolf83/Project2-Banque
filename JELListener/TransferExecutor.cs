@@ -10,8 +10,33 @@ namespace JELListener
     {
         public static void ExecuteTransfers()
         {
-            throw new NotImplementedException("Cette méthode réalise tous les transferts à faire");
+            
             Database database = Database.Instance;
+            DateTime endDate = DateTime.Now;
+            DateTime startDate = DateTime.Now.AddSeconds(-15);
+
+            IEnumerable<Transaction> transactionToDo = Database.Instance.GetTransactions(startDate, endDate);
+            foreach(Transaction transaction in transactionToDo)
+            {
+                Check(transaction);
+                foreach (Transfer transfer in transaction.Transfers)
+                {
+                    Execute(transfer);
+                }
+                Database.Instance.UpdateTransaction(transaction);
+
+            }
         }
+
+        public static void Check(Transaction transaction)
+        {
+           
+        }
+
+        public static void Execute(Transfer transfer)
+        {
+
+        }
+
     }
 }
