@@ -60,13 +60,13 @@ namespace Project2
 
      class DoTransferOptions : LoginOptions
     {
-        [Option('a', "amount", Required = false, HelpText = "Amount to transfer.")]
+        [Option('a', "amount", Required = true, HelpText = "Amount to transfer.")]
         public decimal AmountToTransfer { get; set; }
 
-        [Option('o', "origin", Required = false, HelpText = "Origin account.")]
+        [Option('o', "origin", Required = true, HelpText = "Origin account.")]
         public string AccountIdOrigin { get; set; }
 
-        [Option('d', "destination", Required = false, HelpText = "Destination account.")]
+        [Option('d', "destination", Required = true, HelpText = "Destination account.")]
         public string AccountIdDestination { get; set; }
     }
 
