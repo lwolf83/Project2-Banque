@@ -23,7 +23,7 @@ namespace Project2
             Amount = transaction.Amount;
             IsDone = false;
             IdTransaction = transaction.IdTransaction;
-            TransferDate = transaction.TransferDate;
+            TransferDate = transaction.StartDate;
         }
 
         public TransferMoney(PermanentTransaction transaction) : this((AbstractTransaction)transaction)

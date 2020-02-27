@@ -52,7 +52,6 @@ namespace Project2
                     i++;
                 }
                 while ((password != currentCustomer.Password) && (i <= 2));
-
                 if (password == currentCustomer.Password)
                 {
                     IO.DisplayInformation("You are connected!");
@@ -75,11 +74,19 @@ namespace Project2
             {
                 AbstractAccount accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
                 AbstractAccount accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
-
                 if (accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
                 {
-                    currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse( opts.DefferedDate));
+                    currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.DefferedDate));
                 }
+                else
+                {
+
+                    IO.DisplayWarning("You are not allowed to debit the origin account or credit the destination account!");
+                }
+            }
+            else
+            {
+                IO.DisplayWarning("You can't make this deferred transfer, you aren't the account owner!");
             }
         }
 
@@ -89,11 +96,19 @@ namespace Project2
             {
                 AbstractAccount accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
                 AbstractAccount accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
-
                 if(accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
                 {
                     currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination);
                 }
+                else
+                {
+
+                    IO.DisplayWarning("You are not allowed to debit the origin account or credit the destination account!");
+                }
+            }
+            else
+            {
+                IO.DisplayWarning("You can't make this deferred transfer, you aren't the account owner!");
             }
         }
 
@@ -103,11 +118,19 @@ namespace Project2
             {
                 AbstractAccount accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
                 AbstractAccount accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
-
                 if (accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
                 {
                     currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.StartDate), DateTime.Parse(opts.EndDate), opts.Periodicity);
                 }
+                else
+                {
+
+                    IO.DisplayWarning("You are not allowed to debit the origin account or credit the destination account!");
+                }
+            }
+            else
+            {
+                IO.DisplayWarning("You can't make this deferred transfer, you aren't the account owner!");
             }
         }
 
@@ -115,7 +138,7 @@ namespace Project2
         {  
             if (Customer.IsCustomerExisting(opts.Login))
             {
-                Console.WriteLine("Your account already exists.");
+                IO.DisplayWarning("Your account already exists!");
             }
             else
             {
@@ -152,12 +175,12 @@ namespace Project2
         {
             if (nbErreurSaisie < 3)
             {
-                Console.WriteLine("Your password has not a sufficient complexity. Please, Put a valid password.");
+                IO.DisplayWarning("Your password has not a sufficient complexity! Please, Put a valid password.");
             }
             if (nbErreurSaisie >= 3)
             {
-                Console.WriteLine("Your password must have at least 8 characters, lower and upper letters, " +
-                    "at least one number and one special character.");
+                IO.DisplayWarning("Your password must have at least 8 characters, lower and upper letters, " +
+                    "at least one number and one special character!");
             }
             return true;
         }
@@ -166,19 +189,22 @@ namespace Project2
         {
             if (Customer.IsCustomerExisting(opts.Login))
             {
-                if (opts.CheckingAccount)
+                if (opts.AccountType == "ca")
                 {
                     currentCustomer.AddCheckingAccount();
                 }
-                if (opts.SavingsAccount)
+                else if (opts.AccountType == "sa")
                 {
                     currentCustomer.AddSavingAccount();
-                } 
+                }
+                else
+                {
+                    IO.DisplayWarning("You don't enter a valid type of account!");
+                }
             }
             else
             {
-                IO.DisplayWarning("Cannot create an account on a customer not existing.");
-                Environment.Exit(1);
+                IO.DisplayWarning("Cannot create an account on a customer not existing!");
             }
         }
 
@@ -228,13 +254,15 @@ namespace Project2
                 }
                 Console.WriteLine("CSV File is created.");
             }
+            else
+            {
+                IO.DisplayWarning("Cannot create your CSV File!");
+            }
         }
 
         static void HandleParseError(IEnumerable<Error> errs)
         {
             //handle errors
         }
-
-
     }
 }

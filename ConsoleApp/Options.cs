@@ -26,9 +26,7 @@ namespace Project2
 
 
     [Verb ("createcustomer", HelpText = "Create a new customer.")]
-
     class CreateCustomerOptions : Options
-
     {
         [Option('u', "username", Required = true, HelpText = "The customer username")]
         public string Login { get; set; }
@@ -43,12 +41,8 @@ namespace Project2
     [Verb("createaccount", HelpText = "Create a new account.")]
     class CreateAccountOptions : LoginOptions
     {
-        [Option('s', "sa", Required = false, HelpText = "Create a savings account")]
-        public bool SavingsAccount { get; set; }
-
-        [Option('c', "ca", Required = false, HelpText = "Create a checking account")]
-        public bool CheckingAccount { get; set; }
-
+        [Option('t', "type", Required = false, HelpText = "Choose your type account", MetaValue = "sa/ca")]
+        public string AccountType { get; set; }
     }
 
     [Verb("listaccount", HelpText = "List your accounts.")]
@@ -102,7 +96,6 @@ namespace Project2
 
         [Option('p', "periodicity", Required = true, HelpText = "Number of days between subsequent transfers", MetaValue = "periodicity")]
         public int Periodicity { get; set; }
-
     }
 
     [Verb("csv", HelpText = "Do export of customer's account.")]
@@ -120,7 +113,4 @@ namespace Project2
         [Option('i', "id", Required = false, HelpText = "Account number", MetaValue = "account-number")]
         public string AccountNumber { get; set; }
     }
-
-
-
 }
