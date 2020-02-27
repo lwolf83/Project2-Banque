@@ -51,7 +51,7 @@ namespace Project2
             {
                 transaction = DeferredTransaction.CreateDeferred(startDate);
             }
-            else if (startDate < endDate)
+            else if (startDate < endDate && startDate > DateTime.Now)
             {
                 transaction = PermanentTransaction.CreatePermanent(startDate, endDate);
             }
