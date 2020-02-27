@@ -21,7 +21,6 @@ namespace Project2
             Name = reader.GetString(reader.GetOrdinal("name"));
             Password = reader.GetString(reader.GetOrdinal("password"));
             Location = reader.GetString(reader.GetOrdinal("location"));
-           
         }
 
 
@@ -50,7 +49,7 @@ namespace Project2
 
       
         public static bool IsCustomerExisting(string login)
-        { // vérifie dans la base de données si le client existe en fonction de son login
+        { 
             Customer existingCustomer = DBQuery.getCustomerFromDbWhereLogin(login);
             if (existingCustomer == null)
             {
@@ -71,7 +70,6 @@ namespace Project2
             account.AccountNumber = "";
             account.Ceiling = 61200;
             account.SavingsRate = 0.01m;
-
             DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
             Console.WriteLine("Your Saving Account has been created with default " +
@@ -85,7 +83,6 @@ namespace Project2
             account.Amount = 0;
             account.AccountNumber = "";
             account.Overdraft = -200;
-
             DBQuery.SaveNewAccountInDb(account);
             Accounts.Add(account);
             Console.WriteLine("Your Checking Account has been created with default value (Overdraft set to - " + account.Overdraft + ")");
@@ -109,7 +106,6 @@ namespace Project2
         public static List<AbstractAccount> GetAccountList(int id)
         {          
             List<AbstractAccount> currentCustomerAccountsList = DBQuery.GetAccountsCustomer(id);
-
             return currentCustomerAccountsList;
         }
     }

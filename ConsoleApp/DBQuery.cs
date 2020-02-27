@@ -118,11 +118,8 @@ namespace Project2
                 new SqlParameter("@login", login),
                 new SqlParameter("@password", password),
                 new SqlParameter("@location", location)
-
-             };
-
+            };
             ExecuteQuery(sql, parameters);
-
         }
 
         public static void SaveNewAccountInDb(AbstractAccount account)
@@ -189,7 +186,6 @@ namespace Project2
                     IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
                 }
             }
-
             return IdCustomer;
         }
 
@@ -249,7 +245,6 @@ namespace Project2
             string sql = "SELECT [idTransfert],[idOriginAccount],[idDestinationAccount],[amount],[transferDate],isDone, idTransaction" +
                             " FROM [Transfert] WHERE idOriginAccount= @idAccount";
 
-
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
@@ -282,7 +277,6 @@ namespace Project2
             string sql = "SELECT [idTransaction],[idOriginAccount],[idDestinationAccount],[amount],[transactionType],[transactionDate],[transferDate],[beginDate],[endDate],[periodicity]" +
                             " FROM [Transaction] WHERE idOriginAccount= @idAccount";
 
-
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = GetConnexion;
             cmd.CommandText = sql;
@@ -306,7 +300,6 @@ namespace Project2
                         transaction.StartDate = reader.GetDateTime(reader.GetOrdinal("beginDate"));
                         transaction.EndDate = reader.GetDateTime(reader.GetOrdinal("endDate"));
                         transaction.Periodicity = reader.GetInt32(reader.GetOrdinal("periodicity"));
-
                         newTransactiontList.Add(transaction);
                     }
                 }
@@ -377,7 +370,6 @@ namespace Project2
                 new SqlParameter("@amount", account.Amount),
                 new SqlParameter("@idAccount", account.IdAccount)
              };
-
             ExecuteQuery(sql, parameters);
         }
 
@@ -390,7 +382,6 @@ namespace Project2
                 new SqlParameter("@AccountNumber", accountNumber),
                 new SqlParameter("@idAccount", idAccount)
              };
-
             ExecuteQuery(sql, parameters);
         }
 
@@ -432,12 +423,10 @@ namespace Project2
             {
                 if (reader.HasRows)
                 {
-
                     while (reader.Read())
                     {
                         string typeAccount = reader.GetString(reader.GetOrdinal("type")); ;
                         AbstractAccount currentCustomerAccount = AccountFactory.Create(typeAccount);
-
                         currentCustomerAccount.IdAccount = reader.GetInt32(reader.GetOrdinal("idAccount"));
                         currentCustomerAccount.IdCustomer = reader.GetInt32(reader.GetOrdinal("idCustomer"));
                         currentCustomerAccount.AccountNumber = reader.GetString(reader.GetOrdinal("accountNumber"));
@@ -493,7 +482,6 @@ namespace Project2
                         newTransaction.Amount = reader.GetDecimal(reader.GetOrdinal("amount"));
                         newTransaction.AccountOrigin = reader.GetInt32(reader.GetOrdinal("idOriginAccount"));
                         newTransaction.AccountDestination = reader.GetInt32(reader.GetOrdinal("idDestinationAccount"));
-
                         currentTransactionList.Add(newTransaction);
                     }
                 }
@@ -532,7 +520,6 @@ namespace Project2
                     cmd.Parameters.Add(parameter);
                 }
             }
-
             cmd.ExecuteNonQuery();
         }
 
@@ -549,7 +536,6 @@ namespace Project2
                     cmd.Parameters.Add(parameter);
                 }
             }
-
             return (Int32)cmd.ExecuteScalar();
         }
     }
