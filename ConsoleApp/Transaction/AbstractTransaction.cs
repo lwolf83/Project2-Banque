@@ -57,6 +57,7 @@ namespace Project2
             }
             else
             {
+                IO.DisplayWarning("There is something wrong with the date.");
                 throw new ArgumentException("No transaction can be executed from date " + startDate + " to " + endDate);
             }
             return transaction;
