@@ -45,27 +45,30 @@ namespace Project2
 
         public override bool CanBeDebited(decimal amountToTransfer, AbstractAccount accountDestination)
         {
-            if (Customer.IsAccountOwner(Program.currentCustomer.IdCustomer, accountDestination.AccountNumber) == false)
-            {
-                throw new ArgumentException(this.AccountNumber + " can not credit " + accountDestination.AccountNumber);
-            }
-
-            if (amountToTransfer <= Amount && IsDebitAuthorized)
+            if (isDebitAuthorized(this))
             {
                 return true;
             }
+            else if (Customer.IsAccountOwner(Program.currentCustomer.IdCustomer, accountDestination.AccountNumber) == false)
+            {
+                IO.DisplayWarning(this.AccountNumber + " can not credit " + accountDestination.AccountNumber);
+                return false;
+                
+            }
             else
             {
+                IO.DisplayWarning(this.AccountNumber + " is not authorized to debit " + accountDestination.AccountNumber);
                 return false;
             }
         }
 
         public override bool CanBeCredited(decimal amountToTransfer)
         {
-            if ((amountToTransfer + Amount) < Ceiling && IsAuthorizeCustomerToCredit())
+            if (IsAuthorizeCustomerToCredit())
             {
                 return true;
             }
+            IO.DisplayWarning("You are not authorized to credit a saving account that is not yours.");
             return false;
         }
 
@@ -78,13 +81,42 @@ namespace Project2
             return false;
         }
 
-        public override bool isDebitAuthorized(AbstractAccount accountDestination)
+        public override bool isDebitAuthorized(AbstractAccount accountOrigin)
         {
-            if(accountDestination.IsDebitAuthorized == true)
+            if(accountOrigin.IsDebitAuthorized == true)
             {
                 return true;
             }
             return false;
         }
+
+        public override bool isMoneyEnough(decimal amountToTransfer)
+        {
+            if (amountToTransfer <= Amount)
+            {
+                return true;
+            }
+            else
+            {
+                IO.DisplayWarning(this.AccountNumber + " has not sufficient funds to do this transaction.");
+                return false;
+            }
+           
+        }
+
+        public override bool isTransferNotReachingCeiling(decimal amountToTransfer)
+        {
+            if ((amountToTransfer + Amount) < Ceiling)
+            {
+                return true;
+            }
+            else
+            {
+                IO.DisplayWarning(amountToTransfer + " cannot be credited because it will exceed the ceiling of the destination account.");
+                return false;
+            }
+        }
+
+
     }
 }

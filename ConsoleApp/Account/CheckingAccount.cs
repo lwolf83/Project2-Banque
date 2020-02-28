@@ -42,14 +42,7 @@ namespace Project2
 
         public override bool CanBeDebited(decimal amountToTransfer, AbstractAccount accountDestination)
         {
-            if ((Amount - Overdraft) >= amountToTransfer)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
 
         public override bool CanBeCredited(decimal amountToTransfer)
@@ -71,5 +64,23 @@ namespace Project2
             return false;
         }
 
+        public override bool isMoneyEnough(decimal amountToTransfer)
+        {
+            if ((Amount - Overdraft) >= amountToTransfer)
+            {
+                return true;
+            }
+            else
+            {
+                IO.DisplayWarning(this.AccountNumber + " has not sufficient funds to do this transaction.");
+                return false;
+            }
+
+        }
+
+        public override bool isTransferNotReachingCeiling(decimal amountToTransfer)
+        {
+            return true;
+        }
     }
 }

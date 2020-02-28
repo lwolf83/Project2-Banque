@@ -77,11 +77,6 @@ namespace Project2
                 {
                     currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.DefferedDate));
                 }
-                else
-                {
-
-                    IO.DisplayWarning("You are not allowed to debit the origin account or credit the destination account!");
-                }
             }
             else
             {
@@ -95,19 +90,15 @@ namespace Project2
             {
                 AbstractAccount accountOrigin = DBQuery.GetAccountFromDB(opts.AccountIdOrigin);
                 AbstractAccount accountDestination = DBQuery.GetAccountFromDB(opts.AccountIdDestination);
-                if(accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
+                if(accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountOrigin.isMoneyEnough(opts.AmountToTransfer) && accountDestination.CanBeCredited(opts.AmountToTransfer) && accountDestination.isTransferNotReachingCeiling(opts.AmountToTransfer))
                 {
                     currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination);
                 }
-                else
-                {
-
-                    IO.DisplayWarning("You are not allowed to debit the origin account or credit the destination account!");
-                }
+               
             }
             else
             {
-                IO.DisplayWarning("You can't make this deferred transfer, you aren't the account owner!");
+                IO.DisplayWarning("You can't make this instant transfer, you aren't the account owner!");
             }
         }
 
@@ -120,11 +111,6 @@ namespace Project2
                 if (accountOrigin.CanBeDebited(opts.AmountToTransfer, accountDestination) && accountDestination.CanBeCredited(opts.AmountToTransfer))
                 {
                     currentCustomer.MakeNewTransaction(opts.AmountToTransfer, accountOrigin, accountDestination, DateTime.Parse(opts.StartDate), DateTime.Parse(opts.EndDate), opts.Periodicity);
-                }
-                else
-                {
-
-                    IO.DisplayWarning("You are not allowed to debit the origin account or credit the destination account!");
                 }
             }
             else

@@ -37,5 +37,10 @@ namespace Project2
         public abstract bool IsAuthorizeCustomerToCredit();
 
         public abstract bool isDebitAuthorized(AbstractAccount accountDestination);
+
+        public abstract bool isMoneyEnough(decimal amountToTransfer);
+
+        public abstract bool isTransferNotReachingCeiling(decimal amountToTransfer);
+
     }
 }
