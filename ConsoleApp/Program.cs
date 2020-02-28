@@ -22,8 +22,7 @@ namespace Project2
         {
             Console.InputEncoding = Encoding.UTF8;
 
-            Parser.Default.ParseArguments<LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions, TransactionListOptions,
-                 DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions, Export>(args)
+            Parser.Default.ParseArguments<LoginOptions, CreateCustomerOptions, CreateAccountOptions, ListAccountOptions, TransactionListOptions, DoDefferedTransferOptions, DoInstantTransferOptions, DoPermanentTransferOptions, Export>(args)
                 .WithParsed<LoginOptions>(RunLoginCommand)
                 .WithParsed<CreateCustomerOptions>(RunCreateCustomerCommand)
                 .WithParsed<CreateAccountOptions>(RunCreateAccountCommand)
