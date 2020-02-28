@@ -19,6 +19,9 @@ namespace JELListener
         public DateTime? beginDate { get; set; }
         public DateTime? endDate { get; set; }
         public int periodicity { get; set; }
-        public IEnumerable<Transfer> Transfer { get; set; }
+        public IEnumerable<Transfer> Transfers { get; set; }
+        public Account OriginAccount { get; set; }
+        public Account DestinationAccount { get; set; }
+
     }
 }
