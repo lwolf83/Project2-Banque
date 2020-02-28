@@ -42,14 +42,14 @@ namespace Project2
         public static void DisplayAccountList(Customer customer, List<AbstractAccount> AccountsList)
         {
             string array = String.Format("The client list is : {0}\n", customer.Name);
-            string lignTemplate = "|{0, -29} | {1,20} | {2,20} | {3, 10:dd/mm/yyyy}|\n";
+            string lignTemplate = "|{0, -29} | {1,20} | {2,20} | {3, 10:dd/MM/yyyy}|\n";
             string header = String.Format(lignTemplate, "Type Account", "Account Number", "Amount", "Date");
             string separationLine = new String('-', header.Length) +"\n";
             array += separationLine + header + separationLine;
        
             foreach (AbstractAccount account in AccountsList)
             { 
-                array += String.Format("|{0,-29} | {1,20} | {2,20} | {3, 10:dd/mm/yyyy}|\n", account.GetType().Name, account.AccountNumber, account.Amount, account.CreationDate);
+                array += String.Format("|{0,-29} | {1,20} | {2,20} | {3, 10:dd/MM/yyyy}|\n", account.GetType().Name, account.AccountNumber, account.Amount, account.CreationDate);
             }
             array += separationLine;
             Console.WriteLine($"\n{array}");
@@ -59,7 +59,7 @@ namespace Project2
         public static void DisplayTransactionList(List<AbstractTransaction> TransactionList)
         {
             string array = String.Format("The transaction list of {0}\n", Program.currentCustomer.Name);
-            string lignTemplate = "|{0, 10:dd/mm/yyyy} | {1,20} | {2,20} | {3, 20}|\n";
+            string lignTemplate = "|{0, 10:dd/MM/yyyy} | {1,20} | {2,20} | {3, 20}|\n";
             string header = String.Format(lignTemplate, "Date", "Amount", "Account Origin", "Account Destination");
             string separationLine = new String('-', header.Length) + "\n";
             array += separationLine + header + separationLine;
